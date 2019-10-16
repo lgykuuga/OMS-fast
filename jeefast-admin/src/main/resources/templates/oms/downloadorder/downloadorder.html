@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('下载订单列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                店铺：<select name="shop" th:with="shopList=${@base.selectShop()}">
+                                <option value="">所有</option>
+                                <option th:each="shop : ${shopList}" th:text="${shop.gna}" th:value="${shop.gco}"></option>
+                            </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <button type="button" class="btn btn-success" id="button-open-3" shiro:hasPermission="oms:downloadorder:add">根据时间下载订单</button>
+                <button type="button" class="btn btn-success" id="button-open-4" shiro:hasPermission="oms:downloadorder:add">根据单号下载订单</button>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:downloadorder:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-danger" onclick="$.operate.clean()" shiro:hasPermission="monitor:operlog:remove">
+                    <i class="fa fa-trash"></i> 清空
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:downloadorder:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('oms:downloadorder:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:downloadorder:remove')}]];
+        var prefix = ctx + "oms/downloadorder";
+        var datas = [[${@dict.getType('sys_normal_disable')}]];
+        var shops = [[${@base.selectShop()}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "下载订单",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id',
+                    title : 'id',
+                    visible: false
+                },
+                {
+                    field : 'shop', 
+                    title : '店铺',
+                    formatter: function(value, row, index) {
+                        return $.table.selectGna(shops, value);
+                    }
+                },
+                {
+                    field : 'bedt', 
+                    title : '查单开始时间'
+                },
+                {
+                    field : 'endt', 
+                    title : '查单结束时间'
+                },
+                {
+                    field : 'dodt', 
+                    title : '执行时间'
+                },
+                {
+                    field : 'onum', 
+                    title : '订单数量',
+                    align: 'center',
+                },
+                {
+                    field: 'stat',
+                    title: '请求状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
+                },
+                {
+                    field : 'snum', 
+                    title : '成功保存数量',
+                    align: 'center',
+                },
+                {
+                    field : 'unum', 
+                    title : '成功更新数量',
+                    align: 'center',
+                },
+                {
+                    field : 'fnum', 
+                    title : '失败保存数量',
+                    align: 'center',
+                },
+                {
+                    field : 'resp',
+                    title : '请求结果',
+                    formatter: function(value, row, index) {
+                        return $.table.tooltip(value);
+                    }
+                },
+                ]
+            };
+            $.table.init(options);
+        });
+
+        $("#button-open-3").click(function(){
+            $.modal.open('根据时间下载订单', prefix + "/downloadByTimeForm", '800', '300');
+        })
+
+        $("#button-open-4").click(function(){
+            $.modal.open('根据单号下载订单', prefix + "/downloadByTidForm", '900', '320');
+        })
+
+    </script>
+</body>
+</html>

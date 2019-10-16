@@ -1,0 +1,57 @@
+package com.lgy.oms.service.business;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import com.lgy.common.core.domain.CommonResponse;
+import org.apache.poi.ss.formula.functions.T;
+
+/**
+ * @Description 订单系统请求远程服务
+ * @Author LGy
+ * @Date 2019/10/14
+ */
+public interface IRequestRemoteInterfaceService {
+
+	/**
+	 * 根据时间获取订单
+	 * @param shop 店铺编码
+	 * @param beginTime 开始时间
+	 * @param endTime 结束时间
+	 * @return 返回结果
+	 */
+	CommonResponse<String> getOrderList(String shop, Date beginTime, Date endTime);
+
+	/**
+	 * 获取订单详细信息并保存
+	 * @param shop 店铺编码
+	 * @param tids 多个订单号用','分隔
+	 * @param getRefundDetails 是否下载退款明细
+	 */
+	CommonResponse<String> getOrderDetailsAndSave(String shop, String tids, boolean getRefundDetails);
+
+	/**
+	 * 订单发货通知
+	 * @param shop 店铺编码
+	 * @param odhxs 订单回传信息
+	 * @return
+	 */
+	CommonResponse<String> OrderDeliveryNotice(String shop, List<T> odhxs);
+
+	/**
+	 * 获取退货退款通知
+	 * @param shop 店铺编码
+	 * @param beginTime 开始时间
+	 * @param endTime 结束时间
+	 * @return
+	 */
+	CommonResponse<String> getReturnNotice(String shop, String beginTime, String endTime);
+
+	/**
+	 * 获取评价接口
+	 * @param map 请求参数
+	 * @return
+	 */
+	CommonResponse<String> getAppraisal(Map<String, Object> map);
+
+}

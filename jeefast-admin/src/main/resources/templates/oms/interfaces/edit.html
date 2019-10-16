@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改店铺接口设置')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-interfaces-edit" th:object="${shopInterfaces}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>店铺：</label>
+                <div class="col-sm-8">
+                    <select name="shop" class="form-control" readonly="true" th:with="shopList=${@base.selectShop()}" required>
+                        <option th:each="shop : ${shopList}" th:text="${shop.gna}" th:value="${shop.gco}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">appkey：</label>
+                <div class="col-sm-8">
+                    <input name="appk" th:field="*{appk}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">sercret：</label>
+                <div class="col-sm-8">
+                    <input name="secr" th:field="*{secr}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">token：</label>
+                <div class="col-sm-8">
+                    <input name="toke" th:field="*{toke}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">请求地址：</label>
+                <div class="col-sm-8">
+                    <input name="surl" th:field="*{surl}" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动下载订单:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="zdxz" th:checked="${shopInterfaces.zdxz == '0' ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">补偿抓单:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="bczd" th:checked="${shopInterfaces.bczd == '0' ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下载订单策略：</label>
+                <div class="col-sm-8">
+                    <input name="xdcl" th:field="*{xdcl}" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">上次下单结束时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="scjs" th:value="${#dates.format(shopInterfaces.scjs, 'yyyy-mm-dd HH:mm:ss')}" class="form-control" placeholder="yyyy-mm-dd HH:mm:ss" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">下单前置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="xdqz" th:field="*{xdqz}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">下单后置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="xdhz" th:field="*{xdhz}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">延迟抓单分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="ycfz" th:field="*{ycfz}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">补偿抓单分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="bcmi" th:field="*{bcmi}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动回传发货:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="fhhc" th:checked="${shopInterfaces.fhhc == '0' ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">回传订单明细:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="odmx" th:checked="${shopInterfaces.odmx == '0' ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动上传库存:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="sckc" th:checked="${shopInterfaces.sckc == '0' ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动下载退款通知:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="tktz" th:checked="${shopInterfaces.tktz == '0' ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">上次下退时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="sctk" th:value="${#dates.format(shopInterfaces.sctk, 'yyyy-mm-dd HH:mm:ss')}" class="form-control" placeholder="yyyy-mm-dd HH:mm:ss" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">退款前置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="tzqz" th:field="*{tzqz}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">退款后置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="tzhz" th:field="*{tzhz}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:field="*{status}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/interfaces";
+        $("#form-interfaces-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                var data = $("#form-interfaces-edit").serializeArray();
+                var zdxz = $("input[id='zdxz']").is(':checked') == true ? 0 : 1;
+                var bczd = $("input[id='bczd']").is(':checked') == true ? 0 : 1;
+                var fhhc = $("input[id='fhhc']").is(':checked') == true ? 0 : 1;
+                var odmx = $("input[id='odmx']").is(':checked') == true ? 0 : 1;
+                var sckc = $("input[id='sckc']").is(':checked') == true ? 0 : 1;
+                var tktz = $("input[id='tktz']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "zdxz", "value": zdxz});
+                data.push({"name": "bczd", "value": bczd});
+                data.push({"name": "fhhc", "value": fhhc});
+                data.push({"name": "odmx", "value": odmx});
+                data.push({"name": "sckc", "value": sckc});
+                data.push({"name": "tktz", "value": tktz});
+                $.operate.save(prefix + "/edit", data);
+            }
+        }
+
+        $("input[name='scjs']").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true
+        });
+
+        $("input[name='sctk']").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

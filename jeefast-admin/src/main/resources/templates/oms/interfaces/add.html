@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增店铺接口设置')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <link href="/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-interfaces-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>店铺：</label>
+                <div class="col-sm-8">
+                    <select name="shop" class="form-control" th:with="shopList=${@base.selectShop()}" required>
+                        <option value="">--请选择店铺--</option>
+                        <option th:each="shop : ${shopList}" th:text="${shop.gna}" th:value="${shop.gco}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">appkey：</label>
+                <div class="col-sm-8">
+                    <input name="appk" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">sercret：</label>
+                <div class="col-sm-8">
+                    <input name="secr" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">token：</label>
+                <div class="col-sm-8">
+                    <input name="toke" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">请求地址：</label>
+                <div class="col-sm-8">
+                    <input name="surl" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动下载订单:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="zdxz" checked>
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">补偿抓单:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="bczd">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下载订单策略：</label>
+                <div class="col-sm-8">
+<!--                    <select name="xdcl" class="form-control" th:with="DownloadOrderStrategyList=${DownloadOrderStrategyList}">-->
+<!--                        <option th:each="DownloadOrderStrategy : ${DownloadOrderStrategyList}" th:text="${DownloadOrderStrategy.val}" th:value="${DownloadOrderStrategy.key}"></option>-->
+<!--                    </select>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">上次下单结束时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="scjs" class="form-control"  id="laydate-demo-3" placeholder="yyyy-mm-dd HH:mm:ss" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">下单前置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="xdqz" class="form-control" type="text" placeholder="不填默认不前置">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">下单后置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="xdhz" class="form-control" type="text" placeholder="不填默认120分钟">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">延迟抓单分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="ycfz" class="form-control" type="text" placeholder="不填默认不延迟">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">补偿抓单分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="bcmi" class="form-control" type="text" placeholder="不填默认300分钟">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动回传发货:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="fhhc" checked>
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">回传订单明细:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="odmx">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动上传库存:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="sckc">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">自动下载退款通知:</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="tktz" checked>
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">上次下退时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="sctk" class="form-control" placeholder="yyyy-mm-dd HH:mm:ss" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">退款前置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="tzqz" class="form-control" type="text" placeholder="不填默认120分钟">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">退款后置分钟数：</label>
+                    <div class="col-sm-8">
+                        <input name="tzhz" class="form-control" type="text" placeholder="不填默认300分钟">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+
+        var prefix = ctx + "oms/interfaces"
+        $("#form-interfaces-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                var data = $("#form-interfaces-add").serializeArray();
+                var zdxz = $("input[id='zdxz']").is(':checked') == true ? 0 : 1;
+                var bczd = $("input[id='bczd']").is(':checked') == true ? 0 : 1;
+                var fhhc = $("input[id='fhhc']").is(':checked') == true ? 0 : 1;
+                var odmx = $("input[id='odmx']").is(':checked') == true ? 0 : 1;
+                var sckc = $("input[id='sckc']").is(':checked') == true ? 0 : 1;
+                var tktz = $("input[id='tktz']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "zdxz", "value": zdxz});
+                data.push({"name": "bczd", "value": bczd});
+                data.push({"name": "fhhc", "value": fhhc});
+                data.push({"name": "odmx", "value": odmx});
+                data.push({"name": "sckc", "value": sckc});
+                data.push({"name": "tktz", "value": tktz});
+                $.operate.save(prefix + "/add", data);
+            }
+        }
+
+        $("input[name='scjs']").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true
+        });
+
+        $("input[name='sctk']").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

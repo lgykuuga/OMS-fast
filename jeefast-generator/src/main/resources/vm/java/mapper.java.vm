@@ -1,0 +1,14 @@
+package ${packageName}.mapper;
+
+import ${basePackage}.${moduleName}.domain.${ClassName};
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+/**
+ * ${functionName} 数据层
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${ClassName}Mapper extends BaseMapper<${ClassName}> {
+
+}

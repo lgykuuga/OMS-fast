@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('根据时间下载订单')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <link href="/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="main-content">
+        <form id="form-time-add" class="form-horizontal">
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>店铺：</label>
+                <div class="col-sm-8">
+                    <select name="shop" class="form-control" th:with="shopList=${@base.selectShop()}" required>
+                        <option value="">--请选择店铺--</option>
+                        <option th:each="shop : ${shopList}" th:text="${shop.gna}" th:value="${shop.gco}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>查单开始时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="bedt" class="form-control" id="laydate-demo-3"
+                               th:value="${#dates.format(bedt, 'yyyy-MM-dd hh:mm:ss')}"
+                               placeholder="yyyy-mm-dd HH:mm:ss" type="text" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>查单结束时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="endt" class="form-control" id="laydate-demo-4"
+                               placeholder="yyyy-mm-dd HH:mm:ss" type="text"  required>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+	<th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/downloadorder"
+        $("#form-time-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                var data = $("#form-time-add").serializeArray();
+                $.operate.post(prefix + "/downloadByTime", data);
+            }
+
+        }
+
+        $("input[name='bedt']").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true
+        });
+
+        $("input[name='endt']").datetimepicker({
+            format: "yyyy-mm-dd HH:mm:ss",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>
