@@ -12,6 +12,7 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
 import com.lgy.oms.domain.ShopInterfaces;
+import com.lgy.oms.enums.DownloadOrderInterfaceEnum;
 import com.lgy.oms.enums.DownloadOrderStrategyEnum;
 import com.lgy.oms.service.IShopInterfacesService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -98,7 +99,9 @@ public class ShopInterfacesController extends BaseController {
     @GetMapping("/add")
     public String add(Model model) {
         //下载订单策略
-        model.addAttribute("DownloadOrderStrategyList", DownloadOrderStrategyEnum.toJson());
+        model.addAttribute("strategyList", DownloadOrderStrategyEnum.getList());
+        //下单订单接口
+        model.addAttribute("interfaceList", DownloadOrderInterfaceEnum.getList());
         return prefix + "/add";
     }
 
@@ -136,8 +139,11 @@ public class ShopInterfacesController extends BaseController {
      */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
-        ShopInterfaces shopInterfaces = shopInterfacesService.getById(id);
-        mmap.put("shopInterfaces", shopInterfaces);
+        mmap.put("shopInterfaces", shopInterfacesService.getById(id));
+        //下载订单策略
+        mmap.put("strategyList", DownloadOrderStrategyEnum.getList());
+        //下单订单接口
+        mmap.put("interfaceList", DownloadOrderInterfaceEnum.getList());
         return prefix + "/edit";
     }
 

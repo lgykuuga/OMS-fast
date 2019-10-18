@@ -89,17 +89,7 @@ public class DownloadorderController extends BaseController {
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Downloadorder downloadorder) {
-        QueryWrapper<Downloadorder> queryWrapper = new QueryWrapper<>();
-        // 需要根据页面查询条件进行组装
-        if (StringUtils.isNotEmpty(downloadorder.getShop())) {
-            queryWrapper.eq("shop", downloadorder.getShop());
-        }
-        // 特殊查询时条件需要进行单独组装
-        Map<String, Object> params = downloadorder.getParams();
-        if (StringUtils.isNotEmpty(params)) {
-            queryWrapper.ge(StringUtils.isNotEmpty((String) params.get("beginTime")), "create_time", params.get("beginTime"));
-            queryWrapper.le(StringUtils.isNotEmpty((String) params.get("endTime")), "create_time", params.get("endTime"));
-        }
+        QueryWrapper<Downloadorder> queryWrapper = getDownloadOrderQueryWrapper(downloadorder);
         startPage();
         return getDataTable(downloadOrderService.list(queryWrapper));
     }
@@ -111,9 +101,35 @@ public class DownloadorderController extends BaseController {
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(Downloadorder downloadorder) {
-        List<Downloadorder> list = downloadOrderService.list(new QueryWrapper<>());
+        QueryWrapper<Downloadorder> queryWrapper = getDownloadOrderQueryWrapper(downloadorder);
+        List<Downloadorder> list = downloadOrderService.list(queryWrapper);
         ExcelUtil<Downloadorder> util = new ExcelUtil<>(Downloadorder.class);
         return util.exportExcel(list, "downloadorder");
+    }
+
+    /**
+     * 查询条件
+     * @param downloadorder
+     * @return
+     */
+    private QueryWrapper<Downloadorder> getDownloadOrderQueryWrapper(Downloadorder downloadorder) {
+        QueryWrapper<Downloadorder> queryWrapper = new QueryWrapper<>();
+        // 需要根据页面查询条件进行组装
+        if (StringUtils.isNotEmpty(downloadorder.getShop())) {
+            queryWrapper.eq("shop", downloadorder.getShop());
+        }
+        if (StringUtils.isNotEmpty(downloadorder.getStat())) {
+            queryWrapper.eq("stat", downloadorder.getStat());
+        }
+        // 特殊查询时条件需要进行单独组装
+        Map<String, Object> params = downloadorder.getParams();
+        if (StringUtils.isNotEmpty(params)) {
+            queryWrapper.ge(StringUtils.isNotEmpty((String) params.get("beginTime")), "create_time", params.get("beginTime"));
+            queryWrapper.le(StringUtils.isNotEmpty((String) params.get("endTime")), "create_time", params.get("endTime"));
+        }
+        //根据创建时间排序
+        queryWrapper.orderByDesc("create_time");
+        return queryWrapper;
     }
 
     /**
@@ -156,7 +172,7 @@ public class DownloadorderController extends BaseController {
         }
         CommonResponse<String> response = downloadOrderService.downloadByTid(shop, tids, downloadRefundDetails);
         if (Constants.SUCCESS.equals(response.getCode())) {
-            return AjaxResult.success(response.getMsg());
+            return AjaxResult.success("下载成功");
         }
         return AjaxResult.error(response.getMsg());
     }

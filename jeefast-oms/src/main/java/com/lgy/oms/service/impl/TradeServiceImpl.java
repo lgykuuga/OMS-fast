@@ -1,17 +1,15 @@
 package com.lgy.oms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lgy.common.constant.Constants;
+import com.lgy.oms.domain.Trade;
+import com.lgy.oms.mapper.TradeMapper;
+import com.lgy.oms.service.ITradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.lgy.oms.mapper.TradeMapper;
-import com.lgy.oms.domain.Trade;
-import com.lgy.oms.service.ITradeService;
 
-import java.io.StringWriter;
-import java.util.LinkedHashMap;
+import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 交易订单 服务层实现
@@ -22,18 +20,26 @@ import java.util.Map;
 @Service
 public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements ITradeService {
 
-    @Autowired
+    @Resource
     TradeMapper tradeMapper;
 
     @Override
-    public List<Trade> checkOrderExist(String tid, String shop, boolean valid) {
-        return tradeMapper.checkOrderExist(tid, shop, valid);
+    public Trade checkOrderExist(String tid, String shop, boolean valid) {
+
+        List<Trade> trades = tradeMapper.checkOrderExist(tid, shop, valid);
+        if (trades != null && trades.size() > 0) {
+            return trades.get(0);
+        }
+
+        return null;
     }
 
     @Override
-    public String previewOrder(Long id) {
+    public String previewOrder(String tid) {
         // 查询表信息
-        Trade trade = tradeMapper.selectById(id);
+        QueryWrapper<Trade> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("tid", tid);
+        Trade trade = tradeMapper.selectOne(queryWrapper);
         if (trade != null) {
             return trade.getResponse();
         }

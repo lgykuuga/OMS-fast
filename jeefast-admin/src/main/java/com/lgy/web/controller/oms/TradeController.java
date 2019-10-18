@@ -7,15 +7,16 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
 import com.lgy.oms.domain.Trade;
+import com.lgy.oms.enums.PlatformOrderStatusEnum;
 import com.lgy.oms.service.ITradeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 交易订单Controller
@@ -34,7 +35,9 @@ public class TradeController extends BaseController {
 
     @RequiresPermissions("oms:trade:view")
     @GetMapping()
-    public String trade() {
+    public String trade(Model model) {
+        //下单订单接口
+        model.addAttribute("orderStatusList", PlatformOrderStatusEnum.getList());
         return prefix + "/trade";
     }
 
@@ -78,6 +81,10 @@ public class TradeController extends BaseController {
         if (StringUtils.isNotEmpty(trade.getShop())) {
             queryWrapper.eq("shop", trade.getShop());
         }
+        if (trade.getStatus() != null) {
+            queryWrapper.eq("status", trade.getStatus());
+        }
+        queryWrapper.orderByDesc("create_time");
         return queryWrapper;
     }
 
@@ -85,10 +92,10 @@ public class TradeController extends BaseController {
      * 预览订单报文
      */
     @RequiresPermissions("tool:trade:view")
-    @GetMapping("/view/{id}")
+    @GetMapping("/preview/{tid}")
     @ResponseBody
-    public AjaxResult preview(@PathVariable("id") Long id) throws IOException {
-        return AjaxResult.success(tradeService.previewOrder(id));
+    public AjaxResult preview(@PathVariable("tid") String tableId) throws IOException {
+        return AjaxResult.success(tradeService.previewOrder(tableId));
     }
 
 }

@@ -36,4 +36,15 @@ public interface IOrderGet {
      */
     CommonResponse<Trade> orderFullInfoDownLoad(ShopInterfaces shopInterfaces, OrderDTO orderDTO);
 
+    /**
+     * 根据时间获取订单详情列表接口
+     *
+     * @param shopInterfaces 店铺接口信息
+     * @param beginDate      开始时间
+     * @param endDate        结束时间
+     * @return
+     */
+    CommonResponse<List<Trade>> orderFullInfoListDownload(ShopInterfaces shopInterfaces, Date beginDate, Date endDate);
+
+
 }

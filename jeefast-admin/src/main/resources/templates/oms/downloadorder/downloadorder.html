@@ -17,6 +17,12 @@
                             </select>
                             </li>
                             <li>
+                                请求状态：<select name="stat" th:with="type=${@dict.getType('sys_common_status')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                            </li>
+                            <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
@@ -48,7 +54,7 @@
         var editFlag = [[${@permission.hasPermi('oms:downloadorder:edit')}]];
         var removeFlag = [[${@permission.hasPermi('oms:downloadorder:remove')}]];
         var prefix = ctx + "oms/downloadorder";
-        var datas = [[${@dict.getType('sys_normal_disable')}]];
+        var common_status = [[${@dict.getType('sys_common_status')}]];
         var shops = [[${@base.selectShop()}]];
 
         $(function() {
@@ -96,7 +102,7 @@
                     title: '请求状态',
                     align: 'center',
                     formatter: function(value, row, index) {
-                        return $.table.selectDictLabel(datas, value);
+                        return $.table.selectDictLabel(common_status, value);
                     }
                 },
                 {

@@ -2,6 +2,23 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('店铺接口设置列表')"/>
+    <style type="text/css">
+        .select-table table {
+            table-layout:fixed;
+        }
+
+        .select-table .table td {
+            /* 超出部分隐藏 */
+            overflow:hidden;
+            /* 超出部分显示省略号 */
+            text-overflow:ellipsis;
+            /*规定段落中的文本不进行换行 */
+            white-space:nowrap;
+            /* 配合宽度来使用 */
+            height:40px;
+        }
+
+    </style>
 </head>
 <body class="gray-bg">
     <div class="container-div">
@@ -117,7 +134,9 @@
                     },
                     {
                         field: 'xdcl',
-                        title: '下载订单策略'
+                        title: '下载订单策略',
+                        align: 'center',
+
                     },
                     {
                         field: 'scjs',

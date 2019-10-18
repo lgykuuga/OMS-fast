@@ -1,12 +1,13 @@
 package com.lgy.system.domain;
 
-import javax.validation.constraints.*;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.lgy.common.annotation.Excel;
 import com.lgy.common.annotation.Excel.ColumnType;
 import com.lgy.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * 参数配置表 sys_config
@@ -45,6 +46,15 @@ public class SysConfig extends BaseEntity {
      */
     @Excel(name = "系统内置", readConverterExp = "Y=是,N=否")
     private String configType;
+
+    public SysConfig() {
+
+    }
+
+    public SysConfig(String configKey, String configValue) {
+        this.configKey = configKey;
+        this.configValue = configValue;
+    }
 
     public Long getConfigId() {
         return configId;

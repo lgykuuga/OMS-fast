@@ -66,25 +66,23 @@ public class AsyncExecuteOrderServiceImpl implements IAsyncExecuteOrderService {
 
         for (OrderDTO orderDTO : updateList) {
             //判断有效订单是否存在订单池
-            List<Trade> trades = tradeService.checkOrderExist(orderDTO.getTid(), orderDTO.getShop(), true);
-            if (trades != null && trades.size() > 0) {
-                for (Trade trade : trades) {
-                    if (orderDTO.getPlatformModified().getTime() > trade.getModified().getTime()) {
-                        //最新订单的平台最后更新时间 大于 系统订单平台最后更新时间,则进行更新
-                        UpdateWrapper<Trade> updateWrapper = new UpdateWrapper<>();
-                        updateWrapper.eq("tid", orderDTO.getTid());
-                        Trade newTrade = new Trade();
-                        //平台更新时间
-                        newTrade.setModified(orderDTO.getPlatformModified());
-                        //平台订单状态
-                        newTrade.setStatus(orderDTO.getPlatformState());
-                        //更新
-                        tradeService.update(newTrade, updateWrapper);
-                        logger.info("订单[{}]检测到平台状态为[{}]", orderDTO.getTid(), orderDTO.getPlatformState());
-                    } else {
-                        logger.info("订单[{}]状态为:[{}].平台订单更新时间[{}]<=系统订单更新时间[{}],跳过更新", orderDTO.getTid(), orderDTO.getPlatformState(),
-                                orderDTO.getPlatformModified(), trade.getModified());
-                    }
+            Trade trade = tradeService.checkOrderExist(orderDTO.getTid(), orderDTO.getShop(), true);
+            if (trade != null) {
+                if (orderDTO.getPlatformModified().getTime() > trade.getModified().getTime()) {
+                    //最新订单的平台最后更新时间 大于 系统订单平台最后更新时间,则进行更新
+                    UpdateWrapper<Trade> updateWrapper = new UpdateWrapper<>();
+                    updateWrapper.eq("tid", orderDTO.getTid());
+                    Trade newTrade = new Trade();
+                    //平台更新时间
+                    newTrade.setModified(orderDTO.getPlatformModified());
+                    //平台订单状态
+                    newTrade.setStatus(orderDTO.getPlatformState());
+                    //更新
+                    tradeService.update(newTrade, updateWrapper);
+                    logger.info("订单[{}]检测到平台状态为[{}]", orderDTO.getTid(), orderDTO.getPlatformState());
+                } else {
+                    logger.info("订单[{}]状态为:[{}].平台订单更新时间[{}]<=系统订单更新时间[{}],跳过更新", orderDTO.getTid(), orderDTO.getPlatformState(),
+                            orderDTO.getPlatformModified(), trade.getModified());
                 }
             } else {
                 logger.info("订单[{}]平台状态为:[{}].该订单不存在于系统", orderDTO.getTid(), orderDTO.getPlatformState());

@@ -23,12 +23,12 @@
     </resultMap>
 
     <select id="checkOrderExist" parameterType="String" resultMap="TradeResult">
-        select tid,status,flag,modified from trade
+        select tid,status,flag,modified from oms_trade
         <where>
-            <if test="tid != tid and tid != ''">
+            <if test="tid != null and tid != ''">
                 AND tid = #{tid}
             </if>
-            <if test="shop != tid and shop != ''">
+            <if test="shop != null and shop != ''">
                 AND shop = #{shop}
             </if>
             <if test="valid == true">

@@ -2,9 +2,6 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
 	<th:block th:include="include :: header('根据单号下载订单')" />
-    <th:block th:include="include :: datetimepicker-css" />
-    <th:block th:include="include :: datetimepicker-js" />
-    <link href="/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 </head>
 <body>
     <div class="main-content">
@@ -21,20 +18,20 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span style="color: red; ">*</span>平台单号:</label>
                 <div class="col-sm-8">
-                    <input name="tids" class="form-control" type="text" th:width="100" required>
+                    <input name="tids" class="form-control" type="text" th:width="100" placeholder="下载多个订单用英文逗号分隔" required>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">下载退款明细:</label>
-                    <div class="col-sm-8">
-                        <label class="toggle-switch switch-solid">
-                            <input name="downloadRefundDetails", type="checkbox" id="downloadRefundDetails">
-                            <span></span>
-                        </label>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="col-sm-6">-->
+<!--                <div class="form-group">-->
+<!--                    <label class="col-sm-4 control-label">下载退款明细:</label>-->
+<!--                    <div class="col-sm-8">-->
+<!--                        <label class="toggle-switch switch-solid">-->
+<!--                            <input name="downloadRefundDetails", type="checkbox" id="downloadRefundDetails">-->
+<!--                            <span></span>-->
+<!--                        </label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </form>
     </div>
 	<th:block th:include="include :: footer" />
@@ -49,9 +46,9 @@
                 tids: {
                     required: true,
                 },
-                downloadRefundDetails: {
-                    equalTo: "#downloadRefundDetails"
-                }
+                // downloadRefundDetails: {
+                //     equalTo: "#downloadRefundDetails"
+                // }
             },
             focusCleanup: true
         });
@@ -59,7 +56,15 @@
         function submitHandler() {
             if ($.validate.form()) {
                 var data = $('#form-tid-add').serialize();
-                $.operate.post(prefix + "/downloadByTid", data);
+                $.modal.loading("正在下载数据，请稍后...");
+                $.operate.post(prefix + "/downloadByTid", data,function(result) {
+                    if (result.code == web_status.SUCCESS) {
+                        $.modal.alertSuccess(result.msg);
+                    } else {
+                        $.modal.alertError(result.msg);
+                    }
+                    $.modal.closeLoading();
+                });
             }
         }
     </script>

@@ -6,29 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 下单策略枚举
+ * @Description 下单策略接口类型枚举(对接订单下载系统)
  * @Author LGy
- * @Date 2019/10/14
+ * @Date 2019/10/17
  */
-public enum DownloadOrderStrategyEnum {
+public enum DownloadOrderInterfaceEnum {
 
     /**
-     * 用户自定义
+     * 直接对接平台
      */
-    DEFINED("用户自定义"),
+    DIRECT("对接平台"),
     /**
-     * 标准模式
+     * globale:跨境翼
      */
-    STANDARD("标准模式"),
+    KJY("跨境翼"),
     /**
-     * 大促模式
+     * gwall: ODS
      */
-    PROMOTIONAL("大促模式");
+    GODS("GODS");
+
 
     private String value;
 
     /**
-     * 策略集合
+     * 订单状态集合
      */
     private static List<SysConfig> configs;
 
@@ -36,25 +37,25 @@ public enum DownloadOrderStrategyEnum {
         return value;
     }
 
-    DownloadOrderStrategyEnum(String value) {
+    DownloadOrderInterfaceEnum(String value) {
         this.value = value;
     }
 
     public static String toJson() {
         String JsOrderFlag = "[";
-        for (DownloadOrderStrategyEnum downloadOrderStrategyEnum : DownloadOrderStrategyEnum.values()) {
+        for (DownloadOrderInterfaceEnum downloadOrderStrategyEnum : DownloadOrderInterfaceEnum.values()) {
             JsOrderFlag += "{\"key\":\"" + downloadOrderStrategyEnum.name() + "\",\"val\":\"" + downloadOrderStrategyEnum.getValue() + "\"},";
         }
         return JsOrderFlag = JsOrderFlag.substring(0, JsOrderFlag.length() - 1) + "]";
     }
 
     /**
-     * 获取策略状态集合
+     * 获取订单状态集合
      */
     public final static List<SysConfig> getList() {
         if (configs == null) {
             configs = new ArrayList<>();
-            for (DownloadOrderStrategyEnum strategyEnum : DownloadOrderStrategyEnum.values()) {
+            for (DownloadOrderInterfaceEnum strategyEnum : DownloadOrderInterfaceEnum.values()) {
                 configs.add(new SysConfig(strategyEnum.name(), strategyEnum.getValue()));
             }
         }

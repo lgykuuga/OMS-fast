@@ -12,7 +12,7 @@
                 <label class="col-sm-3 control-label"><span style="color: red; ">*</span>店铺：</label>
                 <div class="col-sm-8">
                     <select name="shop" class="form-control" readonly="true" th:with="shopList=${@base.selectShop()}" required>
-                        <option th:each="shop : ${shopList}" th:text="${shop.gna}" th:value="${shop.gco}"></option>
+                        <option th:each="shop : ${shopList}" th:field="*{shop}"  th:text="${shop.gna}" th:value="${shop.gco}"></option>
                     </select>
                 </div>
             </div>
@@ -38,6 +38,15 @@
                 <label class="col-sm-3 control-label">请求地址：</label>
                 <div class="col-sm-8">
                     <input name="surl" th:field="*{surl}" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下载订单接口：</label>
+                <div class="col-sm-8">
+                    <select name="jklx" class="form-control"  th:field="*{jklx}" >
+                        <option th:each="interface : ${interfaceList}" th:text="${interface.configValue}" th:value="${interface.configKey}"></option>
+                    </select>
                 </div>
             </div>
 
@@ -68,7 +77,9 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">下载订单策略：</label>
                 <div class="col-sm-8">
-                    <input name="xdcl" th:field="*{xdcl}" class="form-control" type="text">
+                    <select name="xdcl" id="xdcl" class="form-control"  th:field="*{xdcl}" >
+                        <option th:each="strategy : ${strategyList}" th:text="${strategy.configValue}" th:value="${strategy.configKey}"></option>
+                    </select>
                 </div>
             </div>
 
@@ -86,7 +97,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">下单前置分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="xdqz" th:field="*{xdqz}" class="form-control" type="text">
+                        <input name="xdqz" id="xdqz" th:field="*{xdqz}" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -95,7 +106,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">下单后置分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="xdhz" th:field="*{xdhz}" class="form-control" type="text">
+                        <input name="xdhz" id="xdhz"  th:field="*{xdhz}" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -104,7 +115,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">延迟抓单分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="ycfz" th:field="*{ycfz}" class="form-control" type="text">
+                        <input name="ycfz" id="ycfz" th:field="*{ycfz}" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -113,7 +124,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">补偿抓单分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="bcmi" th:field="*{bcmi}" class="form-control" type="text">
+                        <input name="bcmi" id="bcmi" th:field="*{bcmi}" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -171,7 +182,7 @@
                 <div class="col-sm-8">
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="sctk" th:value="${#dates.format(shopInterfaces.sctk, 'yyyy-mm-dd HH:mm:ss')}" class="form-control" placeholder="yyyy-mm-dd HH:mm:ss" type="text">
+                        <input name="sctk" id="sctk" th:value="${#dates.format(shopInterfaces.sctk, 'yyyy-mm-dd HH:mm:ss')}" class="form-control" placeholder="yyyy-mm-dd HH:mm:ss" type="text">
                     </div>
                 </div>
             </div>
@@ -180,7 +191,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">退款前置分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="tzqz" th:field="*{tzqz}" class="form-control" type="text">
+                        <input name="tzqz" id="tzqz" th:field="*{tzqz}" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -189,7 +200,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">退款后置分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="tzhz" th:field="*{tzhz}" class="form-control" type="text">
+                        <input name="tzhz" id="tzhz" th:field="*{tzhz}" class="form-control" type="text">
                     </div>
                 </div>
             </div>
@@ -246,6 +257,46 @@
         $("input[name='sctk']").datetimepicker({
             format: "yyyy-mm-dd HH:mm:ss",
             autoclose: true
+        });
+
+        $('#xdcl').on('change', function (e) {
+            if ($(this).val() == "STANDARD") {
+                /**
+                 * 标准模式
+                 */
+                //下单前置不可用
+                $("#xdqz").prop("disabled", true);
+                $("#xdqz").val([120]);
+                //下单后置不可用
+                $("#xdhz").prop("disabled", true);
+                $("#xdhz").val(["0"]).trigger("change");
+                //延迟抓单不可用
+                $("#ycfz").prop("disabled", true);
+                $("#ycfz").val(["0"]).trigger("change");
+            } else if ($(this).val() == "PROMOTIONAL") {
+                /**
+                 * 大促模式
+                 */
+                //下单前置不可用
+                $("#xdqz").prop("disabled", true);
+                $("#xdqz").val(["0"]).trigger("change");
+                //下单后置不可用
+                $("#xdhz").prop("disabled", true);
+                $("#xdhz").val(["5"]).trigger("change");
+                //延迟抓单不可用
+                $("#ycfz").prop("disabled", true);
+                $("#ycfz").val(["0"]).trigger("change");
+            } else if ($(this).val() == "DEFINED") {
+                /**
+                 * 用户自定义
+                 */
+                //下单前置可用
+                $("#xdqz").prop("disabled", false);
+                //下单后置可用
+                $("#xdhz").prop("disabled", false);
+                //延迟抓单可用
+                $("#ycfz").prop("disabled", false);
+            }
         });
     </script>
 </body>

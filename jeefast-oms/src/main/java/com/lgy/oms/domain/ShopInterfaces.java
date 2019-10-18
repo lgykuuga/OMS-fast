@@ -72,6 +72,12 @@ public class ShopInterfaces extends BaseEntity implements Serializable {
     private String surl;
 
     /**
+     * 接口类型
+     */
+    @Excel(name = "接口类型")
+    private String jklx;
+
+    /**
      * 是否自动下载订单
      */
     @Excel(name = "是否自动下载订单", readConverterExp = "0=正常,1=停用")

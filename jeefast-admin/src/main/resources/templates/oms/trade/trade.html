@@ -38,6 +38,12 @@
                                 <input type="text" name="tid"/>
                             </li>
                             <li>
+                                交易状态：<select name="status">
+                                <option value="">所有</option>
+                                <option th:each="orderStatus : ${orderStatusList}" th:text="${orderStatus.configValue}" th:value="${orderStatus.configKey}"></option>
+                            </select>
+                            </li>
+                            <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
@@ -61,8 +67,8 @@
         var editFlag = [[${@permission.hasPermi('oms:trade:edit')}]];
         var removeFlag = [[${@permission.hasPermi('oms:trade:remove')}]];
         var prefix = ctx + "oms/trade";
-        var datas = [[${@dict.getType('sys_normal_disable')}]];
         var shops = [[${@base.selectShop()}]];
+        var orderStatusList = [[${orderStatusList}]];
 
         $(function() {
             var options = {
@@ -95,35 +101,51 @@
                     field : 'status', 
                     title : '交易状态',
                     align: 'center',
+                    formatter: function(key, row, index) {
+                        return $.table.selectValue(orderStatusList, key);
+                    }
                 },
                 {
                     field : 'modified', 
-                    title : '交易修改时间'
+                    title : '交易修改时间',
+                    align: 'center',
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    align: 'center',
+                },
+                {
+                    field : 'updateTime',
+                    title : '更新时间',
+                    align: 'center',
                 },
                 {
                     field : 'flag',
                     title : '转单状态',
                     align: 'center',
+                    width: 80
                 },
                 {
                     field : 'frequency',
                     title : '更新次数',
                     align: 'center',
+                    width: 80
                 },
-                {
-                    field : 'response', 
-                    title : '请求返回消息',
-                    formatter: function(value, row, index) {
-                        return $.table.tooltip(value);
-                    }
-                },
+                // {
+                //     field : 'response',
+                //     title : '请求返回消息',
+                //     formatter: function(value, row, index) {
+                //         return $.table.tooltip(value);
+                //     }
+                // },
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="preview(\'' + row.id + '\')"><i class="fa fa-search"></i>预览</a> ');
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="preview(\'' + row.tid + '\')"><i class="fa fa-search"></i>预览</a> ');
+                        // actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         return actions.join('');
                     }
                 },
@@ -133,11 +155,21 @@
         });
 
         // 预览订单
-        function preview(tableId) {
-            var preViewUrl = prefix + "/preview/" + tableId;
+        function preview(tid) {
+            var preViewUrl = prefix + "/preview/" + tid;
             $.modal.loading("正在加载数据，请稍后...");
             $.get(preViewUrl, function(result) {
                 if (result.code == web_status.SUCCESS) {
+                    var parse = JSON.parse(result.msg);
+                    layer.tab({
+                        area: ['900px', '800px'],
+                        tab: [
+                            {
+                                title: tid,
+                                content: '<pre>' + JSON.stringify(parse, null, "\t") + '</pre>'
+                            },
+                            ]
+                    });
                 } else {
                     $.modal.alertError(result.msg);
                 }

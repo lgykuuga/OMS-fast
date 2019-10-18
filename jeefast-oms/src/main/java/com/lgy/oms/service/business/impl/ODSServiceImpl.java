@@ -138,9 +138,8 @@ public class ODSServiceImpl implements IODSService {
                     trade.setOwner(shopInterfaces.getOwner());
                     //设置店铺
                     trade.setShop(shopInterfaces.getShop());
-                    //请求返回消息转json格式
-                    String resp = gson.toJson(saleOrderBean);
-                    trade.setResponse(resp);
+                    //请求返回消息
+                    trade.setResponse(strResponse);
                     baseResponse.setBody(trade);
                     baseResponse.setStatus(true);
                 } else {

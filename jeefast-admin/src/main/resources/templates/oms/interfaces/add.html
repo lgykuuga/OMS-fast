@@ -4,6 +4,8 @@
     <th:block th:include="include :: header('新增店铺接口设置')" />
     <th:block th:include="include :: datetimepicker-css" />
     <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: select2-js" />
     <link href="/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 </head>
 <body class="white-bg">
@@ -42,6 +44,16 @@
                     <input name="surl" class="form-control" type="text">
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下载订单接口：</label>
+                <div class="col-sm-8">
+                    <select name="jklx" class="form-control" >
+                        <option th:each="interface : ${interfaceList}" th:text="${interface.configValue}" th:value="${interface.configKey}"></option>
+                    </select>
+                </div>
+            </div>
+
             <div class="col-sm-6">
                 <div class="form-group">
                     <label class="col-sm-4 control-label">自动下载订单:</label>
@@ -69,9 +81,9 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">下载订单策略：</label>
                 <div class="col-sm-8">
-<!--                    <select name="xdcl" class="form-control" th:with="DownloadOrderStrategyList=${DownloadOrderStrategyList}">-->
-<!--                        <option th:each="DownloadOrderStrategy : ${DownloadOrderStrategyList}" th:text="${DownloadOrderStrategy.val}" th:value="${DownloadOrderStrategy.key}"></option>-->
-<!--                    </select>-->
+                    <select name="xdcl" class="form-control" id="xdcl">
+                        <option th:each="strategy : ${strategyList}" th:text="${strategy.configValue}" th:value="${strategy.configKey}"></option>
+                    </select>
                 </div>
             </div>
 
@@ -89,7 +101,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">下单前置分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="xdqz" class="form-control" type="text" placeholder="不填默认不前置">
+                        <input name="xdqz" id="xdqz" class="form-control" type="text" placeholder="不填默认不前置">
                     </div>
                 </div>
             </div>
@@ -98,7 +110,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">下单后置分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="xdhz" class="form-control" type="text" placeholder="不填默认120分钟">
+                        <input name="xdhz" id="xdhz" class="form-control" type="text" placeholder="不填默认120分钟">
                     </div>
                 </div>
             </div>
@@ -107,7 +119,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">延迟抓单分钟数：</label>
                     <div class="col-sm-8">
-                        <input name="ycfz" class="form-control" type="text" placeholder="不填默认不延迟">
+                        <input name="ycfz" id="ycfz" class="form-control" type="text" placeholder="不填默认不延迟">
                     </div>
                 </div>
             </div>
@@ -250,6 +262,46 @@
         $("input[name='sctk']").datetimepicker({
             format: "yyyy-mm-dd HH:mm:ss",
             autoclose: true
+        });
+
+        $('#xdcl').on('change.select2', function (e) {
+            if ($(this).val() == "STANDARD") {
+                /**
+                 * 标准模式
+                 */
+                //下单前置不可用
+                $("#xdqz").prop("disabled", true);
+                $("#xdqz").val(["120"]).trigger("change");
+                //下单后置不可用
+                $("#xdhz").prop("disabled", true);
+                $("#xdhz").val(["0"]).trigger("change");
+                //延迟抓单不可用
+                $("#ycfz").prop("disabled", true);
+                $("#ycfz").val(["0"]).trigger("change");
+            } else if ($(this).val() == "PROMOTIONAL") {
+                /**
+                 * 大促模式
+                 */
+                //下单前置不可用
+                $("#xdqz").prop("disabled", true);
+                $("#xdqz").val(["0"]).trigger("change");
+                //下单后置不可用
+                $("#xdhz").prop("disabled", true);
+                $("#xdhz").val(["5"]).trigger("change");
+                //延迟抓单不可用
+                $("#ycfz").prop("disabled", true);
+                $("#ycfz").val(["0"]).trigger("change");
+            } else if ($(this).val() == "DEFINED") {
+                /**
+                 * 用户自定义
+                 */
+                //下单前置可用
+                $("#xdqz").prop("disabled", false);
+                //下单后置可用
+                $("#xdhz").prop("disabled", false);
+                //延迟抓单可用
+                $("#ycfz").prop("disabled", false);
+            }
         });
     </script>
 </body>

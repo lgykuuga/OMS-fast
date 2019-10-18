@@ -411,6 +411,17 @@
 				});
 				return actions.join('');
 			},
+			// 回显枚举值名称
+			selectValue: function(datas, key) {
+				var actions = [];
+				$.each(datas, function(index, config) {
+					if (config.configKey == ('' + key)) {
+						actions.push($.common.sprintf("<span class='%s'>%s</span>", "", config.configValue));
+						return false;
+					}
+				});
+				return actions.join('');
+			},
             // 显示表格指定列
             showColumn: function(column) {
             	$.btTable.bootstrapTable('showColumn', column);

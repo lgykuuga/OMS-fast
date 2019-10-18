@@ -6,6 +6,7 @@ import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 时间工具类
@@ -23,6 +24,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
+    public static String EEE_MMM_dd_HH_mm_ss = "EEE MMM dd HH:mm:ss z yyyy";
+
     private static String[] parsePatterns = {
             "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM",
             "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",
@@ -32,6 +35,21 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * 一天毫秒数
      */
     public static Long ONE_DAY = 86400000L;
+
+    /**
+     * 格林威治时间转标准时间
+     */
+    public static String toStandardTime(String dateTime) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(EEE_MMM_dd_HH_mm_ss, Locale.US);
+            Date d = sdf.parse(dateTime);
+            sdf = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+            return sdf.format(d);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return dateTime;
+        }
+    }
 
     /**
      * 获取当前Date型日期
@@ -64,7 +82,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
     public static final String dateTime(final Date date) {
-        return parseDateToStr(YYYY_MM_DD, date);
+        return parseDateToStr(YYYY_MM_DD_HH_MM_SS, date);
     }
 
     public static final String parseDateToStr(final String format, final Date date) {
@@ -78,7 +96,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             throw new RuntimeException(e);
         }
     }
-
 
 
     /**
@@ -113,6 +130,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     /**
      * 字符串转化成long时间戳
+     *
      * @param datetime
      * @return
      * @throws ParseException
@@ -127,6 +145,18 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             e.printStackTrace();
         }
         return date.getTime();
+    }
+
+    /**
+     * long时间戳转化成时间字符串
+     *
+     * @param timestamp
+     * @return
+     */
+    public static String longToString(Long timestamp) {
+        Date date = new Date(timestamp);
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
+        return formatter.format(date);
     }
 
     /**
@@ -156,5 +186,21 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
+    }
+
+    /**
+     * 时间戳转Date
+     *
+     * @param Timestamp 时间戳
+     * @return
+     */
+    public static Date getDateByTimestamp(Long Timestamp) {
+        return new Date(Timestamp);
+    }
+
+
+    public static void main(String[] args) {
+        String date = "Wed Oct 16 06:10:17 CST 2019";
+        System.out.println(toStandardTime(date));
     }
 }
