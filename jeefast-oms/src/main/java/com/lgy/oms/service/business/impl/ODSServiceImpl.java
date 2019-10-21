@@ -105,9 +105,8 @@ public class ODSServiceImpl implements IODSService {
         requestBean.setOrderCode(orderDTO.getTid());
 
         //获取退款明细
-        String getRefundDetails = (String) map.get("getRefundDetails");
         Map<String, String> extendPropsMap = new HashMap<>(1);
-        extendPropsMap.put("getRefundDetails", getRefundDetails);
+        extendPropsMap.put("getRefundDetails", "true");
         requestBean.setExtendPropsMap(extendPropsMap);
 
         //2发送请求
