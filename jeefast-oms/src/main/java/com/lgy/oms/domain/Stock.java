@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author lgy
  * @date 2019-10-18
  */
- @Data
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("oms_stock")

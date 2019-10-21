@@ -156,11 +156,12 @@ public class ODSServiceImpl implements IODSService {
 
     /**
      * 发送请求
-     * @param url     请求ODS地址
-     * @param appkey  订单接口信息接口信息
-     * @param secret  secret
-     * @param method  api方法
-     * @param obj     请求对象
+     *
+     * @param url    请求ODS地址
+     * @param appkey 订单接口信息接口信息
+     * @param secret secret
+     * @param method api方法
+     * @param obj    请求对象
      * @return
      */
     private String sendRequest(String url, String appkey, String secret, String method, Object obj) {

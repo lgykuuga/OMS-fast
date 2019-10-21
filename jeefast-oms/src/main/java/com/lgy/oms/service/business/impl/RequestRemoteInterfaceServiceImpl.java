@@ -43,12 +43,6 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
     @Autowired
     IOrderGet orderGet;
 
-    @Autowired
-    ITradeService tradeService;
-
-    @Autowired
-    IAsyncExecuteOrderService asyncExecuteOrderService;
-
     @Override
     public CommonResponse<String> getOrderListByTime(ShopInterfaces shopInterfaces, Date beginTime, Date endTime) {
         Downloadorder downloadorder = new Downloadorder();
@@ -210,6 +204,12 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         logger.info("下载订单接口:下载店铺[{}]订单耗时:[{}]ms", shopInterfaces.getShop(), (System.currentTimeMillis() - startTime));
         return new CommonResponse<String>().ok("订单请求完成，请查看详细信息");
     }
+
+    @Autowired
+    ITradeService tradeService;
+
+    @Autowired
+    IAsyncExecuteOrderService asyncExecuteOrderService;
 
     /**
      * 开始订单分类

@@ -9,6 +9,7 @@ import java.util.Map;
  * @Author LGy
  * @Date 2019/10/14
  */
+@Deprecated
 public interface IODSService {
 
     /**
@@ -17,6 +18,7 @@ public interface IODSService {
      * @param map 请求参数
      * @return
      */
+    @Deprecated
     BaseResponse getOrderList(Map<String, Object> map);
 
     /**
@@ -25,5 +27,6 @@ public interface IODSService {
      * @param map 请求参数
      * @return
      */
+    @Deprecated
     BaseResponse getOrderFullInfo(Map<String, Object> map);
 }
