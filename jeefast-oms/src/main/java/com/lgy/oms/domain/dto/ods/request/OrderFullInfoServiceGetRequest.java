@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * API接口请求参数
  *
- * @author wonderful
+ * @author admin
  */
 public class OrderFullInfoServiceGetRequest extends BaseExecuteParams {
 

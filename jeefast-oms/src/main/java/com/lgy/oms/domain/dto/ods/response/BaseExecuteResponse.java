@@ -2,7 +2,7 @@ package com.lgy.oms.domain.dto.ods.response;
 
 /**
  * API接口响应实体
- * @author wonderful
+ * @author admin
  *
  */
 public class BaseExecuteResponse {

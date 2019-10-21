@@ -3,7 +3,7 @@ package com.lgy.oms.domain.dto.ods.response.order;
 /**
  * 订单收货人信息
  *
- * @author wonderful
+ * @author admin
  */
 public class ReceiverInfoBean {
     /**

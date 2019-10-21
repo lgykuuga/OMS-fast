@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * API接口响应实体
  *
- * @author wonderful
+ * @author admin
  */
 public class OrdersSoldServiceGetResponse extends BaseExecuteResponse {
 

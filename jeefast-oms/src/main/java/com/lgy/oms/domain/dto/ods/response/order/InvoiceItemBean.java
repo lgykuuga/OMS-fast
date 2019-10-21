@@ -3,7 +3,7 @@ package com.lgy.oms.domain.dto.ods.response.order;
 /**
  * 订单发票明细信息
  *
- * @author wonderful
+ * @author admin
  */
 public class InvoiceItemBean {
     /**

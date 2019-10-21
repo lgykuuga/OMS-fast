@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 订单发票信息
  *
- * @author wonderful
+ * @author admin
  */
 public class InvoiceBean {
 

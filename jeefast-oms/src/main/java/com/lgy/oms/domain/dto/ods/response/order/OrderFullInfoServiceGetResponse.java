@@ -6,7 +6,7 @@ import com.lgy.oms.domain.dto.ods.response.BaseExecuteResponse;
 /**
  * API接口响应实体
  *
- * @author wonderful
+ * @author admin
  */
 public class OrderFullInfoServiceGetResponse extends BaseExecuteResponse {
 

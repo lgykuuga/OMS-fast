@@ -8,8 +8,8 @@ import java.util.Map;
 
 /**
  * API接口请求参数
- *
- * @author wonderful
+ * @implNote
+ * @author admin
  */
 public class BaseExecuteParams {
 
