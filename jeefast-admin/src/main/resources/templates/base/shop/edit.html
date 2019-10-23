@@ -31,7 +31,7 @@
                 <label class="col-sm-3 control-label">货主：</label>
                 <div class="col-sm-8">
                     <select name="owner" class="form-control" th:with="ownerList=${@base.selectOwner()}">
-                        <option th:each="owner : ${ownerList}" th:text="${owner.gna}" th:value="${owner.gco}"  th:field="*{owner}"></option>
+                        <option th:each="owner : ${ownerList}" th:text="${owner.configValue}" th:value="${owner.configKey}"  th:field="*{owner}"></option>
                     </select>
                 </div>
             </div>

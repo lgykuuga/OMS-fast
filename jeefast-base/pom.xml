@@ -22,6 +22,12 @@
             <artifactId>jeefast-common</artifactId>
         </dependency>
 
+        <!-- 核心模块-->
+        <dependency>
+            <groupId>com.jeefast</groupId>
+            <artifactId>jeefast-framework</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

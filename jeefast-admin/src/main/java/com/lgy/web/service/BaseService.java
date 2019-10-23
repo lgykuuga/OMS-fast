@@ -8,6 +8,7 @@ import com.lgy.base.service.IOwnerService;
 import com.lgy.base.service.IPlatformService;
 import com.lgy.base.service.IShopService;
 import com.lgy.base.service.IWarehouseService;
+import com.lgy.system.domain.vo.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class BaseService {
      * 下来框查询货主
      * @return 货主列表
      */
-    public List<Owner> selectOwner() {
+    public List<Config> selectOwner() {
         return ownerService.selectOwner();
     }
 

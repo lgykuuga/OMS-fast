@@ -27,7 +27,7 @@
                             <li>
                                 货主：<select name="owner" th:with="ownerList=${@base.selectOwner()}">
                                 <option value="">所有</option>
-                                <option th:each="owner : ${ownerList}" th:text="${owner.gna}" th:value="${owner.gco}"></option>
+                                <option th:each="owner : ${ownerList}" th:text="${owner.configValue}" th:value="${owner.configKey}"></option>
                             </select>
                             </li>
                             <li>

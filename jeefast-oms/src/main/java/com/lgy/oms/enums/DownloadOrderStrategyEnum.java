@@ -1,6 +1,6 @@
 package com.lgy.oms.enums;
 
-import com.lgy.system.domain.SysConfig;
+import com.lgy.system.domain.vo.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public enum DownloadOrderStrategyEnum {
     /**
      * 策略集合
      */
-    private static List<SysConfig> configs;
+    private static List<Config> configs;
 
     public String getValue() {
         return value;
@@ -51,11 +51,11 @@ public enum DownloadOrderStrategyEnum {
     /**
      * 获取策略状态集合
      */
-    public final static List<SysConfig> getList() {
+    public final static List<Config> getList() {
         if (configs == null) {
             configs = new ArrayList<>();
             for (DownloadOrderStrategyEnum strategyEnum : DownloadOrderStrategyEnum.values()) {
-                configs.add(new SysConfig(strategyEnum.name(), strategyEnum.getValue()));
+                configs.add(new Config(strategyEnum.name(), strategyEnum.getValue()));
             }
         }
         return configs;
