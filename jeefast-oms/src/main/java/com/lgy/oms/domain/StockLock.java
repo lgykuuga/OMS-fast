@@ -10,16 +10,16 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * 库存锁定表 oms_stocklock
+ * 库存锁定表 oms_stock_lock
  *
  * @author lgy
- * @date 2019-10-18
+ * @date 2019-10-21
  */
- @Data
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("oms_stocklock")
-public class Stocklock extends BaseEntity implements Serializable {
+@TableName("oms_stock_lock")
+public class StockLock extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
@@ -42,12 +42,15 @@ public class Stocklock extends BaseEntity implements Serializable {
     private String commodity;
 
     /** 商品行序号 */
+    @Excel(name = "商品行序号")
     private Long srid;
 
     /** 业务模块 */
+    @Excel(name = "业务模块")
     private String module;
 
     /** 数量 */
+    @Excel(name = "数量")
     private Long qty;
 
 }

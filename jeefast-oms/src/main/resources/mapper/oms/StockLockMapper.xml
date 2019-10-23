@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lgy.oms.mapper.StocklockMapper">
+<mapper namespace="com.lgy.oms.mapper.StockLockMapper">
     <!--
-    <resultMap type="Stocklock" id="StocklockResult">
+    <resultMap type="StockLock" id="StockLockResult">
         <result property="id"    column="id"    />
         <result property="warehouse"    column="warehouse"    />
         <result property="owner"    column="owner"    />

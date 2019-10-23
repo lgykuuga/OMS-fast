@@ -1,16 +1,15 @@
 package com.lgy.oms.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
-import com.lgy.oms.domain.Downloadorder;
+import com.lgy.oms.domain.DownloadOrder;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.domain.dto.OrderDTO;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
-import com.lgy.oms.service.IDownloadorderService;
+import com.lgy.oms.service.IDownloadOrderService;
 import com.lgy.oms.service.IShopInterfacesService;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.business.IAsyncExecuteOrderService;
@@ -22,7 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 订单系统请求远程服务实现
@@ -38,14 +40,14 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
     IShopInterfacesService shopInterfacesService;
 
     @Autowired
-    IDownloadorderService downloadOrderService;
+    IDownloadOrderService downloadOrderService;
 
     @Autowired
     IOrderGet orderGet;
 
     @Override
     public CommonResponse<String> getOrderListByTime(ShopInterfaces shopInterfaces, Date beginTime, Date endTime) {
-        Downloadorder downloadorder = new Downloadorder();
+        DownloadOrder downloadorder = new DownloadOrder();
         downloadorder.setBedt(beginTime);
         downloadorder.setEndt(endTime);
         //开始时间
@@ -172,7 +174,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                         queryWrapper.eq("tid", trade.getTid());
                         Trade one = tradeService.getOne(queryWrapper);
                         //更新次数+1
-                        trade.setFrequency(one.getFrequency()+1);
+                        trade.setFrequency(one.getFrequency() + 1);
                         //更新
                         boolean updateBoolean = tradeService.update(trade, queryWrapper);
                         if (updateBoolean) {
@@ -283,7 +285,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
 
         List<Trade> tradeList = new ArrayList<>(tidArray.length);
 
-        Downloadorder downloadOrder = new Downloadorder();
+        DownloadOrder downloadOrder = new DownloadOrder();
         downloadOrder.setShop(shopInterfaces.getShop());
         downloadOrder.setBedt(DateUtils.getNowDate());
         //默认成功
@@ -362,7 +364,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
     @Override
     public CommonResponse<String> getOrderDetailsByTime(ShopInterfaces shopInterfaces, Date beginTime, Date endTime) {
 
-        Downloadorder downloadorder = new Downloadorder();
+        DownloadOrder downloadorder = new DownloadOrder();
         //开始查单时间
         downloadorder.setBedt(beginTime);
         //结束查单时间
@@ -407,7 +409,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                     }
                 } else {
                     //更新次数+1
-                    trade.setFrequency(one.getFrequency()+1);
+                    trade.setFrequency(one.getFrequency() + 1);
                     boolean update = tradeService.update(trade, queryWrapper);
                     if (update) {
                         successUpdateCount++;
@@ -424,6 +426,8 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
             downloadorder.setFnum(faultSaveCount);
         } else {
             logger.info("请求店铺订单列表返回消息:[{}]", listResponse.getMsg());
+            downloadorder.setStat(Constants.FAIL);
+            downloadorder.setResp(listResponse.getMsg());
         }
         //保存订单请求信息
         downloadOrderService.save(downloadorder);

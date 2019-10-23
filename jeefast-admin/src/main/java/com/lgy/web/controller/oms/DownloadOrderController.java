@@ -12,8 +12,8 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
-import com.lgy.oms.domain.Downloadorder;
-import com.lgy.oms.service.IDownloadorderService;
+import com.lgy.oms.domain.DownloadOrder;
+import com.lgy.oms.service.IDownloadOrderService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,11 +34,11 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/oms/downloadorder")
-public class DownloadorderController extends BaseController {
+public class DownloadOrderController extends BaseController {
     private String prefix = "oms/downloadorder";
 
     @Autowired
-    private IDownloadorderService downloadOrderService;
+    private IDownloadOrderService downloadOrderService;
 
     @RequiresPermissions("oms:downloadorder:view")
     @GetMapping()
@@ -88,8 +88,8 @@ public class DownloadorderController extends BaseController {
     @RequiresPermissions("oms:downloadorder:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(Downloadorder downloadorder) {
-        QueryWrapper<Downloadorder> queryWrapper = getDownloadOrderQueryWrapper(downloadorder);
+    public TableDataInfo list(DownloadOrder downloadorder) {
+        QueryWrapper<DownloadOrder> queryWrapper = getDownloadOrderQueryWrapper(downloadorder);
         startPage();
         return getDataTable(downloadOrderService.list(queryWrapper));
     }
@@ -100,20 +100,21 @@ public class DownloadorderController extends BaseController {
     @RequiresPermissions("oms:downloadorder:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(Downloadorder downloadorder) {
-        QueryWrapper<Downloadorder> queryWrapper = getDownloadOrderQueryWrapper(downloadorder);
-        List<Downloadorder> list = downloadOrderService.list(queryWrapper);
-        ExcelUtil<Downloadorder> util = new ExcelUtil<>(Downloadorder.class);
+    public AjaxResult export(DownloadOrder downloadorder) {
+        QueryWrapper<DownloadOrder> queryWrapper = getDownloadOrderQueryWrapper(downloadorder);
+        List<DownloadOrder> list = downloadOrderService.list(queryWrapper);
+        ExcelUtil<DownloadOrder> util = new ExcelUtil<>(DownloadOrder.class);
         return util.exportExcel(list, "downloadorder");
     }
 
     /**
      * 查询条件
+     *
      * @param downloadorder
      * @return
      */
-    private QueryWrapper<Downloadorder> getDownloadOrderQueryWrapper(Downloadorder downloadorder) {
-        QueryWrapper<Downloadorder> queryWrapper = new QueryWrapper<>();
+    private QueryWrapper<DownloadOrder> getDownloadOrderQueryWrapper(DownloadOrder downloadorder) {
+        QueryWrapper<DownloadOrder> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(downloadorder.getShop())) {
             queryWrapper.eq("shop", downloadorder.getShop());
@@ -138,7 +139,7 @@ public class DownloadorderController extends BaseController {
     @RequiresPermissions("oms:downloadorder:add")
     @PostMapping("/downloadByTime")
     @ResponseBody
-    public AjaxResult downloadByTime(Downloadorder downloadorder) {
+    public AjaxResult downloadByTime(DownloadOrder downloadorder) {
         if (StringUtils.isEmpty(downloadorder.getShop())) {
             return AjaxResult.error("店铺不能为空");
         }

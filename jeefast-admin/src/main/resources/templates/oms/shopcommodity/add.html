@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增铺货关系')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-commodity-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>店铺：</label>
+                <div class="col-sm-8">
+                    <select name="shop" class="form-control" th:with="shopList=${@base.selectShop()}" required>
+                        <option value="">--请选择店铺--</option>
+                        <option th:each="shop : ${shopList}" th:text="${shop.gna}" th:value="${shop.gco}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">商品编码：</label>
+                <div class="col-sm-8">
+                    <input name="commodity" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">商品数字ID：</label>
+                <div class="col-sm-8">
+                    <input name="numIid" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">商家外部编码：</label>
+                <div class="col-sm-8">
+                    <input name="outerIid" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">平台skuID：</label>
+                <div class="col-sm-8">
+                    <input name="skuId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">外部Sku编号：</label>
+                <div class="col-sm-8">
+                    <input name="outerSkuId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/commodity"
+        $("#form-commodity-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-commodity-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

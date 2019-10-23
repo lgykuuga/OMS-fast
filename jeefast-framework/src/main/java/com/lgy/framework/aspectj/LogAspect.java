@@ -103,7 +103,6 @@ public class LogAspect {
             getControllerMethodDescription(controllerLog, operLog);
             // 保存数据库
             AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
-            log.info(operLog.toString() + "return result:" + jsonResult);
         } catch (Exception exp) {
             // 记录本地异常日志
             log.error("==前置通知异常==");

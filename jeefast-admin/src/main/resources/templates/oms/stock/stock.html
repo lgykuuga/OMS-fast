@@ -4,71 +4,70 @@
     <th:block th:include="include :: header('库存信息列表')" />
 </head>
 <body class="gray-bg">
-     <div class="container-div">
-        <div class="row">
-            <div class="col-sm-12 search-collapse">
-                <form id="formId">
-                    <div class="select-list">
-                        <ul>
-                            <li>
-                                仓库：<select name="owner" th:with="warehouseList=${@base.selectWarehouse()}">
-                                <option value="">所有</option>
-                                <option th:each="warehouse : ${warehouseList}" th:text="${warehouse.gna}" th:value="${warehouse.gco}"></option>
-                            </select>
-                            </li>
-                            <li>
-                                货主：<select name="owner" th:with="ownerList=${@base.selectOwner()}">
-                                <option value="">所有</option>
-                                <option th:each="owner : ${ownerList}" th:text="${owner.gna}" th:value="${owner.gco}"></option>
-                            </select>
-                            </li>
-                            <li>
-                                <p>商品编码：</p>
-                                <input type="text" name="commodity"/>
-                            </li>
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
-                        </ul>
-                    </div>
-                </form>
-            </div>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            仓库：<select name="owner" th:with="warehouseList=${@base.selectWarehouse()}">
+                            <option value="">所有</option>
+                            <option th:each="warehouse : ${warehouseList}" th:text="${warehouse.gna}" th:value="${warehouse.gco}"></option>
+                        </select>
+                        </li>
+                        <li>
+                            货主：<select name="owner" th:with="ownerList=${@base.selectOwner()}">
+                            <option value="">所有</option>
+                            <option th:each="owner : ${ownerList}" th:text="${owner.gna}" th:value="${owner.gco}"></option>
+                        </select>
+                        </li>
+                        <li>
+                            <p>商品编码：</p>
+                            <input type="text" name="commodity"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
 
-            <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:stock:export">
-                    <i class="fa fa-download"></i> 导出
-                 </a>
-            </div>
-            <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table" data-mobile-responsive="true"></table>
-            </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:stock:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('oms:stock:remove')}]];
-        var warehouses = [[${@base.selectWarehouse()}]];
-        var owners = [[${@base.selectOwner()}]];
-        var prefix = ctx + "oms/stock";
-
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                removeUrl: prefix + "/remove",
-                exportUrl: prefix + "/export",
-                modalName: "库存信息",
-                columns: [{
-                    checkbox: true
-                },
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('oms:stock:remove')}]];
+    var warehouses = [[${@base.selectWarehouse()}]];
+    var owners = [[${@base.selectOwner()}]];
+    var prefix = ctx + "oms/stock";
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "库存信息",
+            columns: [{
+                checkbox: true
+            },
                 {
-                    field : 'id', 
+                    field : 'id',
                     title : '主键',
                     visible: false
                 },
                 {
-                    field : 'warehouse', 
+                    field : 'warehouse',
                     title : '仓库',
                     align: 'center',
                     formatter: function(value, row, index) {
@@ -76,7 +75,7 @@
                     }
                 },
                 {
-                    field : 'owner', 
+                    field : 'owner',
                     title : '货主',
                     align: 'center',
                     formatter: function(value, row, index) {
@@ -84,17 +83,17 @@
                     }
                 },
                 {
-                    field : 'commodity', 
+                    field : 'commodity',
                     title : '商品编码'
                 },
                 {
-                    field : 'qty', 
+                    field : 'qty',
                     title : '数量',
                     align: 'center',
                     width : 50
                 },
                 {
-                    field : 'remark', 
+                    field : 'remark',
                     title : '备注',
                 },
                 {
@@ -106,10 +105,10 @@
                         return actions.join('');
                     }
                 }
-                ]
-            };
-            $.table.init(options);
-        });
-    </script>
+            ]
+        };
+        $.table.init(options);
+    });
+</script>
 </body>
 </html>

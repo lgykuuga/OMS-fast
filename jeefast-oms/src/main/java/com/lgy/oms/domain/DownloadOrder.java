@@ -19,8 +19,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("oms_downloadorder")
-public class Downloadorder extends BaseEntity implements Serializable {
+@TableName("oms_download_order")
+public class DownloadOrder extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */

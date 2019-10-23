@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改铺货关系')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-commodity-edit" th:object="${shopCommodity}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>店铺：</label>
+                <div class="col-sm-8">
+                    <select name="shop" class="form-control" readonly="true" th:with="shopList=${@base.selectShop()}" required>
+                        <option th:each="shop : ${shopList}" th:field="*{shop}"  th:text="${shop.gna}" th:value="${shop.gco}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">店铺编码：</label>
+                <div class="col-sm-8">
+                    <input name="shop" th:field="*{shop}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">货主：</label>
+                <div class="col-sm-8">
+                    <input name="owner" th:field="*{owner}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">商品编码：</label>
+                <div class="col-sm-8">
+                    <input name="commodity" th:field="*{commodity}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">商品数字ID：</label>
+                <div class="col-sm-8">
+                    <input name="numIid" th:field="*{numIid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">商家外部编码：</label>
+                <div class="col-sm-8">
+                    <input name="outerIid" th:field="*{outerIid}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">平台skuID：</label>
+                <div class="col-sm-8">
+                    <input name="skuId" th:field="*{skuId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">外部Sku编号：</label>
+                <div class="col-sm-8">
+                    <input name="outerSkuId" th:field="*{outerSkuId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:field="*{status}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/commodity";
+        $("#form-commodity-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-commodity-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

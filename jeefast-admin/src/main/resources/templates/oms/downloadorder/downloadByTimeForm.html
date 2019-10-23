@@ -25,8 +25,8 @@
                 <div class="col-sm-8">
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="bedt" class="form-control" id="laydate-demo-3"
-                               placeholder="yyyy-mm-dd HH:mm:ss" type="text" required>
+                        <input type="datetime" class="form-control time-input" data-type="day" name="bedt" id="bedt"
+                               th:value="*{#dates.format({bedt}, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择时间" required>
                     </div>
                 </div>
             </div>
@@ -36,8 +36,8 @@
                 <div class="col-sm-8">
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="endt" class="form-control" id="laydate-demo-4"
-                               placeholder="yyyy-mm-dd HH:mm:ss" type="text"  required>
+                        <input type="datetime" class="form-control time-input" data-type="day" name="endt" id="endt"
+                               th:value="*{#dates.format({endt}, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择时间" required>
                     </div>
                 </div>
             </div>

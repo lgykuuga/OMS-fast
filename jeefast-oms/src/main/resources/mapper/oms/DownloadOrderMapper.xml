@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lgy.oms.mapper.DownloadorderMapper">
+<mapper namespace="com.lgy.oms.mapper.DownloadOrderMapper">
     <!--
-    <resultMap type="Downloadorder" id="DownloadorderResult">
+    <resultMap type="DownloadOrder" id="DownloadOrderResult">
         <result property="id"    column="id"    />
         <result property="shop"    column="shop"    />
         <result property="bedt"    column="bedt"    />

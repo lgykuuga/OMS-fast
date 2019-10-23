@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('商品档案列表')" />
+    <th:block th:include="include :: header('铺货关系列表')" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -11,21 +11,25 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <p>商品编码：</p>
-                                <input type="text" name="gco"/>
-                            </li>
-                            <li>
-                                <p>商品名称：</p>
-                                <input type="text" name="gna"/>
-                            </li>
-                            <li>
-                                货主：<select name="owner" th:with="ownerList=${@base.selectOwner()}">
+                                店铺：<select name="shop" th:with="shopList=${@base.selectShop()}">
                                 <option value="">所有</option>
-                                <option th:each="owner : ${ownerList}" th:text="${owner.gna}" th:value="${owner.gco}"></option>
+                                <option th:each="shop : ${shopList}" th:text="${shop.gna}" th:value="${shop.gco}"></option>
                             </select>
                             </li>
                             <li>
-                                状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
+                                <p>商品编码：</p>
+                                <input type="text" name="commodity"/>
+                            </li>
+                            <li>
+                                <p>商品数字ID：</p>
+                                <input type="text" name="numIid"/>
+                            </li>
+                            <li>
+                                <p>平台skuID：</p>
+                                <input type="text" name="skuId"/>
+                            </li>
+                            <li>
+                                状态：<select name="stat" th:with="type=${@dict.getType('sys_common_status')}">
                                 <option value="">所有</option>
                                 <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
                             </select>
@@ -40,19 +44,19 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="base:commodity:add">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:commodity:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="base:commodity:edit">
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:commodity:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="base:commodity:remove">
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:commodity:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
                 <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:commodity:import">
                     <i class="fa fa-upload"></i> 导入
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="base:commodity:export">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:commodity:export">
                     <i class="fa fa-download"></i> 导出
                  </a>
             </div>
@@ -61,12 +65,14 @@
             </div>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
+
+
+     <th:block th:include="include :: footer" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('base:commodity:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('base:commodity:remove')}]];
+        var editFlag = [[${@permission.hasPermi('oms:commodity:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:commodity:remove')}]];
+        var prefix = ctx + "oms/commodity";
         var datas = [[${@dict.getType('sys_normal_disable')}]];
-        var prefix = ctx + "base/commodity";
 
         $(function() {
             var options = {
@@ -77,31 +83,39 @@
                 exportUrl: prefix + "/export",
                 importUrl: prefix + "/importData",
                 importTemplateUrl: prefix + "/importTemplate",
-                modalName: "商品档案",
+                modalName: "铺货关系",
                 columns: [{
                     checkbox: true
                 },
                 {
                     field : 'id', 
-                    title : '主键',
+                    title : 'id',
                     visible: false
                 },
                 {
-                    field : 'gco', 
+                    field : 'shop', 
+                    title : '店铺',
+                    width: 100
+                },
+                {
+                    field : 'commodity', 
                     title : '商品编码'
                 },
                 {
-                    field : 'gna', 
-                    title : '商品名称'
+                    field : 'numIid', 
+                    title : '商品数字ID'
                 },
                 {
-                    field : 'owner',
-                    title : '货主',
-                    align: 'center',
+                    field : 'outerIid', 
+                    title : '商家外部编码'
                 },
                 {
-                    field : 'remark',
-                    title : '备注'
+                    field : 'skuId', 
+                    title : '平台skuID'
+                },
+                {
+                    field : 'outerSkuId', 
+                    title : '外部Sku编号'
                 },
                 {
                     field: 'status',
@@ -110,6 +124,10 @@
                     formatter: function(value, row, index) {
                         return $.table.selectDictLabel(datas, value);
                     }
+                },
+                {
+                    field : 'remark', 
+                    title : '备注'
                 },
                 ]
             };
@@ -124,7 +142,7 @@
         <div class="col-xs-offset-1">
             <input type="file" id="file" name="file"/>
             <div class="mt10 pt5">
-                <input type="checkbox" id="updateSupport" name="updateSupport" title="已经存在的商品数据更新这条数据。"> 是否更新已经存在的商品数据
+                <input type="checkbox" id="updateSupport" name="updateSupport" title="已经存在的铺货关系数据更新这条数据。"> 是否更新已经存在的铺货关系数据
                 &nbsp;	<a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> 下载模板</a>
             </div>
             <font color="red" class="pull-left mt10">
@@ -133,4 +151,5 @@
         </div>
     </form>
 </script>
+
 </html>

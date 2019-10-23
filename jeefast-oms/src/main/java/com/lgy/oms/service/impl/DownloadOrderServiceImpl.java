@@ -4,34 +4,30 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.common.utils.DateUtils;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.domain.Downloadorder;
+import com.lgy.oms.domain.DownloadOrder;
 import com.lgy.oms.domain.ShopInterfaces;
-import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.DownloadOrderInterfaceEnum;
-import com.lgy.oms.mapper.DownloadorderMapper;
-import com.lgy.oms.service.IDownloadorderService;
+import com.lgy.oms.mapper.DownloadOrderMapper;
+import com.lgy.oms.service.IDownloadOrderService;
 import com.lgy.oms.service.IShopInterfacesService;
-import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.business.IRequestRemoteInterfaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import javax.annotation.Resource;
 
 /**
  * 下载订单 服务层实现
  *
  * @author lgy
- * @date 2019-10-14
+ * @date 201-10-14
  */
 @Service
-public class DownloadorderServiceImpl extends ServiceImpl<DownloadorderMapper, Downloadorder> implements IDownloadorderService {
+public class DownloadOrderServiceImpl extends ServiceImpl<DownloadOrderMapper, DownloadOrder> implements IDownloadOrderService {
 
-    @Autowired
-    DownloadorderMapper downloadOrdrMapper;
+    @Resource
+    DownloadOrderMapper downloadOrderMapper;
 
     @Autowired
     IShopInterfacesService shopInterfacesService;
@@ -40,7 +36,7 @@ public class DownloadorderServiceImpl extends ServiceImpl<DownloadorderMapper, D
     IRequestRemoteInterfaceService requestRemoteInterfaceService;
 
     @Override
-    public CommonResponse<String> downloadByTime(Downloadorder downloadorder) {
+    public CommonResponse<String> downloadByTime(DownloadOrder downloadorder) {
         //获取店铺接口设置
         QueryWrapper<ShopInterfaces> wrapper = new QueryWrapper<>();
         wrapper.eq("shop", downloadorder.getShop());
@@ -97,6 +93,6 @@ public class DownloadorderServiceImpl extends ServiceImpl<DownloadorderMapper, D
 
     @Override
     public void cleanDownloadLog() {
-        downloadOrdrMapper.cleanDownloadLog();
+        downloadOrderMapper.cleanDownloadLog();
     }
 }

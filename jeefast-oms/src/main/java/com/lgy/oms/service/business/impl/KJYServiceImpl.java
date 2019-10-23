@@ -96,7 +96,7 @@ public class KJYServiceImpl implements IKJYService {
             return new CommonResponse<List<Trade>>().ok(tradeList);
         }
 
-        return new CommonResponse<List<Trade>>().error(Constants.FAIL, "请求订单失败");
+        return new CommonResponse<List<Trade>>().error(Constants.FAIL, "请求订单明细为空");
 
     }
 

@@ -31,8 +31,8 @@ server:
 # 日志配置
 logging:
   level:
-    com.jeefast: info
-    org.springframework: warn
+    com.lgy: info
+    org.springframework: warning
 
 # 用户配置
 user:
