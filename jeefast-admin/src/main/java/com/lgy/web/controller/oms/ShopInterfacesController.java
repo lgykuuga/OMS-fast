@@ -102,6 +102,8 @@ public class ShopInterfacesController extends BaseController {
         model.addAttribute("strategyList", DownloadOrderStrategyEnum.getList());
         //下单订单接口
         model.addAttribute("interfaceList", DownloadOrderInterfaceEnum.getList());
+        //下单订单Json
+        model.addAttribute("interfaceJson", DownloadOrderInterfaceEnum.toJson());
         return prefix + "/add";
     }
 

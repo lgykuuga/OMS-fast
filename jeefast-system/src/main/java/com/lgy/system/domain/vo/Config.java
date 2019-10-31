@@ -37,4 +37,5 @@ public class Config {
     public void setConfigValue(String configValue) {
         this.configValue = configValue;
     }
+
 }
