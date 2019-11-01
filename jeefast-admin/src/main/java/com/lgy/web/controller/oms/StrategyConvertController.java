@@ -9,10 +9,14 @@ import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
+import com.lgy.oms.enums.ConvertTriggerNodeEnum;
+import com.lgy.oms.enums.DownloadOrderInterfaceEnum;
+import com.lgy.oms.enums.DownloadOrderStrategyEnum;
 import com.lgy.oms.service.IStrategyConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +38,10 @@ public class StrategyConvertController extends BaseController {
 
     @RequiresPermissions("oms:convert:view")
     @GetMapping()
-    public String convert() {
+    public String convert(Model model) {
+        //转单触发节点Json
+        model.addAttribute("convertTriggerNodeJson", ConvertTriggerNodeEnum.toJson());
+        model.addAttribute("convertTriggerNodeList", ConvertTriggerNodeEnum.getList());
         return prefix + "/convert";
     }
 

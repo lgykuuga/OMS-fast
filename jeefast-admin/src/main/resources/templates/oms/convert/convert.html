@@ -42,28 +42,33 @@
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <!-- table -->
-
                 <table id="bootstrap-table" data-mobile-responsive="true"></table>
 
                 <div class="row">
+                    <!-- 店铺 -->
                     <div class="col-sm-3">
                         <div class="col-sm-12 select-table table-striped">
                             <table id="bootstrap-table2" data-mobile-responsive="true"></table>
                         </div>
                     </div>
+                    <!-- 策略 -->
                     <div class="col-sm-9">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
-                                <h5>简单示例</h5>
+                                <h5>转单策略</h5>
                             </div>
                             <div class="ibox-content">
                                 <form class="form-horizontal m-t" id="commentForm">
+
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">姓名：</label>
+                                        <label class="col-sm-3 control-label">转单触发节点：</label>
                                         <div class="col-sm-8">
-                                            <input id="cname" name="name" minlength="2" type="text" class="form-control" required>
+                                            <select name="xdcl" class="form-control" id="xdcl">
+                                                <option th:each="convertTriggerNode : ${convertTriggerNodeList}" th:text="${convertTriggerNode.configValue}" th:value="${convertTriggerNode.configKey}"></option>
+                                            </select>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">E-mail：</label>
                                         <div class="col-sm-8">
@@ -92,22 +97,16 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
-
-
         </div>
-
-
-
     </div>
 
 
 
     <th:block th:include="include :: footer" />
      <th:block th:include="include :: bootstrap-duallistbox-js" />
+     <th:block th:include="include :: bootstrap-suggest-js" />
+     <th:block th:include="include :: bootstrap-typeahead-js" />
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('oms:convert:edit')}]];
         var removeFlag = [[${@permission.hasPermi('oms:convert:remove')}]];
@@ -160,22 +159,6 @@
             };
             $.table.init(options);
         });
-
-        $('.dual_select').bootstrapDualListbox({
-            nonSelectedListLabel: '未加入策略店铺',
-            selectedListLabel: '加入策略店铺',
-            preserveSelectionOnMove: 'moved',
-            moveOnSelect: false,           // 出现一个剪头，表示可以一次选择一个
-            filterTextClear: '展示所有',
-            moveSelectedLabel: "添加",
-            moveAllLabel: '添加所有',
-            removeSelectedLabel: "移除",
-            removeAllLabel: '移除所有',
-            infoText: '共{0}个',
-            showFilterInputs: false,       // 是否带搜索
-            selectorMinimalHeight: 160
-        });
-
 
         $(function() {
             var options = {
