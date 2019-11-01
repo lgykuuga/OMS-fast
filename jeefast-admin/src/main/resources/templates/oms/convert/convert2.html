@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('转单策略列表')" />
+    <th:block th:include="include :: bootstrap-duallistbox-css" />
+</head>
+<body class="gray-bg">
+
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>策略编码：</p>
+                                <input type="text" name="gco"/>
+                            </li>
+                            <li>
+                                <p>策略名称：</p>
+                                <input type="text" name="gna"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:convert:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:convert:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:convert:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <!-- table -->
+
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+
+                <!-- dualListBox -->
+                <div class="row m-b-lg">
+                    <div class="col-sm-12" >
+                        <div class="tabs-container" >
+
+                            <div class="tabs-left">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#tab-8"> 适用店铺</a>
+                                    </li>
+                                    <li class=""><a data-toggle="tab" href="#tab-9"> 策略</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content ">
+                                    <div id="tab-8" class="tab-pane active">
+                                        <div class="panel-body">
+                                            <div class="wrapper wrapper-content animated fadeInRight">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="ibox">
+                                                            <div class="ibox-title">
+                                                                <h5>双重列表框 <small>https://github.com/istvan-ujjmeszaros/bootstrap-duallistbox</small></h5>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <p>
+                                                                    转换店铺
+                                                                </p>
+
+                                                                <form id="form" action="#" class="wizard-big">
+                                                                    <select class="form-control dual_select" multiple>
+                                                                        <option value="1">店铺1</option>
+                                                                        <option value="2">店铺2</option>
+                                                                        <option value="3">店铺3</option>
+                                                                        <option selected value="4">店铺4</option>
+                                                                        <option selected value="5">店铺5</option>
+                                                                        <option value="6">店铺6</option>
+                                                                        <option value="7">店铺7</option>
+                                                                        <option value="8">店铺8</option>
+                                                                        <option value="9">店铺9</option>
+                                                                        <option value="10">店铺10</option>
+                                                                        <option value="11">店铺11</option>
+                                                                        <option value="12">店铺12</option>
+                                                                    </select>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <p>Bootstrap 排版、链接样式设置了基本的全局样式。分别是： 为 body 元素设置 background-color: #fff; 使用 @font-family-base、@font-size-base 和 @line-height-base a变量作为排版的基本参数 为所有链接设置了基本颜色 @link-color ，并且当链接处于 :hover 状态时才添加下划线 这些样式都能在 scaffolding.less 文件中找到对应的源码。</p>
+                                        </div>
+                                    </div>
+                                    <div id="tab-9" class="tab-pane">
+                                        <div class="panel-body">
+                                            <div class="btn-group-sm" id="toolbar" role="group">
+                                                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:convert:add">
+                                                    <i class="fa fa-plus"></i> 添加
+                                                </a>
+                                                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:convert:edit">
+                                                    <i class="fa fa-edit"></i> 修改
+                                                </a>
+                                                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:convert:remove">
+                                                    <i class="fa fa-remove"></i> 删除
+                                                </a>
+                                            </div>
+                                            <strong>栅格系统</strong>
+
+                                            <p>Bootstrap 提供了一套响应式、移动设备优先的流式栅格系统，随着屏幕或视口（viewport）尺寸的增加，系统会自动分为最多12列。它包含了易于使用的预定义类，还有强大的mixin 用于生成更具语义的布局。</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: bootstrap-duallistbox-js" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('oms:convert:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:convert:remove')}]];
+        var prefix = ctx + "oms/convert";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "转单策略",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'id',
+                    visible: false
+                },
+                {
+                    field : 'gco', 
+                    title : '策略编码'
+                },
+                {
+                    field : 'gna', 
+                    title : '策略名称'
+                },
+                {
+                    field : 'owner', 
+                    title : '货主'
+                },
+                {
+                    field : 'remark', 
+                    title : '备注'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }
+                ]
+            };
+            $.table.init(options);
+        });
+
+        $('.dual_select').bootstrapDualListbox({
+            nonSelectedListLabel: '未加入策略店铺',
+            selectedListLabel: '加入策略店铺',
+            preserveSelectionOnMove: 'moved',
+            moveOnSelect: false,           // 出现一个剪头，表示可以一次选择一个
+            filterTextClear: '展示所有',
+            moveSelectedLabel: "添加",
+            moveAllLabel: '添加所有',
+            removeSelectedLabel: "移除",
+            removeAllLabel: '移除所有',
+            infoText: '共{0}个',
+            showFilterInputs: false,       // 是否带搜索
+            selectorMinimalHeight: 160
+        });
+
+    </script>
+</body>
+</html>

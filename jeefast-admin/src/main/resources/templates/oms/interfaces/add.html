@@ -3,9 +3,7 @@
 <head>
     <th:block th:include="include :: header('新增店铺接口设置')" />
     <th:block th:include="include :: datetimepicker-css" />
-    <th:block th:include="include :: datetimepicker-js" />
     <th:block th:include="include :: select2-css" />
-    <th:block th:include="include :: select2-js" />
     <link href="/ajax/libs/datapicker/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 </head>
 <body class="white-bg">
@@ -226,8 +224,11 @@
             </div>
         </form>
     </div>
+
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: select2-js" />
+    <th:block th:include="include :: bootstrap-select-js" />
     <script type="text/javascript">
 
         var prefix = ctx + "oms/interfaces"

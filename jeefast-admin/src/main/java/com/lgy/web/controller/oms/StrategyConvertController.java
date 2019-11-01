@@ -7,7 +7,7 @@ import com.lgy.common.core.domain.AjaxResult;
 import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
-import com.lgy.common.utils.poi.ExcelUtil;
+import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.service.IStrategyConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -17,7 +17,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * 转单策略Controller
@@ -46,34 +45,20 @@ public class StrategyConvertController extends BaseController {
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(StrategyConvert strategyConvert) {
-        QueryWrapper<StrategyConvert> queryWrapper = new QueryWrapper<>();
-        // 需要根据页面查询条件进行组装
-    	/*if(StringUtils.isNotEmpty(sysDemo.getLoginName())) {
-    		queryWrapper.like("login_name", sysDemo.getLoginName());
-    	} 
-    	if(StringUtils.isNotEmpty(sysDemo.getUserName())) {
-    		queryWrapper.like("user_name", sysDemo.getUserName());
-    	}*/
-        // 特殊查询时条件需要进行单独组装
-		/*Map<String, Object> params = sysDemo.getParams();
-		if (StringUtils.isNotEmpty(params)) {
-			queryWrapper.ge(StringUtils.isNotEmpty((String)params.get("beginTime")), "create_time", params.get("beginTime"));
-			queryWrapper.le(StringUtils.isNotEmpty((String)params.get("endTime")), "create_time", params.get("endTime"));
-		}*/
+        QueryWrapper<StrategyConvert> queryWrapper = getStrategyConvertQueryWrapper(strategyConvert);
         startPage();
         return getDataTable(strategyConvertService.list(queryWrapper));
     }
 
-    /**
-     * 导出转单策略列表
-     */
-    @RequiresPermissions("oms:convert:export")
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(StrategyConvert strategyConvert) {
-        List<StrategyConvert> list = strategyConvertService.list(new QueryWrapper<>());
-        ExcelUtil<StrategyConvert> util = new ExcelUtil<StrategyConvert>(StrategyConvert.class);
-        return util.exportExcel(list, "convert");
+    private QueryWrapper<StrategyConvert> getStrategyConvertQueryWrapper(StrategyConvert strategyConvert) {
+        QueryWrapper<StrategyConvert> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(strategyConvert.getGco())) {
+            queryWrapper.eq("gco", strategyConvert.getGco());
+        }
+        if (StringUtils.isNotEmpty(strategyConvert.getGna())) {
+            queryWrapper.like("gna", strategyConvert.getGna());
+        }
+        return queryWrapper;
     }
 
     /**
