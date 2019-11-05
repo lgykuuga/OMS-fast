@@ -63,6 +63,12 @@ public class KJYServiceImpl implements IKJYService {
                     bedt, endt, page, size);
 
             KJYOrderResponse response = dataObject.toJavaObject(KJYOrderResponse.class);
+
+            if (response.ERROR_CODE.equals(response.getState())) {
+                return new CommonResponse<List<Trade>>().error(Constants.FAIL,
+                        "调用跨境翼接口返回:" + response.getMsg());
+            }
+
             //跨境翼返回对象
             List<Trades> kjyTrades = response.getTrades();
 

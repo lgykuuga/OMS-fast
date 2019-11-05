@@ -52,7 +52,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         downloadorder.setEndt(endTime);
         //开始时间
         long startTime = System.currentTimeMillis();
-        logger.info("根据时间段下载订单:" + downloadorder.toString());
+        logger.debug("根据时间段下载订单:" + downloadorder.toString());
         //默认成功
         downloadorder.setStat(Constants.SUCCESS);
         //执行时间
@@ -65,19 +65,19 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         downloadorder.setUnum(0);
         //记录失败下载保存的订单数量
         downloadorder.setFnum(0);
-        logger.info("开始调用订单列表接口获取订单列表");
+        logger.debug("开始调用订单列表接口获取订单列表");
         //开始时间
         long startOrderListDownload = System.currentTimeMillis();
         //获取订单列表
         CommonResponse<List<OrderDTO>> listResponse = orderGet.orderListDownload(shopInterfaces, beginTime, endTime);
-        logger.info("下载订单接口:(1)完成调用订单列表接口获取订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startOrderListDownload));
+        logger.debug("下载订单接口:(1)完成调用订单列表接口获取订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startOrderListDownload));
         if (Constants.SUCCESS.equals(listResponse.getCode())) {
             List<OrderDTO> orderList = listResponse.getData();
 
             if (orderList != null && orderList.size() > 0) {
                 //记录总订单量
                 downloadorder.setOnum(orderList.size());
-                logger.info("开始根据时间段分类需要处理的订单信息");
+                logger.debug("开始根据时间段分类需要处理的订单信息");
                 //开始分类处理时间
                 long startGetOrderListByTime = System.currentTimeMillis();
                 //定义需要下载保存的订单列表
@@ -87,7 +87,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
 
                 //开始订单分类处理
                 classifiedOrders(orderList, saveList, updateList);
-                logger.info("下载订单接口:(2)完成根据时间段分类需要处理的订单信息,耗时:[{}]ms", (System.currentTimeMillis() - startGetOrderListByTime));
+                logger.debug("下载订单接口:(2)完成根据时间段分类需要处理的订单信息,耗时:[{}]ms", (System.currentTimeMillis() - startGetOrderListByTime));
                 //成功下载保存的订单数量
                 int successSaveCount = 0;
                 //失败下载保存的订单数量
@@ -102,7 +102,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                             long startSave = System.currentTimeMillis();
                             //下载单笔订单详情
                             CommonResponse<Trade> tradeResponse = orderGet.orderFullInfoDownLoad(shopInterfaces, order);
-                            logger.info("完成调用订单[{}]详细信息接口(保存订单),耗时:[{}]ms", order.getTid(), (System.currentTimeMillis() - startSave));
+                            logger.debug("完成调用订单[{}]详细信息接口(保存订单),耗时:[{}]ms", order.getTid(), (System.currentTimeMillis() - startSave));
                             if (Constants.SUCCESS.equals(tradeResponse.getCode())) {
                                 Trade trade = tradeResponse.getData();
 
@@ -127,7 +127,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                             sbMsg.append(order.getTid()).append("下载或保存失败;");
                         }
                     }
-                    logger.info("下载订单接口:(3)完成保存订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startSaveOrderList));
+                    logger.debug("下载订单接口:(3)完成保存订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startSaveOrderList));
                     //记录成功下载保存的订单数量
                     downloadorder.setSnum(successSaveCount);
                     //记录失败下载保存的订单数量
@@ -138,17 +138,17 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                 if (updateList.size() > 0) {
                     //需要更新订单列表
                     List<Trade> updateTradeList = new ArrayList<>();
-                    logger.info("开始更新订单列表");
+                    logger.debug("开始更新订单列表");
 
                     long startUpdate = System.currentTimeMillis();
                     for (OrderDTO order : updateList) {
                         try {
-                            logger.info("开始调用订单[{}]详情接口", order.getTid());
+                            logger.debug("开始调用订单[{}]详情接口", order.getTid());
                             //开始获取订单
                             long startGetOrder = System.currentTimeMillis();
                             //下载单笔订单详情
                             CommonResponse<Trade> tradeResponse = orderGet.orderFullInfoDownLoad(shopInterfaces, order);
-                            logger.info("下载订单接口:完成调用订单[{}]详情接口,耗时:[{}]ms", order.getTid(), (System.currentTimeMillis() - startGetOrder));
+                            logger.debug("下载订单接口:完成调用订单[{}]详情接口,耗时:[{}]ms", order.getTid(), (System.currentTimeMillis() - startGetOrder));
                             if (Constants.SUCCESS.equals(tradeResponse.getCode())) {
                                 Trade trade = tradeResponse.getData();
                                 updateTradeList.add(trade);
@@ -179,7 +179,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                         boolean updateBoolean = tradeService.update(trade, queryWrapper);
                         if (updateBoolean) {
                             updateCount++;
-                            logger.info("订单[{}]检测到平台状态为[{}],更新订单", trade.getTid(), trade.getStatus());
+                            logger.debug("订单[{}]检测到平台状态为[{}],更新订单", trade.getTid(), trade.getStatus());
                         } else {
                             logger.error("订单[{}]检测到平台状态为[{}],更新订单失败", trade.getTid(), trade.getStatus());
                             faultSaveCount++;
@@ -189,9 +189,9 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
 
                     //订单更新数量
                     downloadorder.setUnum(updateCount);
-                    logger.info("下载订单接口:(4)完成更新订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startUpdate));
+                    logger.debug("下载订单接口:(4)完成更新订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startUpdate));
                 } else {
-                    logger.info("请求成功， 没有需要更新的订单");
+                    logger.debug("请求成功， 没有需要更新的订单");
                 }
             } else {
                 downloadorder.setStat(Constants.FAIL);
@@ -199,11 +199,11 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                 downloadorder.setResp(listResponse.getMsg());
             }
         } else {
-            logger.info("请求店铺订单列表返回消息:[{}]", listResponse.getMsg());
+            logger.debug("请求店铺订单列表返回消息:[{}]", listResponse.getMsg());
         }
         //保存订单请求信息
         downloadOrderService.save(downloadorder);
-        logger.info("下载订单接口:下载店铺[{}]订单耗时:[{}]ms", shopInterfaces.getShop(), (System.currentTimeMillis() - startTime));
+        logger.debug("下载订单接口:下载店铺[{}]订单耗时:[{}]ms", shopInterfaces.getShop(), (System.currentTimeMillis() - startTime));
         return new CommonResponse<String>().ok("订单请求完成，请查看详细信息");
     }
 
@@ -234,29 +234,29 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                 //等待卖家发货之前调用下载订单接口
                 if (trade != null) {
                     if (orderDTO.getPlatformModified().getTime() > trade.getModified().getTime()) {
-                        logger.info("订单[{}]状态为[{}],订单平台系统更新时间大于系统平台更新时间,下载订单详情",
+                        logger.debug("订单[{}]状态为[{}],订单平台系统更新时间大于系统平台更新时间,下载订单详情",
                                 orderDTO.getTid(), orderDTO.getPlatformState());
                         updateList.add(orderDTO);
                     } else {
-                        logger.info("订单[{}]状态为[{}],订单平台系统更新时间不大于系统平台更新时间,不下载订单详情",
+                        logger.debug("订单[{}]状态为[{}],订单平台系统更新时间不大于系统平台更新时间,不下载订单详情",
                                 orderDTO.getTid(), orderDTO.getPlatformState());
                     }
                 } else {
-                    logger.info("订单[{}]状态为[{}],下载订单详情",
+                    logger.debug("订单[{}]状态为[{}],下载订单详情",
                             orderDTO.getTid(), orderDTO.getPlatformState());
                     saveList.add(orderDTO);
                 }
             } else if (orderDTO.getPlatformState() <= PlatformOrderStatusEnum.TRADE_FINISHED.getValue()) {
                 //卖家已发货到交易成功前
                 if (trade != null) {
-                    logger.info("订单[{}]状态为[{}],不下载该订单详情,只更新系统存在订单的平台状态", orderDTO.getTid(), orderDTO.getPlatformState());
+                    logger.debug("订单[{}]状态为[{}],不下载该订单详情,只更新系统存在订单的平台状态", orderDTO.getTid(), orderDTO.getPlatformState());
                     onlyUpdateList.add(orderDTO);
                 } else {
-                    logger.info("订单[{}]状态为[{}],系统不存在该订单,下载该订单", orderDTO.getTid(), orderDTO.getPlatformState());
+                    logger.debug("订单[{}]状态为[{}],系统不存在该订单,下载该订单", orderDTO.getTid(), orderDTO.getPlatformState());
                     saveList.add(orderDTO);
                 }
             } else if (orderDTO.getPlatformState() == PlatformOrderStatusEnum.TRADE_CLOSED.getValue()) {
-                logger.info("订单[{}]状态为[{}],不下载该订单并尝试取消/冻结该订单", orderDTO.getTid(), PlatformOrderStatusEnum.TRADE_CLOSED.name());
+                logger.debug("订单[{}]状态为[{}],不下载该订单并尝试取消/冻结该订单", orderDTO.getTid(), PlatformOrderStatusEnum.TRADE_CLOSED.name());
                 if (trade != null) {
                     //查询存在订单,如果存在,则取消订单
                     cancelList.add(orderDTO);
@@ -264,7 +264,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                     saveList.add(orderDTO);
                 }
             } else {
-                logger.info("订单[{}]状态[{}]未定义,不下载该订单", orderDTO.getTid(), orderDTO.getPlatformState());
+                logger.debug("订单[{}]状态[{}]未定义,不下载该订单", orderDTO.getTid(), orderDTO.getPlatformState());
             }
         }
 
@@ -329,18 +329,18 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         }
 
         if (tradeList.size() == 0) {
-            logger.info("没有下载到订单！");
+            logger.debug("没有下载到订单！");
             return new CommonResponse<String>().error(Constants.FAIL, "没有下载到订单！");
         } else {
             //调用接口进行数据持久化
             for (Trade trade : tradeList) {
                 boolean b = tradeService.save(trade);
                 if (b) {
-                    logger.info("订单保存成功！");
+                    logger.debug("订单保存成功！");
                     sbMsg.append("订单保存成功！");
                     sucNum++;
                 } else {
-                    logger.info("订单[{}]保存失败", trade.getTid());
+                    logger.debug("订单[{}]保存失败", trade.getTid());
                     sbMsg.append("订单保存失败:").append(trade.getTid());
                     msg.append(trade.getTid()).append("保存失败;");
                     faiNum++;
@@ -371,7 +371,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         downloadorder.setEndt(endTime);
         //任务开始时间
         long startTime = System.currentTimeMillis();
-        logger.info("根据时间段下载订单:" + downloadorder.toString());
+        logger.debug("根据时间段下载订单:" + downloadorder.toString());
 
         //执行时间
         downloadorder.setDodt(DateUtils.getNowDate());
@@ -380,12 +380,12 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
 
         //默认成功
         downloadorder.setStat(Constants.SUCCESS);
-        logger.info("开始调用订单列表接口获取订单列表");
+        logger.debug("开始调用订单列表接口获取订单列表");
         //开始时间
         long startOrderListDownload = System.currentTimeMillis();
         //获取订单列表
         CommonResponse<List<Trade>> listResponse = orderGet.orderFullInfoListDownload(shopInterfaces, beginTime, endTime);
-        logger.info("下载订单接口:完成调用订单列表接口获取订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startOrderListDownload));
+        logger.debug("下载订单接口:完成调用订单列表接口获取订单列表,耗时:[{}]ms", (System.currentTimeMillis() - startOrderListDownload));
         if (Constants.SUCCESS.equals(listResponse.getCode())) {
             List<Trade> data = listResponse.getData();
             //记录总订单量
@@ -425,14 +425,14 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
             //记录失败下载保存的订单数量
             downloadorder.setFnum(faultSaveCount);
         } else {
-            logger.info("请求店铺订单列表返回消息:[{}]", listResponse.getMsg());
+            logger.debug("请求店铺订单列表返回消息:[{}]", listResponse.getMsg());
             downloadorder.setStat(Constants.FAIL);
             downloadorder.setResp(listResponse.getMsg());
         }
         //保存订单请求信息
         downloadOrderService.save(downloadorder);
-        logger.info("下载订单接口:下载店铺[{}]订单耗时:[{}]ms", shopInterfaces.getShop(), (System.currentTimeMillis() - startTime));
-        return new CommonResponse<String>().ok("订单请求完成，请查看详细信息");
+        logger.debug("下载订单接口:下载店铺[{}]订单耗时:[{}]ms", shopInterfaces.getShop(), (System.currentTimeMillis() - startTime));
+        return new CommonResponse<String>(listResponse.getCode(), listResponse.getMsg(), null);
     }
 
     @Override

@@ -10,8 +10,6 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.enums.ConvertTriggerNodeEnum;
-import com.lgy.oms.enums.DownloadOrderInterfaceEnum;
-import com.lgy.oms.enums.DownloadOrderStrategyEnum;
 import com.lgy.oms.service.IStrategyConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

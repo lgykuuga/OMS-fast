@@ -36,7 +36,7 @@ public class OrderGetImpl implements IOrderGet {
 
     @Override
     public CommonResponse<List<OrderDTO>> orderListDownload(ShopInterfaces shopInterfaces, Date beginDate, Date endDate) {
-        logger.info("调用获取店铺[{}]订单列表服务：beginDate[{}],endDate[{}]", shopInterfaces.getShop(), beginDate, endDate);
+        logger.debug("调用获取店铺[{}]订单列表服务：beginDate[{}],endDate[{}]", shopInterfaces.getShop(), beginDate, endDate);
         //默认返回成功内容
         CommonResponse<List<OrderDTO>> message = new CommonResponse<>();
         message.setCode(Constants.SUCCESS);
