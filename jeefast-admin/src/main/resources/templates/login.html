@@ -3,18 +3,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
     <title>OMS</title>
     <meta name="description" content="订单管理系统">
-    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
-    <link href="../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
-    <link href="../static/css/login.min.css" th:href="@{/css/login.min.css}" rel="stylesheet"/>
-    <link href="../static/my/css/my-ui.css" th:href="@{/my/css/my-ui.css?v=2.0}" rel="stylesheet"/>
-    <!--[if lt IE 9]>
-    <meta http-equiv="refresh" content="0;ie.html" />
-    <![endif]-->
     <link rel="shortcut icon" href="../static/favicon.ico" th:href="@{favicon.ico}"/>
     <style type="text/css">label.error { position:inherit;  }</style>
     <script>
@@ -51,6 +42,11 @@
             padding: 10px;
         }
         .tyg-div-form form input[type="text"] {
+            width: 270px;
+            height: 30px;
+            margin: 25px 10px 0px 0px;
+        }
+        .tyg-div-form form input[type="password"] {
             width: 270px;
             height: 30px;
             margin: 25px 10px 0px 0px;
@@ -128,20 +124,16 @@
         <form id="signupForm">
             <h2>登录</h2>
             <div style="margin:5px 0px;">
-                <input type="text"     name="username" class="form-control uname" placeholder="用户名" value="admin"    />
+                <input type="text"     name="username" placeholder="用户名" value="admin"    />
             </div>
             <div style="margin:5px 0px;">
-                <input type="password" name="password" class="form-control pword" placeholder="密码"   value="123456" />
+                <input type="password" name="password" placeholder="密码"   value="123456" />
             </div>
-            <div class="row m-t" th:if="${captchaEnabled==true}">
-                <div class="col-xs-6">
-                    <input type="text" name="validateCode" class="form-control code" placeholder="验证码" maxlength="5" autocomplete="off">
-                </div>
-                <div class="col-xs-6">
-                    <a href="javascript:void(0);" title="点击更换验证码">
-                        <img th:src="@{captcha/captchaImage(type=${captchaType})}" class="imgcode" width="85%"/>
-                    </a>
-                </div>
+            <div style="margin:5px 0px;" th:if="${captchaEnabled==true}">
+                <input type="text" name="validateCode" style="width:150px;"  placeholder="验证码" maxlength="5" autocomplete="off">
+                <a href="javascript:void(0);" title="点击更换验证码">
+                    <img th:src="@{captcha/captchaImage(type=${captchaType})}" style="width:100px;height: 40px;"/>
+                </a>
             </div>
             <div class="checkbox-custom" th:classappend="${captchaEnabled==false} ? 'm-t'">
                 <input type="checkbox" id="rememberme" name="rememberme"> <label for="rememberme">记住我</label>
@@ -154,7 +146,6 @@
 <script type="text/javascript" src="../js/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="../js/com.js"></script>
 <script th:inline="javascript"> var ctx = [[@{/}]]; var captchaType = [[${captchaType}]]; </script>
-<!-- 全局js -->
 <!-- 验证插件 -->
 <script src="../static/ajax/libs/validate/jquery.validate.min.js" th:src="@{/ajax/libs/validate/jquery.validate.min.js}"></script>
 <script src="../static/ajax/libs/validate/messages_zh.min.js" th:src="@{/ajax/libs/validate/messages_zh.min.js}"></script>
