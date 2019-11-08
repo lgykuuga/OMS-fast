@@ -69,6 +69,7 @@
     <th:block th:include="include :: bootstrap-fileinput-js" />
     <script type="text/javascript">
         var prefix = ctx + "base/commodity";
+        var imUrl = encodeURI("[[${commodity.imgUrl}]]");
         $("#form-commodity-edit").validate({
             focusCleanup: true
         });
@@ -89,7 +90,7 @@
                 overwriteInitial: false,
                 initialPreviewAsData: true,
                 initialPreview: [
-                    [[${commodity.imgUrl}]]
+                    imUrl
                 ]
             });
 
