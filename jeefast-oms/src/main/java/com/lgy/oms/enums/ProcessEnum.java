@@ -13,9 +13,9 @@ import java.util.List;
 public enum ProcessEnum {
 
     /**
-     * 人工触发
+     * 手动触发
      */
-    HAND("0", "人工触发"),
+    HAND("0", "手动触发"),
     /**
      * 无逻辑转发
      */
