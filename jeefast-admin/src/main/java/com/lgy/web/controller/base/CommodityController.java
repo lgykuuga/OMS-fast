@@ -168,15 +168,28 @@ public class CommodityController extends BaseController {
             queryWrapper.eq("gco", commodity.getGco());
         }
         if (StringUtils.isNotEmpty(commodity.getGna())) {
-            queryWrapper.eq("gna", commodity.getGna());
+            queryWrapper.like("gna", commodity.getGna());
         }
         if (StringUtils.isNotEmpty(commodity.getOwner())) {
             queryWrapper.eq("owner", commodity.getOwner());
+        }
+        if (StringUtils.isNotEmpty(commodity.getCombo())) {
+            queryWrapper.eq("combo", commodity.getCombo());
         }
         if (StringUtils.isNotEmpty(commodity.getStatus())) {
             queryWrapper.eq("status", commodity.getStatus());
         }
         return queryWrapper;
+    }
+
+    /**
+     * 选择商品
+     * 点击提交后得到数据并回显到父窗体
+     */
+    @GetMapping("/selectCommodityParent/{combo}")
+    public String selectCommodityParent(@PathVariable("combo") String combo, ModelMap mmap) {
+        mmap.put("combo", combo);
+        return prefix + "/common/commodityParent";
     }
 
 }

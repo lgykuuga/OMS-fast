@@ -1,6 +1,7 @@
 package com.lgy.web.controller.oms;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Combo;
 import com.lgy.common.annotation.Log;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
@@ -9,7 +10,10 @@ import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
+import com.lgy.oms.domain.StrategyConvertShop;
+import com.lgy.oms.enums.ConvertMatchCommodityEnum;
 import com.lgy.oms.enums.ConvertTriggerNodeEnum;
+import com.lgy.oms.enums.ProcessEnum;
 import com.lgy.oms.service.IStrategyConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 转单策略Controller
@@ -37,9 +42,12 @@ public class StrategyConvertController extends BaseController {
     @RequiresPermissions("oms:convert:view")
     @GetMapping()
     public String convert(Model model) {
-        //转单触发节点Json
-        model.addAttribute("convertTriggerNodeJson", ConvertTriggerNodeEnum.toJson());
+        //转单触发节点
         model.addAttribute("convertTriggerNodeList", ConvertTriggerNodeEnum.getList());
+        //匹配商品方式
+        model.addAttribute("matchCommodityList", ConvertMatchCommodityEnum.getList());
+        //流程方式
+        model.addAttribute("processList", ProcessEnum.getList());
         return prefix + "/convert";
     }
 
@@ -86,16 +94,6 @@ public class StrategyConvertController extends BaseController {
     }
 
     /**
-     * 修改转单策略
-     */
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap) {
-        StrategyConvert strategyConvert = strategyConvertService.getById(id);
-        mmap.put("strategyConvert", strategyConvert);
-        return prefix + "/edit";
-    }
-
-    /**
      * 修改保存转单策略
      */
     @RequiresPermissions("oms:convert:edit")
@@ -116,4 +114,18 @@ public class StrategyConvertController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(strategyConvertService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
+
+    /**
+     * 查询策略店铺列表
+     */
+    @PostMapping("/convertShop")
+    @ResponseBody
+    public TableDataInfo convertShop(StrategyConvert strategyConvert) {
+        List<StrategyConvertShop> convertShop = strategyConvertService.getConvertShop(strategyConvert.getGco());
+        startPage();
+        return getDataTable(convertShop);
+    }
+
+
+
 }

@@ -33,6 +33,13 @@ public class Commodity extends BaseEntity implements Serializable {
     @Excel(name = "商品名称")
     private String gna;
 
+    /** 组合商品 */
+    @Excel(name = "组合商品", readConverterExp = "0=是,1=否")
+    private String combo;
+
+    /** 缩略图url */
+    private String imgUrl;
+
     /** 货主编码 */
     @Excel(name = "货主")
     private String owner;

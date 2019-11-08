@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgy.oms.mapper.StrategyConvertShopMapper">
+
+
+    <select id="getConvertShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvertShop">
+        select a.gco, a.shop, b.gna as shopName, auto
+        from oms_strategy_convert_shop a
+        left join base_shop b on b.gco = a.shop
+        where a.gco = #{gco}
+    </select>
+</mapper>
+

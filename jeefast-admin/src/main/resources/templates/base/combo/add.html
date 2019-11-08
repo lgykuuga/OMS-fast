@@ -6,18 +6,27 @@
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-combo-add">
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">组合商品编码：</label>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>组合商品：</label>
                 <div class="col-sm-8">
-                    <input name="parent" class="form-control" type="text" required>
+                    <div class="input-group">
+                        <input name="parent" onclick="selectParent('parent')" id="parent" type="text" placeholder="请选择组合商品" class="form-control" autocomplete="off" required>
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">明细商品编码：</label>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>明细商品：</label>
                 <div class="col-sm-8">
-                    <input name="children" class="form-control" type="text" required>
+                    <div class="input-group">
+                        <input name="children" onclick="selectParent('children')" id="children" type="text" placeholder="请选择明细商品" class="form-control" autocomplete="off" required>
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
                 </div>
             </div>
+
             <div class="form-group">    
                 <label class="col-sm-3 control-label">数量：</label>
                 <div class="col-sm-8">
@@ -45,6 +54,13 @@
     <th:block th:include="include :: footer" />
     <script type="text/javascript">
         var prefix = ctx + "base/combo"
+
+        /*选择商品*/
+        function selectParent(combo) {
+            var url = ctx + "base/commodity/selectCommodityParent/" + combo;
+            $.modal.open("选择商品", url);
+        }
+
         $("#form-combo-add").validate({
             focusCleanup: true
         });

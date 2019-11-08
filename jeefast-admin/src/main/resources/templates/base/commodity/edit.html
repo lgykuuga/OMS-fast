@@ -2,6 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('修改商品档案')" />
+    <th:block th:include="include :: bootstrap-fileinput-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -19,6 +20,17 @@
                     <input name="gna" th:field="*{gna}" class="form-control" type="text" required>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">组合商品:</label>
+                <div class="col-sm-3">
+                    <label class="toggle-switch switch-solid">
+                        <input type="checkbox" id="combo" th:checked="${commodity.combo == 'Y' ? true : false}">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span style="color: red; ">*</span>货主：</label>
                 <div class="col-sm-8">
@@ -27,6 +39,15 @@
                     </select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">缩略图</label>
+                <div class="col-sm-8">
+                    <input name="imgUrl" id="imgUrl" class="form-control" th:field="*{imgUrl}" type="hidden">
+                    <input id="fileinput-demo-1" name="file" type="file" multiple>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-sm-3 control-label">状态：</label>
                 <div class="col-sm-8">
@@ -45,6 +66,7 @@
         </form>
     </div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: bootstrap-fileinput-js" />
     <script type="text/javascript">
         var prefix = ctx + "base/commodity";
         $("#form-commodity-edit").validate({
@@ -53,9 +75,32 @@
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-commodity-edit').serialize());
+                var data = $("#form-commodity-edit").serializeArray();
+                var combo = $("input[id='combo']").is(':checked') == true ? "Y" : "N";
+                data.push({"name": "combo", "value": combo});
+                $.operate.save(prefix + "/edit", data);
             }
         }
+
+        $(document).ready(function () {
+            $("#fileinput-demo-1").fileinput({
+                'theme': 'explorer-fas',
+                'uploadUrl': '/common/upload',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                initialPreview: [
+                    [[${commodity.imgUrl}]]
+                ]
+            });
+
+            $("#fileinput-demo-1").on("fileuploaded", function (event, data, previewId, index) {
+                console.log(data.response);
+                if(data.response.code == 0){
+                    $('#imgUrl').val(data.response.url);
+                }
+            })
+        });
+
     </script>
 </body>
 </html>

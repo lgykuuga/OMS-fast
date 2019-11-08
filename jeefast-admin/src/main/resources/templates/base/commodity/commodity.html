@@ -65,7 +65,8 @@
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('base:commodity:edit')}]];
         var removeFlag = [[${@permission.hasPermi('base:commodity:remove')}]];
-        var datas = [[${@dict.getType('sys_normal_disable')}]];
+        var sys_normal_disable = [[${@dict.getType('sys_normal_disable')}]];
+        var sys_yes_no = [[${@dict.getType('sys_yes_no')}]];
         var prefix = ctx + "base/commodity";
 
         $(function() {
@@ -95,9 +96,26 @@
                     title : '商品名称'
                 },
                 {
+                    field: 'combo',
+                    title: '组合商品',
+                    align: 'center',
+                    width: 80,
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(sys_yes_no, value);
+                    }
+                },
+                {
                     field : 'owner',
                     title : '货主',
                     align: 'center',
+                },
+                // 在columns中格式化对应相关的列属性
+                {
+                    field: 'imgUrl',
+                    title: '图片',
+                    formatter: function(value, row, index) {
+                        return $.table.imageView(value, '/profile/avatar');
+                    }
                 },
                 {
                     field : 'remark',
@@ -108,7 +126,7 @@
                     title: '状态',
                     align: 'center',
                     formatter: function(value, row, index) {
-                        return $.table.selectDictLabel(datas, value);
+                        return $.table.selectDictLabel(sys_normal_disable, value);
                     }
                 },
                 ]

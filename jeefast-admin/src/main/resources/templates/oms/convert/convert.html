@@ -33,12 +33,6 @@
                 <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:convert:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:convert:edit">
-                    <i class="fa fa-edit"></i> 修改
-                </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:convert:remove">
-                    <i class="fa fa-remove"></i> 删除
-                </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <!-- table -->
@@ -61,32 +55,32 @@
                                 <form class="form-horizontal m-t" id="commentForm">
 
                                     <div class="form-group">
+                                        <label class="col-sm-3 control-label">流程方式：</label>
+                                        <div class="col-sm-8">
+                                            <select name="process" class="form-control" id="process">
+                                                <option th:each="process : ${processList}" th:text="${process.configValue}" th:value="${process.configKey}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label class="col-sm-3 control-label">转单触发节点：</label>
                                         <div class="col-sm-8">
-                                            <select name="xdcl" class="form-control" id="xdcl">
+                                            <select name="triggerNode" class="form-control" id="triggerNode">
                                                 <option th:each="convertTriggerNode : ${convertTriggerNodeList}" th:text="${convertTriggerNode.configValue}" th:value="${convertTriggerNode.configKey}"></option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">E-mail：</label>
+                                        <label class="col-sm-3 control-label">匹配商品方式：</label>
                                         <div class="col-sm-8">
-                                            <input id="cemail" type="email" class="form-control" name="email" required>
+                                            <select name="matchCommodity" class="form-control" id="matchCommodity">
+                                                <option th:each="matchCommodity : ${matchCommodityList}" th:text="${matchCommodity.configValue}" th:value="${matchCommodity.configKey}"></option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">网站：</label>
-                                        <div class="col-sm-8">
-                                            <input id="curl" type="url" class="form-control" name="url">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">说明：</label>
-                                        <div class="col-sm-8">
-                                            <textarea id="ccomment" name="comment" class="form-control" required></textarea>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group">
                                         <div class="col-sm-4 col-sm-offset-3">
                                             <button class="btn btn-primary" type="submit">提交</button>
@@ -101,25 +95,24 @@
         </div>
     </div>
 
-
-
-    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: footer" />
      <th:block th:include="include :: bootstrap-duallistbox-js" />
      <th:block th:include="include :: bootstrap-suggest-js" />
      <th:block th:include="include :: bootstrap-typeahead-js" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('oms:convert:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('oms:convert:remove')}]];
+        var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:stock:remove')}]];
         var prefix = ctx + "oms/convert";
+        var owners = [[${@base.selectOwner()}]];
 
         $(function() {
             var options = {
                 url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
+                createUrl: prefix + "/edit",
                 removeUrl: prefix + "/remove",
-                exportUrl: prefix + "/export",
                 modalName: "转单策略",
+                singleSelect:true,
+                onClickRow: onClickRow,
                 columns: [{
                     checkbox: true
                 },
@@ -136,10 +129,14 @@
                     field : 'gna', 
                     title : '策略名称'
                 },
-                {
-                    field : 'owner', 
-                    title : '货主'
-                },
+                    {
+                        field : 'owner',
+                        title : '货主',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return $.table.selectValue(owners, value);
+                        }
+                    },
                 {
                     field : 'remark', 
                     title : '备注'
@@ -149,8 +146,8 @@
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>店铺</a>');
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-success btn-xs" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-edit"></i>店铺</a>');
+                        actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>修改</a>');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
@@ -164,7 +161,7 @@
             var options = {
                 id: "bootstrap-table2",
                 toolbar: "toolbar2",
-                url: prefix + "/list",
+                url: prefix + "/convertShop",
                 showSearch: false,
                 showRefresh: false,
                 showToggle: false,
@@ -173,26 +170,49 @@
                     checkbox: true
                 },
                     {
-                        field : 'ID',
-                        title : 'ID',
+                        field : 'id',
+                        title : 'id',
                         visible: false
                     },
                     {
-                        field : 'userCode',
+                        field : 'shop',
                         title : '店铺'
                     },
                     {
-                        field: 'status',
                         title: '自动',
                         align: 'center',
-                        formatter: function(value, row, index) {
-                            return $.table.selectDictLabel(datas, value);
+                        formatter: function (value, row, index) {
+                            return statusTools(row);
                         }
                     },
                     ]
             };
             $.table.init(options);
         });
+
+        function onClickRow(row, $element){
+            alert("单击行userId：" + row.gco);
+        }
+
+
+        /* 店铺开启自动 */
+        function statusTools(row) {
+            if (row.auto == 0) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
+            }
+        }
+
+        /* 店铺开启自动-停用 */
+        function disable(roleId) {
+            $.operate.post(prefix + "/changeAuto", { "roleId": roleId, "status": 1 });
+        }
+
+        /* 店铺开启自动-启用 */
+        function enable(roleId) {
+            $.operate.post(prefix + "/changeAuto", { "roleId": roleId, "status": 0 });
+        }
 
     </script>
 </body>
