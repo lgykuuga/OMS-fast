@@ -2,6 +2,7 @@ package com.lgy.oms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lgy.oms.domain.DownloadOrder;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 下载订单 数据层
@@ -9,6 +10,7 @@ import com.lgy.oms.domain.DownloadOrder;
  * @author lgy
  * @date 2019-10-14
  */
+@Mapper
 public interface DownloadOrderMapper extends BaseMapper<DownloadOrder> {
 
     /**

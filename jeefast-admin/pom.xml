@@ -82,14 +82,14 @@
         <dependency>
             <groupId>com.jeefast</groupId>
             <artifactId>jeefast-base</artifactId>
-            <version>2.0</version>
+            <version>${jeefast.version}</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.jeefast</groupId>
             <artifactId>jeefast-oms</artifactId>
-            <version>2.0</version>
+            <version>${jeefast.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -119,7 +119,8 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>${artifactId}</warName>
                 </configuration>   
-		   </plugin>   
+		   </plugin>
+
         </plugins>
         <finalName>${artifactId}</finalName>
     </build>

@@ -1,6 +1,6 @@
 ######################################################################
 # Build Tools
-jeefast-admin/src/main/resources/application-dev.yml/
+application-prd.yml
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar

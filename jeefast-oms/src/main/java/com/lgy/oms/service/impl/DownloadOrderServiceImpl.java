@@ -26,7 +26,7 @@ import javax.annotation.Resource;
 @Service
 public class DownloadOrderServiceImpl extends ServiceImpl<DownloadOrderMapper, DownloadOrder> implements IDownloadOrderService {
 
-    @Resource
+    @Autowired
     DownloadOrderMapper downloadOrderMapper;
 
     @Autowired
