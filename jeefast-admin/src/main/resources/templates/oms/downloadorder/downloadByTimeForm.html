@@ -26,7 +26,8 @@
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         <input type="datetime" class="form-control time-input" data-type="day" name="bedt" id="bedt"
-                               th:value="*{#dates.format({bedt}, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择时间" required>
+                               th:value="*{#dates.format({bedt}, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择时间"
+                               autocomplete="off" required>
                     </div>
                 </div>
             </div>
@@ -37,7 +38,8 @@
                     <div class="input-group date">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         <input type="datetime" class="form-control time-input" data-type="day" name="endt" id="endt"
-                               th:value="*{#dates.format({endt}, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择时间" required>
+                               th:value="*{#dates.format({endt}, 'yyyy-MM-dd HH:mm:ss')}" placeholder="请选择时间"
+                               autocomplete="off" required>
                     </div>
                 </div>
             </div>

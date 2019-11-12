@@ -18,7 +18,8 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"><span style="color: red; ">*</span>平台单号:</label>
                 <div class="col-sm-8">
-                    <input name="tids" class="form-control" type="text" th:width="100" placeholder="下载多个订单用英文逗号分隔" required>
+                    <input name="tids" class="form-control" type="text" th:width="100"
+                           placeholder="下载多个订单用英文逗号分隔" autocomplete="off" required>
                 </div>
             </div>
 <!--            <div class="col-sm-6">-->
@@ -67,6 +68,10 @@
                 });
             }
         }
+
+        $("#form-tid-add").validate({
+            focusCleanup: true
+        });
     </script>
 </body>
 </html>

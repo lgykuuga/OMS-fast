@@ -131,6 +131,7 @@ public class StrategyConvertController extends BaseController {
      */
     @PostMapping("/changeAuto")
     @ResponseBody
+    @Log(title = "转单策略", businessType = BusinessType.UPDATE)
     public AjaxResult changeAuto(Long id, String auto) {
         return toAjax(strategyConvertService.changeAuto(id, auto));
     }
