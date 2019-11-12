@@ -31,7 +31,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.lgy: info
+    com.lgy: debug
     org.springframework: warn
 
 # 用户配置

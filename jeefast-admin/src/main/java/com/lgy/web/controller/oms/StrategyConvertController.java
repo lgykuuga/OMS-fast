@@ -123,9 +123,16 @@ public class StrategyConvertController extends BaseController {
     @ResponseBody
     public TableDataInfo convertShop(StrategyConvert strategyConvert) {
         List<StrategyConvertShop> convertShop = strategyConvertService.getConvertShop(strategyConvert.getGco());
-        startPage();
         return getDataTable(convertShop);
     }
 
+    /**
+     * 更改策略店铺是否开启自动
+     */
+    @PostMapping("/changeAuto")
+    @ResponseBody
+    public AjaxResult changeAuto(Long id, String auto) {
+        return toAjax(strategyConvertService.changeAuto(id, auto));
+    }
 
 }

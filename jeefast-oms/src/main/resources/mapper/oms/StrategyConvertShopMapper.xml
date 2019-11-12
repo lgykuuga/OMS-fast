@@ -2,14 +2,28 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lgy.oms.mapper.StrategyConvertShopMapper">
 
+
+<mapper namespace="com.lgy.oms.mapper.StrategyConvertShopMapper">
+    <update id="changeAuto">
+        update oms_strategy_convert_shop set auto = #{auto}
+        where id = #{id}
+    </update>
 
     <select id="getConvertShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvertShop">
-        select a.gco, a.shop, b.gna as shopName, auto
+        select
+        a.id as id,
+        a.gco,
+        a.shop,
+        b.gna as shopName,
+        a.auto
         from oms_strategy_convert_shop a
         left join base_shop b on b.gco = a.shop
-        where a.gco = #{gco}
+        <where>
+            <if test="gco != null and gco != ''">
+                AND a.gco = #{gco}
+            </if>
+        </where>
     </select>
 </mapper>
 

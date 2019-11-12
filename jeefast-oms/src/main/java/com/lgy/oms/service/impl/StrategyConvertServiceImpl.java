@@ -27,4 +27,9 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
     public List<StrategyConvertShop> getConvertShop(String gco) {
         return shopMapper.getConvertShop(gco);
     }
+
+    @Override
+    public boolean changeAuto(Long id, String auto) {
+        return shopMapper.changeAuto(id, auto);
+    }
 }

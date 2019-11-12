@@ -45,6 +45,7 @@
                             <table id="bootstrap-table2" data-mobile-responsive="true"></table>
                         </div>
                     </div>
+
                     <!-- 策略 -->
                     <div class="col-sm-9">
                         <div class="ibox float-e-margins">
@@ -166,16 +167,16 @@
                 showRefresh: false,
                 showToggle: false,
                 showColumns: false,
-                columns: [{
-                    checkbox: true
-                },
+                height: 280,
+                pagination: false,
+                columns: [
                     {
                         field : 'id',
                         title : 'id',
                         visible: false
                     },
                     {
-                        field : 'shop',
+                        field : 'shopName',
                         title : '店铺'
                     },
                     {
@@ -197,7 +198,7 @@
 
         /* 店铺开启自动 */
         function statusTools(row) {
-            if (row.auto == 0) {
+            if (row.auto == 1) {
                 return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
             } else {
                 return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
@@ -205,13 +206,13 @@
         }
 
         /* 店铺开启自动-停用 */
-        function disable(roleId) {
-            $.operate.post(prefix + "/changeAuto", { "roleId": roleId, "status": 1 });
+        function disable(id) {
+            $.operate.post(prefix + "/changeAuto", { "id": id, "auto": 1 });
         }
 
         /* 店铺开启自动-启用 */
-        function enable(roleId) {
-            $.operate.post(prefix + "/changeAuto", { "roleId": roleId, "status": 0 });
+        function enable(id) {
+            $.operate.post(prefix + "/changeAuto", { "id": id, "auto": 0 });
         }
 
     </script>

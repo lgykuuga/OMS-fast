@@ -2,7 +2,7 @@
 <configuration>
     <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,%i索引【从数字0开始递增】,%M方法名,%lines输出日志的行数,%F/%file源码文件名-->
     <!-- 日志存放路径 -->
-	<property name="log.path" value="${log.path}" />
+	<property name="log.path" value="/usr/local/lgy/logs" />
 
     <!-- 彩色日志 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />

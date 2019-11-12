@@ -55,6 +55,3 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
-
-log:
-    path: F:/temp/lgy/logs
