@@ -49,4 +49,8 @@ public class StrategyConvert extends BaseEntity implements Serializable {
     @Excel(name = "货主")
     private String owner;
 
+    /** 备注 */
+    @Excel(name = "备注")
+    private String remark;
+
 }

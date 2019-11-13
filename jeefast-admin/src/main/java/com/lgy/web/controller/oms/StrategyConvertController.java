@@ -1,6 +1,7 @@
 package com.lgy.web.controller.oms;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Shop;
 import com.lgy.common.annotation.Log;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
@@ -18,6 +19,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -81,6 +83,16 @@ public class StrategyConvertController extends BaseController {
     }
 
     /**
+     * 修改转单策略
+     */
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Long id, ModelMap mmap) {
+        StrategyConvert strategyConvert = strategyConvertService.getById(id);
+        mmap.put("strategyConvert", strategyConvert);
+        return prefix + "/edit";
+    }
+
+    /**
      * 新增保存转单策略
      */
     @RequiresPermissions("oms:convert:add")
@@ -96,7 +108,7 @@ public class StrategyConvertController extends BaseController {
      */
     @RequiresPermissions("oms:convert:edit")
     @Log(title = "转单策略", businessType = BusinessType.UPDATE)
-    @PostMapping("/editSave")
+    @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(StrategyConvert strategyConvert) {
         return toAjax(strategyConvertService.updateById(strategyConvert));
@@ -132,8 +144,8 @@ public class StrategyConvertController extends BaseController {
      */
     @PostMapping("/convertShop")
     @ResponseBody
-    public TableDataInfo convertShop(StrategyConvert strategyConvert) {
-        List<StrategyConvertShop> convertShop = strategyConvertService.getConvertShop(strategyConvert.getGco());
+    public TableDataInfo convertShop(String gco) {
+        List<StrategyConvertShop> convertShop = strategyConvertService.getConvertShop(gco);
         return getDataTable(convertShop);
     }
 
@@ -147,4 +159,12 @@ public class StrategyConvertController extends BaseController {
         return toAjax(strategyConvertService.changeAuto(id, auto));
     }
 
+    /**
+     * 选择店铺窗口
+     */
+    @GetMapping("/selectShop/{gco}")
+    public String selectShop(@PathVariable("gco") String gco, ModelMap mmap) {
+        mmap.put("gco", gco);
+        return prefix + "/shop";
+    }
 }

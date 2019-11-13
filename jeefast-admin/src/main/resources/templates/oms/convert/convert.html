@@ -2,7 +2,6 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('转单策略列表')" />
-    <th:block th:include="include :: bootstrap-duallistbox-css" />
 </head>
 <body class="gray-bg">
 
@@ -41,7 +40,7 @@
                 <table id="bootstrap-table1" data-mobile-responsive="true"></table>
 
                 <div class="row">
-                    <!-- 店铺 -->
+                    <!-- 店铺table -->
                     <div class="col-sm-3">
                         <div class="col-sm-12 select-table table-striped">
                             <table id="bootstrap-table2" data-mobile-responsive="true"></table>
@@ -99,9 +98,6 @@
     </div>
 
      <th:block th:include="include :: footer" />
-     <th:block th:include="include :: bootstrap-duallistbox-js" />
-     <th:block th:include="include :: bootstrap-suggest-js" />
-     <th:block th:include="include :: bootstrap-typeahead-js" />
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
         var removeFlag = [[${@permission.hasPermi('oms:stock:remove')}]];
@@ -136,14 +132,14 @@
                     field : 'gna', 
                     title : '策略名称'
                 },
-                    {
-                        field : 'owner',
-                        title : '货主',
-                        align: 'center',
-                        formatter: function(value, row, index) {
-                            return $.table.selectValue(owners, value);
-                        }
-                    },
+                {
+                    field : 'owner',
+                    title : '货主',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectValue(owners, value);
+                    }
+                },
                 {
                     field : 'remark', 
                     title : '备注'
@@ -153,9 +149,9 @@
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-edit"></i>店铺</a>');
-                        actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>修改</a>');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-primary btn-xs" onclick="shop(\'' + row.gco + '\')"><i class="fa fa-edit"></i>店铺</a> ');
+                        actions.push('<a class="btn btn-success btn-xs" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs" onclick="remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }
@@ -229,9 +225,23 @@
             $.operate.post(prefix + "/changeAuto", { "id": id, "auto": 0 });
         }
 
+        /** 打开策略店铺窗口 */
+        function shop(gco) {
+            $.modal.open("策略店铺", prefix + "/selectShop/" + gco);
+        }
+
+        function remove(id) {
+            $.modal.confirm("确定删除该条信息吗？", function() {
+                var data = { "ids": id };
+                $.operate.submit(prefix + "/remove", "post", "json", data);
+                //重新加载表格
+                $('#bootstrap-table1').bootstrapTable('refresh', '');
+            });
+        }
+
         function submit2(){
             $.ajax({
-                url: prefix + "/editSave",
+                url: prefix + "/edit",
                 data: $('#form-demo-2').serialize(),
                 type: "post",
                 success: function(result) {
