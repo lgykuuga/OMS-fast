@@ -1,6 +1,8 @@
 package com.lgy.oms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvertShop;
 import com.lgy.oms.mapper.StrategyConvertShopMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +33,15 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
     @Override
     public boolean changeAuto(Long id, String auto) {
         return shopMapper.changeAuto(id, auto);
+    }
+
+    @Override
+    public Integer deleteConvertShop(String gco) {
+        if (StringUtils.isNotEmpty(gco)) {
+            QueryWrapper<StrategyConvertShop> wrapper = new QueryWrapper<>();
+            wrapper.eq("gco", gco);
+            return shopMapper.delete(wrapper);
+        }
+        return 0;
     }
 }

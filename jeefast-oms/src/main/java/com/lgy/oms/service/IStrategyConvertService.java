@@ -30,4 +30,12 @@ public interface IStrategyConvertService extends IService<StrategyConvert> {
      * @return
      */
     boolean changeAuto(Long id, String auto);
+
+    /**
+     * 根据策略编码删除策略店铺关系
+     *
+     * @param gco 策略编码
+     * @return
+     */
+    Integer deleteConvertShop(String gco);
 }

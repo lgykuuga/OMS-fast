@@ -10,18 +10,14 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.StrategyConvertShop;
-import com.lgy.oms.enums.ConvertMatchCommodityEnum;
-import com.lgy.oms.enums.ConvertTriggerNodeEnum;
-import com.lgy.oms.enums.ProcessEnum;
+import com.lgy.oms.enums.*;
 import com.lgy.oms.service.IStrategyConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -99,10 +95,18 @@ public class StrategyConvertController extends BaseController {
      */
     @RequiresPermissions("oms:convert:edit")
     @Log(title = "转单策略", businessType = BusinessType.UPDATE)
-    @PostMapping("/edit")
+    @PostMapping("/editSave")
     @ResponseBody
     public AjaxResult editSave(StrategyConvert strategyConvert) {
         return toAjax(strategyConvertService.updateById(strategyConvert));
+    }
+
+    /**
+     * 加载策略
+     */
+    @GetMapping("/edit/{id}")
+    public StrategyConvert loadStrategy(@PathVariable("id") Long id) {
+        return strategyConvertService.getById(id);
     }
 
     /**
@@ -113,6 +117,12 @@ public class StrategyConvertController extends BaseController {
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
+        List<String> idList = Arrays.asList(Convert.toStrArray(ids));
+        for (String id : idList) {
+            StrategyConvert strategyConvert = strategyConvertService.getById(id);
+            //删除策略店铺
+            strategyConvertService.deleteConvertShop(strategyConvert.getGco());
+        }
         return toAjax(strategyConvertService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
 

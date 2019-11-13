@@ -29,11 +29,13 @@
                 </form>
             </div>
 
+            <!-- btn -->
             <div class="btn-group-sm" id="toolbar" role="group">
                 <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:convert:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
             </div>
+
             <div class="col-sm-12 select-table table-striped">
                 <!-- table -->
                 <table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -53,7 +55,7 @@
                                 <h5>转单策略</h5>
                             </div>
                             <div class="ibox-content">
-                                <form class="form-horizontal m-t" id="commentForm">
+                                <form class="form-horizontal m-t" id="commentForm" >
 
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">流程方式：</label>
@@ -67,7 +69,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">转单触发节点：</label>
                                         <div class="col-sm-8">
-                                            <select name="triggerNode" class="form-control" id="triggerNode">
+                                            <select name="triggerNode" class="form-control" id="triggerNode" >
                                                 <option th:each="convertTriggerNode : ${convertTriggerNodeList}" th:text="${convertTriggerNode.configValue}" th:value="${convertTriggerNode.configKey}"></option>
                                             </select>
                                         </div>
@@ -76,15 +78,15 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">匹配商品方式：</label>
                                         <div class="col-sm-8">
-                                            <select name="matchCommodity" class="form-control" id="matchCommodity">
+                                            <select name="matchCommodity" class="form-control" id="matchCommodity" >
                                                 <option th:each="matchCommodity : ${matchCommodityList}" th:text="${matchCommodity.configValue}" th:value="${matchCommodity.configKey}"></option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="col-sm-4 col-sm-offset-3">
-                                            <button class="btn btn-primary" type="submit">提交</button>
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="submit2()"><i class="fa fa-check"></i>更新</button>&nbsp;
                                         </div>
                                     </div>
                                 </form>
@@ -105,6 +107,7 @@
         var removeFlag = [[${@permission.hasPermi('oms:stock:remove')}]];
         var prefix = ctx + "oms/convert";
         var owners = [[${@base.selectOwner()}]];
+        var gco = "";
 
         $(function() {
             var options = {
@@ -169,10 +172,16 @@
                 showColumns: false,
                 height: 280,
                 pagination: false,
+                data: gco,
                 columns: [
                     {
                         field : 'id',
                         title : 'id',
+                        visible: false
+                    },
+                    {
+                        field : 'gco',
+                        title : '策略编码',
                         visible: false
                     },
                     {
@@ -192,7 +201,9 @@
         });
 
         function onClickRow(row, $element){
-            alert("单击行userId：" + row.gco);
+            gco = row.gco;
+            //重新加载店铺表格
+            $('#bootstrap-table2').bootstrapTable('refresh', gco);
         }
 
 
@@ -213,6 +224,27 @@
         /* 店铺开启自动-启用 */
         function enable(id) {
             $.operate.post(prefix + "/changeAuto", { "id": id, "auto": 0 });
+        }
+
+        function submit2(){
+            $.ajax({
+                url: prefix + "/edit",
+                data: $('#form-demo-2').serialize(),
+                type: "post",
+                success: function(result) {
+                    if (result.code == 0) {
+                        layer.msg("更新成功,正在刷新数据请稍后……", {
+                            icon: 1,
+                            time: 500,
+                            shade: [0.1, '#8F8F8F']
+                        },function() {
+                            location.reload();
+                        });
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            })
         }
 
     </script>

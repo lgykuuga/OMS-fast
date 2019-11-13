@@ -23,7 +23,12 @@ public enum DownloadOrderInterfaceEnum {
     /**
      * gwall: ODS
      */
-    GODS("GODS");
+    GODS("GODS"),
+
+    /**
+     * 奇门接口
+     */
+    QIMEN("奇门");
 
 
     private String value;
