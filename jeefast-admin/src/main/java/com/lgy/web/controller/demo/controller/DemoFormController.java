@@ -1,18 +1,18 @@
 package com.lgy.web.controller.demo.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.lgy.common.core.domain.AjaxResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.lgy.common.core.domain.AjaxResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 表单相关
  *
- * @author lgy
+ * @author ruoyi
  */
 @Controller
 @RequestMapping("/demo/form")
@@ -43,6 +43,14 @@ public class DemoFormController {
     @GetMapping("/select")
     public String select() {
         return prefix + "/select";
+    }
+
+    /**
+     * 时间轴
+     */
+    @GetMapping("/timeline")
+    public String timeline() {
+        return prefix + "/timeline";
     }
 
     /**

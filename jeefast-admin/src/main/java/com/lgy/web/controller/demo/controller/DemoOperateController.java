@@ -4,14 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
 import com.lgy.common.core.page.PageDomain;
@@ -22,11 +15,19 @@ import com.lgy.common.exception.BusinessException;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
 import com.lgy.web.controller.demo.domain.UserOperateModel;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 操作控制
  * 
- * @author lgy
+ * @author ruoyi
  */
 @Controller
 @RequestMapping("/demo/operate")
@@ -98,6 +99,17 @@ public class DemoOperateController extends BaseController
             for (Map.Entry<Integer, UserOperateModel> entry : users.entrySet())
             {
                 if (entry.getValue().getUserName().equals(userModel.getSearchValue()))
+                {
+                    userList.add(entry.getValue());
+                }
+            }
+        }
+        else if (StringUtils.isNotEmpty(userModel.getUserName()))
+        {
+            userList.clear();
+            for (Map.Entry<Integer, UserOperateModel> entry : users.entrySet())
+            {
+                if (entry.getValue().getUserName().equals(userModel.getUserName()))
                 {
                     userList.add(entry.getValue());
                 }

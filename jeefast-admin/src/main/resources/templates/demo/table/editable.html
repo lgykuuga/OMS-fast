@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-	<th:block th:include="include :: header('自定义触发事件')" />
+	<th:block th:include="include :: header('表格行内编辑')" />
+	<th:block th:include="include :: bootstrap-editable-css" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
+        <div class="btn-group-sm" id="toolbar" role="group">
+             <a class="btn btn-info" onclick="getSelections()">
+	            <i class="fa fa-search"></i> 查询选择数据
+	        </a>
+	        <a class="btn btn-primary" onclick="getData()">
+	            <i class="fa fa-search"></i> 获取所有数据
+	        </a>
+        </div>
 		<div class="row">
 			<div class="col-sm-12 select-table table-striped">
-			    <p class="select-title">自定义触发事件（点击某行/双击某行/单击某格/双击某格/服务器发送数据前触发/数据被加载时触发）</p>
 				<table id="bootstrap-table"></table>
 			</div>
 		</div>
 	</div>
-    <div th:include="include :: footer"></div>
+	
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: bootstrap-table-editable-js" />
+	
     <script th:inline="javascript">
         var prefix = ctx + "demo/table";
         var datas = [[${@dict.getType('sys_normal_disable')}]];
@@ -24,12 +35,8 @@
 		        showRefresh: false,
 		        showToggle: false,
 		        showColumns: false,
-		        onClickRow: onClickRow,
-		        onDblClickRow: onDblClickRow,
-		        onClickCell: onClickCell,
-		        onDblClickCell: onDblClickCell,
-		        responseHandler: responseHandler,
-		        onLoadSuccess: onLoadSuccess,
+		        showPageGo: true,
+		        onEditableSave: onEditableSave,
                 columns: [{
 		            checkbox: true
 		        },
@@ -39,11 +46,25 @@
 				},
 				{
 					field : 'userCode', 
-					title : '用户编号'
+					title : '用户编号',
+					editable: true
 				},
 				{
 					field : 'userName', 
-					title : '用户姓名'
+					title : '用户姓名',
+					editable : {
+						type : 'text',
+						title : '名称',
+						emptytext : "【名称】为空",
+						validate : function(value) {
+							if (value.length > 30) {
+								return '名称不能超过30个字符';
+							}
+							if (value.length == 0) {
+								return '名称不能为空';
+							}
+						}
+					}
 				},
 				{
 					field : 'userPhone', 
@@ -61,9 +82,17 @@
                     field: 'status',
                     title: '用户状态',
                     align: 'center',
-                    formatter: function(value, row, index) {
-                    	return $.table.selectDictLabel(datas, value);
-                    }
+                    editable : {
+						type : 'select',
+						title : '状态',
+						source : [{
+							value : 0,
+							text : "正常"
+						}, {
+							value : 1,
+							text : "停用"
+						}]
+					}
                 },
 		        {
 		            title: '操作',
@@ -79,28 +108,20 @@
             $.table.init(options);
         });
         
-        function onClickRow(row, $element){
-        	alert("单击行userId：" + row.userId + " userName：" + row.userName);
+        function onEditableSave (field, row, oldValue, $el) {
+        	alert("字段名：" + field + "，当前值：" + row[field]  + "，旧值：" + oldValue);
         }
         
-        function onDblClickRow(row, $element){
-        	alert("双击行userId：" + row.userId + " userName：" + row.userName);
+        /* 查询表格所有数据值 */
+        function getData(){
+        	var data = $("#" + table.options.id).bootstrapTable('getData');
+            alert(JSON.stringify(data))
         }
         
-        function onClickCell(field, value, row, $element){
-        	alert("单击格name：" + field + " value：" + value);
-        }
-        
-        function onDblClickCell(field, value, row, $element){
-        	alert("双击格name：" + field + " value：" + value);
-        }
-        
-        function responseHandler(res){
-        	alert("请求获取数据后处理回调函数");
-        }
-        
-        function onLoadSuccess(data){
-        	alert("当所有数据被加载时触发");
+        /* 查询表格选择行数据值 */
+        function getSelections(){
+        	var data = $("#" + table.options.id).bootstrapTable('getSelections');
+        	alert(JSON.stringify(data))
         }
     </script>
 </body>

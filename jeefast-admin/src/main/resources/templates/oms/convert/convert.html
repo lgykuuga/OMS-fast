@@ -9,7 +9,7 @@
      <div class="container-div">
         <div class="row">
             <div class="col-sm-12 search-collapse">
-                <form id="formId">
+                <form id="form1">
                     <div class="select-list">
                         <ul>
                             <li>
@@ -21,8 +21,8 @@
                                 <input type="text" name="gna"/>
                             </li>
                             <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form1', 'bootstrap-table1')"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form1', 'bootstrap-table1')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
                         </ul>
                     </div>
@@ -30,7 +30,7 @@
             </div>
 
             <!-- btn -->
-            <div class="btn-group-sm" id="toolbar" role="group">
+            <div class="btn-group-sm" id="toolbar1" role="group">
                 <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:convert:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
@@ -38,7 +38,7 @@
 
             <div class="col-sm-12 select-table table-striped">
                 <!-- table -->
-                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+                <table id="bootstrap-table1" data-mobile-responsive="true"></table>
 
                 <div class="row">
                     <!-- 店铺 -->
@@ -111,8 +111,11 @@
 
         $(function() {
             var options = {
+                id: "bootstrap-table1",
+                toolbar: "toolbar1",
                 url: prefix + "/list",
-                createUrl: prefix + "/edit",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 modalName: "转单策略",
                 singleSelect:true,
@@ -228,7 +231,7 @@
 
         function submit2(){
             $.ajax({
-                url: prefix + "/edit",
+                url: prefix + "/editSave",
                 data: $('#form-demo-2').serialize(),
                 type: "post",
                 success: function(result) {

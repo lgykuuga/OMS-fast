@@ -5,23 +5,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.page.PageDomain;
 import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.core.page.TableSupport;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.common.utils.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 表格相关
  * 
- * @author lgy
+ * @author ruoyi
  */
 @Controller
 @RequestMapping("/demo/table")
@@ -166,6 +167,15 @@ public class DemoTableController extends BaseController
     {
         return prefix + "/detail";
     }
+    
+    /**
+     * 表格父子视图
+     */
+    @GetMapping("/child")
+    public String child()
+    {
+        return prefix + "/child";
+    }
 
     /**
      * 表格图片预览
@@ -192,6 +202,15 @@ public class DemoTableController extends BaseController
     public String reorder()
     {
         return prefix + "/reorder";
+    }
+
+    /**
+     * 表格行内编辑操作
+     */
+    @GetMapping("/editable")
+    public String editable()
+    {
+        return prefix + "/editable";
     }
 
     /**

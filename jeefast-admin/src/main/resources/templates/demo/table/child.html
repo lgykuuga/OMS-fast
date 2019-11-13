@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-	<th:block th:include="include :: header('表格传值给父页面')" />
+	<th:block th:include="include :: header('表格父子视图')" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -23,6 +23,10 @@
 		        showRefresh: false,
 		        showToggle: false,
 		        showColumns: false,
+		        detailView: true,
+				onExpandRow : function(index, row, $detail) {
+					initChildTable(index, row, $detail);
+				},
                 columns: [{
 		            checkbox: true
 		        },
@@ -72,19 +76,38 @@
             $.table.init(options);
         });
         
-        /* 添加用户-选择用户-提交 */
-		function submitHandler(index, layero) {
-			var rows = $.table.selectFirstColumns();
-			if (rows.length == 0) {
-       			$.modal.alertWarning("请至少选择一条记录");
-       			return;
-       		}
-			$.modal.close();
-			// 父页面的方法
-			// parent.selectUsers();
-			// 父页面的变量
-			parent.$('#userids').html(rows.join());
-		}
+		initChildTable = function(index, row, $detail) {
+			var cur_table = $detail.html('<table style="table-layout:fixed"></table>').find('table');
+    	    $(cur_table).bootstrapTable({
+    	        url: prefix + "/list",
+    	        method: 'post',
+    	        sidePagination: "server",
+    	        contentType: "application/x-www-form-urlencoded",   // 编码类型
+    	        queryParams : {
+                    userName: '测试8'
+				},
+    	        columns: [{
+					field : 'userId', 
+					title : '子表ID'
+				},
+				{
+					field : 'userCode', 
+					title : '子表编号'
+				},
+				{
+					field : 'userName', 
+					title : '子表姓名'
+				},
+				{
+                    field: 'status',
+                    title: '子表状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                    	return $.table.selectDictLabel(datas, value);
+                    }
+                }]
+    	    });
+		};
     </script>
 </body>
 </html>

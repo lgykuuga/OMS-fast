@@ -6,19 +6,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 模态窗口
- *
- * @author lgy
+ * 
+ * @author ruoyi
  */
 @Controller
 @RequestMapping("/demo/modal")
-public class DemoDialogController {
+public class DemoDialogController
+{
     private String prefix = "demo/modal";
 
     /**
      * 模态窗口
      */
     @GetMapping("/dialog")
-    public String dialog() {
+    public String dialog()
+    {
         return prefix + "/dialog";
     }
 
@@ -26,7 +28,8 @@ public class DemoDialogController {
      * 弹层组件
      */
     @GetMapping("/layer")
-    public String layer() {
+    public String layer()
+    {
         return prefix + "/layer";
     }
 
@@ -34,7 +37,8 @@ public class DemoDialogController {
      * 表单
      */
     @GetMapping("/form")
-    public String form() {
+    public String form()
+    {
         return prefix + "/form";
     }
 
@@ -42,7 +46,8 @@ public class DemoDialogController {
      * 表格
      */
     @GetMapping("/table")
-    public String table() {
+    public String table()
+    {
         return prefix + "/table";
     }
 
@@ -50,7 +55,8 @@ public class DemoDialogController {
      * 表格check
      */
     @GetMapping("/check")
-    public String check() {
+    public String check()
+    {
         return prefix + "/table/check";
     }
 
@@ -58,7 +64,8 @@ public class DemoDialogController {
      * 表格radio
      */
     @GetMapping("/radio")
-    public String radio() {
+    public String radio()
+    {
         return prefix + "/table/radio";
     }
 
@@ -66,7 +73,8 @@ public class DemoDialogController {
      * 表格回传父窗体
      */
     @GetMapping("/parent")
-    public String parent() {
+    public String parent()
+    {
         return prefix + "/table/parent";
     }
 }

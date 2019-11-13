@@ -10,13 +10,14 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.StrategyConvertShop;
-import com.lgy.oms.enums.*;
+import com.lgy.oms.enums.ConvertMatchCommodityEnum;
+import com.lgy.oms.enums.ConvertTriggerNodeEnum;
+import com.lgy.oms.enums.ProcessEnum;
 import com.lgy.oms.service.IStrategyConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -104,7 +105,7 @@ public class StrategyConvertController extends BaseController {
     /**
      * 加载策略
      */
-    @GetMapping("/edit/{id}")
+    @GetMapping("/loadStrategy/{id}")
     public StrategyConvert loadStrategy(@PathVariable("id") Long id) {
         return strategyConvertService.getById(id);
     }
