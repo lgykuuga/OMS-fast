@@ -30,7 +30,7 @@
     <select id="getNotJoThisStrategyShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvertShop">
         SELECT
 	    p.gco as shop,
-	    p.gna as shopName,
+	    p.gna as shopName
         FROM
 	    base_shop p
         WHERE
@@ -41,6 +41,12 @@
             </if>
         </where>
         )
+        <if test="shopCode != null and shopCode != ''">
+            AND gco = #{shopCode}
+        </if>
+        <if test="shopName != null and shopName != ''">
+            AND gna like  concat('%', #{shopName}, '%')
+        </if>
     </select>
 </mapper>
 

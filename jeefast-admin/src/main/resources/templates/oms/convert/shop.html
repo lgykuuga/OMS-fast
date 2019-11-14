@@ -39,7 +39,6 @@
 		        showRefresh: false,
 		        showToggle: false,
 		        showColumns: false,
-				createUrl: prefix + "/addShop",
 				removeUrl: prefix + "/removeShop",
                 columns: [{
 		            checkbox: true
@@ -101,7 +100,12 @@
 
 		/* 添加店铺 */
 		function addShop(gco, enforce) {
-			$.operate.post(prefix + "/addShop", { "gco": gco, "enforce": enforce });
+			var title = "新增店铺";
+			if (enforce) {
+				title = "强制新增店铺";
+			}
+			var url = prefix + "/selectShop/?gco=" + gco +"&&enforce=" + enforce;
+			$.modal.open(title, url);
 		}
 	</script>
 </body>

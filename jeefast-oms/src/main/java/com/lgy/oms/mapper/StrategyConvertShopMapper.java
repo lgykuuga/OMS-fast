@@ -36,8 +36,11 @@ public interface StrategyConvertShopMapper extends BaseMapper<StrategyConvertSho
     /**
      * 获取未加入该策略的店铺
      *
-     * @param gco 策略编码
+     * @param shopCode 店铺编码
+     * @param shopName 店铺名称
+     * @param gco      策略编码
      * @return
      */
-    List<StrategyConvertShop> getNotJoThisStrategyShop(@Param("gco") String gco);
+    List<StrategyConvertShop> getNotJoThisStrategyShop(@Param("shopCode") String shopCode, @Param("shopName") String shopName,
+                                                       @Param("gco") String gco);
 }

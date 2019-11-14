@@ -1,5 +1,7 @@
 package com.lgy.web.controller.oms;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.lgy.common.annotation.Log;
@@ -183,34 +185,65 @@ public class StrategyConvertController extends BaseController {
     }
 
     /**
-     * 新增策略店铺
+     * 新增策略店铺弹窗
      * gco:      策略编码
      * enforce: 是否强制新增店铺;
      *          true:取不在该策略的店铺
      *          false:获取未加入策略的店铺
      */
     @RequiresPermissions("oms:convert:add")
-    @PostMapping("/addShop")
-    @ResponseBody
-    public String addShop(String gco, boolean enforce, ModelMap mmap) {
+    @GetMapping("/selectShop")
+    public String selectShop(String gco, boolean enforce, ModelMap mmap) {
         mmap.put("gco", gco);
         mmap.put("enforce", enforce);
-        return prefix + "/addShop";
+        return prefix + "/selectShop";
     }
 
     /**
-     * 新增读取店铺c'lo
+     * 选择商品
+     * 点击提交后得到数据并回显到父窗体
+     */
+    @GetMapping("/selectCommodityParent/{combo}")
+    public String selectCommodityParent(@PathVariable("combo") String combo, ModelMap mmap) {
+        mmap.put("combo", combo);
+        return prefix + "/common/commodityParent";
+    }
+
+    /**
+     * 新增读取店铺
      * gco:      策略编码
      * enforce: 是否强制新增店铺
-     *          true:取不在该策略的店铺
+     *          true:获取不在该策略的店铺
      *          false:获取未加入策略的店铺
      */
     @PostMapping("/addLoadShop")
     @ResponseBody
-    public TableDataInfo addLoadShop(String gco, boolean enforce) {
-        List<StrategyConvertShop> convertShop = strategyConvertService.addLoadShop(gco, enforce);
+    public TableDataInfo addLoadShop(String shopCode, String shopName, String gco, boolean enforce) {
+        List<StrategyConvertShop> convertShop = strategyConvertService.addLoadShop(shopCode, shopName, gco, enforce);
         startPage();
         return getDataTable(convertShop);
+    }
+
+    /**
+     * 新增保存店铺:保存不在该策略的店铺
+     */
+    @PostMapping("/addNotInShop")
+    @ResponseBody
+    public AjaxResult addNotInShop(String data) {
+        List<StrategyConvertShop> strategyConvertShops = JSON.parseArray(data, StrategyConvertShop.class);
+        Integer count = strategyConvertService.saveStrategyConvertShop(strategyConvertShops, true);
+       return toAjax(SqlHelper.retBool(count));
+    }
+
+    /**
+     * 新增保存店铺:保存未加入策略的店铺
+     */
+    @PostMapping("/addNotJoinShop")
+    @ResponseBody
+    public AjaxResult addNotJoinShop(String data) {
+        List<StrategyConvertShop> strategyConvertShops = JSON.parseArray(data, StrategyConvertShop.class);
+        Integer count = strategyConvertService.saveStrategyConvertShop(strategyConvertShops, false);
+        return toAjax(SqlHelper.retBool(count));
     }
 
 

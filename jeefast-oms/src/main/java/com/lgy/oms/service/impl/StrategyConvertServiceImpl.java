@@ -51,15 +51,40 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
     }
 
     @Override
-    public List<StrategyConvertShop> addLoadShop(String gco, boolean enforce) {
+    public List<StrategyConvertShop> addLoadShop(String shopCode, String shopName, String gco, boolean enforce) {
         List<StrategyConvertShop> list = null;
         if (enforce) {
             //获取不在该策略的店铺
-            list = shopMapper.getNotJoThisStrategyShop(gco);
+            list = shopMapper.getNotJoThisStrategyShop(shopCode, shopName, gco);
         } else {
             //获取未加入策略的店铺
-            list = shopMapper.getNotJoThisStrategyShop(null);
+            list = shopMapper.getNotJoThisStrategyShop(shopCode, shopName, null);
         }
         return list;
+    }
+
+    @Override
+    public Integer saveStrategyConvertShop(List<StrategyConvertShop> strategyConvertShopList, boolean enforce) {
+        //保存数量
+        int count = 0;
+
+        if (enforce) {
+            for (StrategyConvertShop strategyConvertShop : strategyConvertShopList) {
+                //删除选中店铺在其它策略的关系
+                QueryWrapper<StrategyConvertShop> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("shop", strategyConvertShop.getShop());
+                shopMapper.delete(queryWrapper);
+
+                //保存
+                count += shopMapper.insert(strategyConvertShop);
+            }
+        } else {
+            for (StrategyConvertShop strategyConvertShop : strategyConvertShopList) {
+                //保存
+                count += shopMapper.insert(strategyConvertShop);
+            }
+        }
+
+        return count;
     }
 }

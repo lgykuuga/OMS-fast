@@ -49,9 +49,20 @@ public interface IStrategyConvertService extends IService<StrategyConvert> {
 
     /**
      * 获取未加入该策略的店铺
-     * @param gco  策略编码
-     * @param enforce 是否强制添加
+     *
+     * @param shopCode 店铺编码
+     * @param shopName 店铺名称
+     * @param gco      策略编码
+     * @param enforce  是否强制添加
      * @return
      */
-    List<StrategyConvertShop> addLoadShop(String gco, boolean enforce);
+    List<StrategyConvertShop> addLoadShop(String shopCode, String shopName, String gco, boolean enforce);
+
+    /**
+     * 保存策略店铺
+     * @param strategyConvertShopList
+     * @param enforce  是否强制添加
+     * @return
+     */
+    Integer saveStrategyConvertShop(List<StrategyConvertShop> strategyConvertShopList, boolean enforce);
 }
