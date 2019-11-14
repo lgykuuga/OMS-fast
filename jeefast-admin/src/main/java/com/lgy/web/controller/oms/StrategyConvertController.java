@@ -146,6 +146,7 @@ public class StrategyConvertController extends BaseController {
     @ResponseBody
     public TableDataInfo convertShop(String gco) {
         List<StrategyConvertShop> convertShop = strategyConvertService.getConvertShop(gco);
+        startPage();
         return getDataTable(convertShop);
     }
 

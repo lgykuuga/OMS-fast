@@ -55,7 +55,14 @@
                             </div>
                             <div class="ibox-content">
                                 <form class="form-horizontal m-t" id="commentForm" >
-
+<!--                                    <input name="id" th:field="*{id}" type="hidden">-->
+<!--                                    <input name="gco" th:field="*{gco}" type="hidden">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label class="col-sm-3 control-label">策略名称：</label>-->
+<!--                                        <div class="col-sm-8">-->
+<!--                                            <input name="gna" readonly="true" th:field="*{gna}" class="form-control" type="text">-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">流程方式：</label>
                                         <div class="col-sm-8">
@@ -99,10 +106,13 @@
 
      <th:block th:include="include :: footer" />
     <script th:inline="javascript">
+
         var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
         var removeFlag = [[${@permission.hasPermi('oms:stock:remove')}]];
         var prefix = ctx + "oms/convert";
+        //货主list
         var owners = [[${@base.selectOwner()}]];
+        //策略编码
         var gco = "";
 
         $(function() {
@@ -116,9 +126,7 @@
                 modalName: "转单策略",
                 singleSelect:true,
                 onClickRow: onClickRow,
-                columns: [{
-                    checkbox: true
-                },
+                columns: [
                 {
                     field : 'id', 
                     title : 'id',
@@ -169,9 +177,7 @@
                 showRefresh: false,
                 showToggle: false,
                 showColumns: false,
-                height: 280,
-                pagination: false,
-                data: gco,
+                height: 500,
                 columns: [
                     {
                         field : 'id',
@@ -227,7 +233,7 @@
 
         /** 打开策略店铺窗口 */
         function shop(gco) {
-            $.modal.open("策略店铺", prefix + "/selectShop/" + gco);
+            $.modal.openWindow("策略店铺", prefix + "/selectShop/" + gco);
         }
 
         function remove(id) {
@@ -235,7 +241,7 @@
                 var data = { "ids": id };
                 $.operate.submit(prefix + "/remove", "post", "json", data);
                 //重新加载表格
-                $('#bootstrap-table1').bootstrapTable('refresh', '');
+                location.reload();
             });
         }
 
@@ -262,4 +268,7 @@
 
     </script>
 </body>
+
+
+
 </html>

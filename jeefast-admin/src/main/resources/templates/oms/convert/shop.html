@@ -4,28 +4,21 @@
 	<th:block th:include="include :: header('策略店铺')" />
 </head>
 <body class="gray-bg">
-	<div class="col-sm-12 search-collapse">
-		<form id="formId">
-			<div class="select-list">
-				<ul>
-					<li>
-						<p>店铺编码</p>
-						<input type="text" name="gco" autocomplete="off"/>
-					</li>
-					<li>
-						<p>店铺名称</p>
-						<input type="text" name="gna" autocomplete="off"/>
-					</li>
-					<li>
-						<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-						<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-					</li>
-				</ul>
-			</div>
-		</form>
-	</div>
      <div class="container-div">
 		<div class="row">
+			<!-- btn -->
+			<div class="btn-group-sm" id="toolbar1" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:convert:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:convert:add">
+					<i class="fa fa-plus"></i> 强制添加
+				</a>
+				<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:convert:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+			</div>
+
 			<div class="col-sm-12 select-table table-striped">
 				<table id="bootstrap-table" data-mobile-responsive="true"></table>
 			</div>
@@ -50,12 +43,29 @@
 		            checkbox: true
 		        },
 				{
+					field : 'id',
+					title : 'id',
+					visible: false
+				},
+				{
+					field : 'gco',
+					title : '策略编码',
+					visible: false
+				},
+				{
 					field : 'shop',
 					title : '店铺编码'
 				},
 				{
 					field : 'shopName',
-					title : '店铺名称'
+					title : '店铺'
+				},
+				{
+					title: '自动',
+					align: 'center',
+					formatter: function (value, row, index) {
+						return statusTools(row);
+					}
 				},
 		        ]
             };
@@ -68,18 +78,23 @@
 			return search;
 		}
 
-		/* 添加用户-选择用户-提交 */
-		function submitHandler(index, layero) {
-			var rows = $.table.selectFirstColumns();
-			if (rows.length == 0) {
-				$.modal.alertWarning("请至少选择一条记录");
-				return;
+		/* 店铺开启自动 */
+		function statusTools(row) {
+			if (row.auto == 1) {
+				return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
+			} else {
+				return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
 			}
-			$.modal.close();
-			// 父页面的方法
-			// parent.selectUsers();
-			// 父页面的变量
-			parent.$('#userids').html(rows.join());
+		}
+
+		/* 店铺开启自动-停用 */
+		function disable(id) {
+			$.operate.post(prefix + "/changeAuto", { "id": id, "auto": 1 });
+		}
+
+		/* 店铺开启自动-启用 */
+		function enable(id) {
+			$.operate.post(prefix + "/changeAuto", { "id": id, "auto": 0 });
 		}
 
 	</script>
