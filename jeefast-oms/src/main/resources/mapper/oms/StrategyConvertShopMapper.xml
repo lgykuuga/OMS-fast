@@ -25,5 +25,22 @@
             </if>
         </where>
     </select>
+
+
+    <select id="getNotJoThisStrategyShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvertShop">
+        SELECT
+	    p.gco as shop,
+	    p.gna as shopName,
+        FROM
+	    base_shop p
+        WHERE
+	    p.gco NOT IN (SELECT DISTINCT shop FROM oms_strategy_convert_shop
+        <where>
+            <if test="gco != null and gco != ''">
+                AND gco = #{gco}
+            </if>
+        </where>
+        )
+    </select>
 </mapper>
 

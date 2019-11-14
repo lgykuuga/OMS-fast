@@ -177,7 +177,7 @@
                 showRefresh: false,
                 showToggle: false,
                 showColumns: false,
-                height: 500,
+                height: 300,
                 columns: [
                     {
                         field : 'id',
@@ -231,7 +231,7 @@
             $.operate.post(prefix + "/changeAuto", { "id": id, "auto": 0 });
         }
 
-        /** 打开策略店铺窗口 */
+        /* 打开策略店铺窗口 */
         function shop(gco) {
             $.modal.openWindow("策略店铺", prefix + "/selectShop/" + gco);
         }

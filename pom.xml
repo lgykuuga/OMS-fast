@@ -12,6 +12,18 @@
 	<url>http://www.jeefast.vip</url>
 	<description>JeeFast管理系统</description>
 
+	<modules>
+		<module>jeefast-admin</module>
+		<module>jeefast-framework</module>
+		<module>jeefast-system</module>
+		<module>jeefast-quartz</module>
+		<module>jeefast-generator</module>
+		<module>jeefast-common</module>
+		<module>jeefast-oms</module>
+		<module>jeefast-base</module>
+	</modules>
+	<packaging>pom</packaging>
+
 	<properties>
 		<jeefast.version>2.0</jeefast.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -214,17 +226,7 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<modules>
-		<module>jeefast-admin</module>
-		<module>jeefast-framework</module>
-		<module>jeefast-system</module>
-		<module>jeefast-quartz</module>
-		<module>jeefast-generator</module>
-		<module>jeefast-common</module>
-		<module>jeefast-oms</module>
-		<module>jeefast-base</module>
-	</modules>
-	<packaging>pom</packaging>
+
 
 	<dependencies>
 
@@ -272,6 +274,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>

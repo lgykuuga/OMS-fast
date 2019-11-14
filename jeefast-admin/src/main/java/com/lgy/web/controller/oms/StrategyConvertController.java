@@ -1,7 +1,7 @@
 package com.lgy.web.controller.oms;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lgy.base.domain.Shop;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.lgy.common.annotation.Log;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
@@ -134,7 +134,7 @@ public class StrategyConvertController extends BaseController {
         for (String id : idList) {
             StrategyConvert strategyConvert = strategyConvertService.getById(id);
             //删除策略店铺
-            strategyConvertService.deleteConvertShop(strategyConvert.getGco());
+            strategyConvertService.deleteConvertShopByGco(strategyConvert.getGco());
         }
         return toAjax(strategyConvertService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
@@ -168,4 +168,50 @@ public class StrategyConvertController extends BaseController {
         mmap.put("gco", gco);
         return prefix + "/shop";
     }
+
+    /**
+     * 删除转单策略店铺
+     */
+    @RequiresPermissions("oms:convert:remove")
+    @PostMapping("/removeShop")
+    @ResponseBody
+    public AjaxResult removeShop(String ids) {
+        List<String> idList = Arrays.asList(Convert.toStrArray(ids));
+        //删除策略店铺
+        Integer integer = strategyConvertService.deleteConvertShopById(idList);
+        return toAjax(SqlHelper.retBool(integer));
+    }
+
+    /**
+     * 新增策略店铺
+     * gco:      策略编码
+     * enforce: 是否强制新增店铺;
+     *          true:取不在该策略的店铺
+     *          false:获取未加入策略的店铺
+     */
+    @RequiresPermissions("oms:convert:add")
+    @PostMapping("/addShop")
+    @ResponseBody
+    public String addShop(String gco, boolean enforce, ModelMap mmap) {
+        mmap.put("gco", gco);
+        mmap.put("enforce", enforce);
+        return prefix + "/addShop";
+    }
+
+    /**
+     * 新增读取店铺c'lo
+     * gco:      策略编码
+     * enforce: 是否强制新增店铺
+     *          true:取不在该策略的店铺
+     *          false:获取未加入策略的店铺
+     */
+    @PostMapping("/addLoadShop")
+    @ResponseBody
+    public TableDataInfo addLoadShop(String gco, boolean enforce) {
+        List<StrategyConvertShop> convertShop = strategyConvertService.addLoadShop(gco, enforce);
+        startPage();
+        return getDataTable(convertShop);
+    }
+
+
 }

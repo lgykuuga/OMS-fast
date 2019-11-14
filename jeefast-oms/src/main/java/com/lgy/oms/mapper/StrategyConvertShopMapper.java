@@ -31,5 +31,13 @@ public interface StrategyConvertShopMapper extends BaseMapper<StrategyConvertSho
      * @param auto 是否开启自动
      * @return
      */
-    boolean changeAuto(@Param("id")Long id, @Param("auto")String auto);
+    boolean changeAuto(@Param("id") Long id, @Param("auto") String auto);
+
+    /**
+     * 获取未加入该策略的店铺
+     *
+     * @param gco 策略编码
+     * @return
+     */
+    List<StrategyConvertShop> getNotJoThisStrategyShop(@Param("gco") String gco);
 }

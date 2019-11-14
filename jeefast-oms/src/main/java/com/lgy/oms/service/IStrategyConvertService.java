@@ -37,5 +37,21 @@ public interface IStrategyConvertService extends IService<StrategyConvert> {
      * @param gco 策略编码
      * @return
      */
-    Integer deleteConvertShop(String gco);
+    Integer deleteConvertShopByGco(String gco);
+
+    /**
+     * 根据ID删除策略店铺关系
+     *
+     * @param ids 多条Id
+     * @return
+     */
+    Integer deleteConvertShopById(List<String> ids);
+
+    /**
+     * 获取未加入该策略的店铺
+     * @param gco  策略编码
+     * @param enforce 是否强制添加
+     * @return
+     */
+    List<StrategyConvertShop> addLoadShop(String gco, boolean enforce);
 }

@@ -57,7 +57,7 @@ var table = {
 					showColumns: true,
 					showToggle: true,
 					showExport: false,
-					clickToSelect: false,
+					clickToSelect: true,
 					mobileResponsive: true,
 					rememberSelected: false,
 					fixedColumns: false,
@@ -759,7 +759,7 @@ var table = {
 				});
 			},
 			// 弹出层指定宽度
-			openWindow: function (title, url, width, height) {
+			openWindow: function (title, url, data, width, height) {
 				//如果是移动端，就使用自适应大小弹窗
 				if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
 					width = 'auto';

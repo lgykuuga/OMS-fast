@@ -11,6 +11,7 @@ lgy:
   # 文件路径 示例（ Windows配置D:/temp/lgy/uploadPath，Linux配置 /usr/local/oms/uploadPath）
   profile: D:/temp/lgy/uploadPath
   # 获取ip地址开关
+  # 获取ip地址开关
   addressEnabled: true
 
 # 开发环境配置

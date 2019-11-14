@@ -36,12 +36,30 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
     }
 
     @Override
-    public Integer deleteConvertShop(String gco) {
+    public Integer deleteConvertShopByGco(String gco) {
         if (StringUtils.isNotEmpty(gco)) {
             QueryWrapper<StrategyConvertShop> wrapper = new QueryWrapper<>();
             wrapper.eq("gco", gco);
             return shopMapper.delete(wrapper);
         }
         return 0;
+    }
+
+    @Override
+    public Integer deleteConvertShopById(List<String> ids) {
+        return shopMapper.deleteBatchIds(ids);
+    }
+
+    @Override
+    public List<StrategyConvertShop> addLoadShop(String gco, boolean enforce) {
+        List<StrategyConvertShop> list = null;
+        if (enforce) {
+            //获取不在该策略的店铺
+            list = shopMapper.getNotJoThisStrategyShop(gco);
+        } else {
+            //获取未加入策略的店铺
+            list = shopMapper.getNotJoThisStrategyShop(null);
+        }
+        return list;
     }
 }
