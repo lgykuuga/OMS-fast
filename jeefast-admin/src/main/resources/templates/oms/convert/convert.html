@@ -55,19 +55,21 @@
                             </div>
                             <div class="ibox-content">
                                 <form class="form-horizontal m-t" id="commentForm" >
-<!--                                    <input name="id" th:field="*{id}" type="hidden">-->
-<!--                                    <input name="gco" th:field="*{gco}" type="hidden">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label class="col-sm-3 control-label">策略名称：</label>-->
-<!--                                        <div class="col-sm-8">-->
-<!--                                            <input name="gna" readonly="true" th:field="*{gna}" class="form-control" type="text">-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <input name="id" th:field="*{formConvert.id}" type="hidden">
+                                    <input name="gco" th:field="*{formConvert.gco}" type="hidden">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">策略名称：</label>
+                                        <div class="col-sm-8">
+                                            <input name="gna" th:field="*{formConvert.gna}" readonly="true" class="form-control" type="text">
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">流程方式：</label>
                                         <div class="col-sm-8">
                                             <select name="process" class="form-control" id="process">
-                                                <option th:each="process : ${processList}" th:text="${process.configValue}" th:value="${process.configKey}"></option>
+                                                <option th:each="process : ${processList}" th:text="${process.configValue}" th:value="${process.configKey}"
+                                                th:selected="${formConvert.process == process.configKey}">
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -114,6 +116,8 @@
         var owners = [[${@base.selectOwner()}]];
         //策略编码
         var gco = "";
+        //策略
+        var formConvert = {}
 
         $(function() {
             var options = {
@@ -206,6 +210,7 @@
             $.table.init(options);
         });
 
+        //点击行触发事件
         function onClickRow(row, $element){
             gco = row.gco;
             //重新加载店铺表格
@@ -215,9 +220,9 @@
                 url: prefix + "/loadStrategy/" + row.id,
                 type: "get",
                 success: function(result) {
-                    if (typeof callback == "function") {
-                        callback(result);
-                    }
+                    formConvert = result.data;
+                    // $('#commentForm').load(prefix + "/loadStrategy/" + row.id);
+                    $('#commentForm').bootstrapTable('load', result.data);
                 }
             };
             $.ajax(config)

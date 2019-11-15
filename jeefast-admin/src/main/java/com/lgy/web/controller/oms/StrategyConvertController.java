@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class StrategyConvertController extends BaseController {
         model.addAttribute("matchCommodityList", ConvertMatchCommodityEnum.getList());
         //流程方式
         model.addAttribute("processList", ProcessEnum.getList());
+        //表单对象
+        model.addAttribute("formConvert", new StrategyConvert());
         return prefix + "/convert";
     }
 
@@ -149,8 +152,12 @@ public class StrategyConvertController extends BaseController {
     @PostMapping("/convertShop")
     @ResponseBody
     public TableDataInfo convertShop(String gco) {
-        List<StrategyConvertShop> convertShop = strategyConvertService.getConvertShop(gco);
-        startPage();
+        List<StrategyConvertShop> convertShop = new ArrayList<>();
+        if (StringUtils.isNotEmpty(gco)) {
+            convertShop = strategyConvertService.getConvertShop(gco);
+            startPage();
+            return getDataTable(convertShop);
+        }
         return getDataTable(convertShop);
     }
 
