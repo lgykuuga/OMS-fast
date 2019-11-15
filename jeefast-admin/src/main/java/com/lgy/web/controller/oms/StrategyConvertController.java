@@ -52,7 +52,7 @@ public class StrategyConvertController extends BaseController {
         //流程方式
         model.addAttribute("processList", ProcessEnum.getList());
         //表单对象
-        model.addAttribute("formConvert", new StrategyConvert());
+        model.addAttribute("strategyConvert", new StrategyConvert());
         return prefix + "/convert";
     }
 
@@ -120,12 +120,14 @@ public class StrategyConvertController extends BaseController {
     }
 
     /**
-     * 加载策略
+     * 加载策略到form表单
      */
     @GetMapping("/loadStrategy/{id}")
     @ResponseBody
-    public AjaxResult loadStrategy(@PathVariable("id") Long id) {
+    public AjaxResult loadStrategy(@PathVariable("id") Long id, Model model) {
         StrategyConvert strategyConvert = strategyConvertService.getById(id);
+        //表单对象
+        model.addAttribute("strategyConvert", strategyConvertService.getById(id));
         return AjaxResult.success(strategyConvert);
     }
 

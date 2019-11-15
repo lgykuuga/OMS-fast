@@ -51,24 +51,30 @@
                     <div class="col-sm-9">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
-                                <h5>转单策略</h5>
+                                <h5 th:field="${strategyConvert.gna}">转单策略</h5>
                             </div>
                             <div class="ibox-content">
-                                <form class="form-horizontal m-t" id="commentForm" >
-                                    <input name="id" th:field="*{formConvert.id}" type="hidden">
-                                    <input name="gco" th:field="*{formConvert.gco}" type="hidden">
+                                <form class="form-horizontal m" id="form-convert-edit" th:object="${strategyConvert}">
+                                    <input name="id" th:field="*{id}" type="hidden">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">策略编码：</label>
+                                        <div class="col-sm-8">
+                                            <input name="gco" th:field="*{gco}" class="form-control" type="text"  readonly="true">
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">策略名称：</label>
                                         <div class="col-sm-8">
-                                            <input name="gna" th:field="*{formConvert.gna}" readonly="true" class="form-control" type="text">
+                                            <input name="gna" th:field="*{gna}" class="form-control" type="text" readonly="true">
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">流程方式：</label>
                                         <div class="col-sm-8">
                                             <select name="process" class="form-control" id="process">
                                                 <option th:each="process : ${processList}" th:text="${process.configValue}" th:value="${process.configKey}"
-                                                th:selected="${formConvert.process == process.configKey}">
+                                                        th:selected="${strategyConvert.process == process.configKey}">
                                                 </option>
                                             </select>
                                         </div>
@@ -78,7 +84,9 @@
                                         <label class="col-sm-3 control-label">转单触发节点：</label>
                                         <div class="col-sm-8">
                                             <select name="triggerNode" class="form-control" id="triggerNode" >
-                                                <option th:each="convertTriggerNode : ${convertTriggerNodeList}" th:text="${convertTriggerNode.configValue}" th:value="${convertTriggerNode.configKey}"></option>
+                                                <option th:each="convertTriggerNode : ${convertTriggerNodeList}"
+                                                        th:text="${convertTriggerNode.configValue}" th:value="${convertTriggerNode.configKey}"
+                                                        th:selected="${strategyConvert.triggerNode == convertTriggerNode.configKey}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -87,7 +95,9 @@
                                         <label class="col-sm-3 control-label">匹配商品方式：</label>
                                         <div class="col-sm-8">
                                             <select name="matchCommodity" class="form-control" id="matchCommodity" >
-                                                <option th:each="matchCommodity : ${matchCommodityList}" th:text="${matchCommodity.configValue}" th:value="${matchCommodity.configKey}"></option>
+                                                <option th:each="matchCommodity : ${matchCommodityList}" th:text="${matchCommodity.configValue}"
+                                                        th:value="${matchCommodity.configKey}"
+                                                        th:selected="${strategyConvert.matchCommodity == matchCommodity.configKey}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -116,8 +126,10 @@
         var owners = [[${@base.selectOwner()}]];
         //策略编码
         var gco = "";
-        //策略
-        var formConvert = {}
+
+        $("#form-convert-edit").validate({
+            focusCleanup: true
+        });
 
         $(function() {
             var options = {
@@ -157,6 +169,14 @@
                     title : '备注'
                 },
                 {
+                    field : 'createTime',
+                    title : '创建时间'
+                },
+                {
+                    field : 'updateTime',
+                    title : '更新时间'
+                },
+                {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
@@ -182,7 +202,7 @@
                 showToggle: false,
                 showColumns: false,
                 queryParams: queryParams,
-                height: 300,
+                height: 360,
                 columns: [
                     {
                         field : 'id',
@@ -220,9 +240,8 @@
                 url: prefix + "/loadStrategy/" + row.id,
                 type: "get",
                 success: function(result) {
-                    formConvert = result.data;
-                    // $('#commentForm').load(prefix + "/loadStrategy/" + row.id);
-                    $('#commentForm').bootstrapTable('load', result.data);
+                    var strategyConvert = result.data;
+                    $('#form-convert-edit').bootstrapTable('refresh', strategyConvert);
                 }
             };
             $.ajax(config)
