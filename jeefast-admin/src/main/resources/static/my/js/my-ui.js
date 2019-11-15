@@ -57,7 +57,7 @@ var table = {
                     showColumns: true,
                     showToggle: true,
                     showExport: false,
-                    clickToSelect: false,
+                    clickToSelect: true,
                     mobileResponsive: true,
                     rememberSelected: false,
         		    fixedColumns: false,
