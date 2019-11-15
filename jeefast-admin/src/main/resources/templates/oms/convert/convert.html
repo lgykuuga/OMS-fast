@@ -241,7 +241,8 @@
                 type: "get",
                 success: function(result) {
                     var strategyConvert = result.data;
-                    $('#form-convert-edit').bootstrapTable('refresh', strategyConvert);
+                    $("#form-convert-edit").setForm(strategyConvert);
+                    // $('#form-convert-edit').bootstrapTable('refresh', strategyConvert);
                 }
             };
             $.ajax(config)
@@ -304,6 +305,48 @@
                     } else {
                         alert(result.msg);
                     }
+                }
+            })
+        }
+
+        /**
+         * 将josn对象赋值给form
+         * @param {dom} 指定的选择器
+         * @param {obj} 需要给form赋值的json对象
+         * @method serializeJson
+         * */
+        $.fn.setForm = function(jsonValue){
+            var obj = this;
+            $.each(jsonValue,function(name,ival){
+                var $oinput = obj.find("input[name="+name+"]");
+                if($oinput.attr("type")=="checkbox"){
+                    if(ival !== null){
+                        var checkboxObj = $("[name="+name+"]");
+                        var checkArray = ival.split(";");
+                        for(var i=0;i<checkboxObj.length;i++){
+                            for(var j=0;j<checkArray.length;j++){
+                                if(checkboxObj[i].value == checkArray[j]){
+                                    checkboxObj[i].click();
+                                }
+                            }
+                        }
+                    }
+                }
+                else if($oinput.attr("type")=="radio"){
+                    $oinput.each(function(){
+                        var radioObj = $("[name="+name+"]");
+                        for(var i=0;i<radioObj.length;i++){
+                            if(radioObj[i].value == ival){
+                                radioObj[i].click();
+                            }
+                        }
+                    });
+                }
+                else if($oinput.attr("type")=="textarea"){
+                    obj.find("[name="+name+"]").html(ival);
+                }
+                else{
+                    obj.find("[name="+name+"]").val(ival);
                 }
             })
         }

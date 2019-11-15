@@ -211,16 +211,6 @@ public class StrategyConvertController extends BaseController {
     }
 
     /**
-     * 选择商品
-     * 点击提交后得到数据并回显到父窗体
-     */
-    @GetMapping("/selectCommodityParent/{combo}")
-    public String selectCommodityParent(@PathVariable("combo") String combo, ModelMap mmap) {
-        mmap.put("combo", combo);
-        return prefix + "/common/commodityParent";
-    }
-
-    /**
      * 新增读取店铺
      * gco:      策略编码
      * enforce: 是否强制新增店铺
