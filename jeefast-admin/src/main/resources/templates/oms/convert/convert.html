@@ -210,6 +210,17 @@
             gco = row.gco;
             //重新加载店铺表格
             $('#bootstrap-table2').bootstrapTable('refresh', gco);
+
+            var config = {
+                url: prefix + "/loadStrategy/" + row.id,
+                type: "get",
+                success: function(result) {
+                    if (typeof callback == "function") {
+                        callback(result);
+                    }
+                }
+            };
+            $.ajax(config)
         }
 
 

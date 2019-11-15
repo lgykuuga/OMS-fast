@@ -120,8 +120,10 @@ public class StrategyConvertController extends BaseController {
      * 加载策略
      */
     @GetMapping("/loadStrategy/{id}")
-    public StrategyConvert loadStrategy(@PathVariable("id") Long id) {
-        return strategyConvertService.getById(id);
+    @ResponseBody
+    public AjaxResult loadStrategy(@PathVariable("id") Long id) {
+        StrategyConvert strategyConvert = strategyConvertService.getById(id);
+        return AjaxResult.success(strategyConvert);
     }
 
     /**
