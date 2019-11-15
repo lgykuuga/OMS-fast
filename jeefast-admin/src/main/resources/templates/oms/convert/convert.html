@@ -246,6 +246,12 @@
             });
         }
 
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.gco = gco;
+            return search;
+        }
+
         function submit2(){
             $.ajax({
                 url: prefix + "/edit",
