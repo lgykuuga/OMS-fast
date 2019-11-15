@@ -242,7 +242,6 @@
                 success: function(result) {
                     var strategyConvert = result.data;
                     $("#form-convert-edit").setForm(strategyConvert);
-                    // $('#form-convert-edit').bootstrapTable('refresh', strategyConvert);
                 }
             };
             $.ajax(config)
@@ -291,7 +290,7 @@
         function submit2(){
             $.ajax({
                 url: prefix + "/edit",
-                data: $('#form-demo-2').serialize(),
+                data: $('#form-convert-edit').serialize(),
                 type: "post",
                 success: function(result) {
                     if (result.code == 0) {
@@ -299,8 +298,6 @@
                             icon: 1,
                             time: 500,
                             shade: [0.1, '#8F8F8F']
-                        },function() {
-                            location.reload();
                         });
                     } else {
                         alert(result.msg);

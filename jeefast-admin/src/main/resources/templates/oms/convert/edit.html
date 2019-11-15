@@ -45,6 +45,7 @@
         function submitHandler() {
             if ($.validate.form()) {
                 $.operate.save(prefix + "/edit", $('#form-convert-edit').serialize());
+                parent.location.reload();
             }
         }
     </script>
