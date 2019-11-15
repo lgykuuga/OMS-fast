@@ -63,7 +63,7 @@
                         <label class="col-sm-4 control-label">用户状态：</label>
                         <div class="col-sm-8">
                             <label class="toggle-switch switch-solid">
-	                            <input type="checkbox" id="status" th:checked="${shops.status == '0' ? true : false}">
+	                            <input type="checkbox" id="status" th:checked="${user.status == '0' ? true : false}">
 	                            <span></span>
 	                        </label>
                         </div>
@@ -219,7 +219,7 @@
 
 		$(function() {
             $('#post').select2({
-                placeholder:"请选择岗位",
+                placeholder: "请选择岗位",
                 allowClear: true
             });
         })
