@@ -34,6 +34,12 @@
             <groupId>com.jeefast</groupId>
             <artifactId>jeefast-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.jeefast</groupId>
+            <artifactId>jeefast-oms</artifactId>
+            <version>2.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 	
