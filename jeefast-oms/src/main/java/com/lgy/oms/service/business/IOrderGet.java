@@ -4,7 +4,7 @@ package com.lgy.oms.service.business;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.Trade;
-import com.lgy.oms.domain.dto.OrderDTO;
+import com.lgy.oms.interfaces.common.dto.OrderDTO;
 
 import java.util.Date;
 import java.util.List;

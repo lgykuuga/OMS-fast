@@ -1,7 +1,7 @@
 package com.lgy.oms.service.business;
 
 import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.oms.domain.dto.OrderDTO;
+import com.lgy.oms.interfaces.common.dto.OrderDTO;
 
 /**
  * @Description 取消订单服务接口

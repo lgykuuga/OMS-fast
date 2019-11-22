@@ -1,7 +1,7 @@
 package com.lgy.oms.service.business.impl;
 
 import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.oms.domain.dto.OrderDTO;
+import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.service.business.ICancelOrderService;
 import org.springframework.stereotype.Service;
 

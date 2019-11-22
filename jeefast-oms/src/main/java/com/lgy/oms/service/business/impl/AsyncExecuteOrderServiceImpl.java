@@ -2,7 +2,7 @@ package com.lgy.oms.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lgy.oms.domain.Trade;
-import com.lgy.oms.domain.dto.OrderDTO;
+import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.business.IAsyncExecuteOrderService;
 import com.lgy.oms.service.business.ICancelOrderService;

@@ -1,7 +1,8 @@
 package com.lgy.oms.service.business;
 
 
-import com.lgy.oms.domain.dto.OrderDTO;
+
+import com.lgy.oms.interfaces.common.dto.OrderDTO;
 
 import java.util.List;
 

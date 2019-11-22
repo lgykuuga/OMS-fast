@@ -6,10 +6,10 @@ import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.Trade;
-import com.lgy.oms.domain.dto.OrderDTO;
-import com.lgy.oms.domain.dto.ods.response.BaseResponse;
-import com.lgy.oms.service.business.IKJYService;
-import com.lgy.oms.service.business.IODSService;
+import com.lgy.oms.interfaces.common.dto.OrderDTO;
+import com.lgy.oms.interfaces.kjy.service.IKJYService;
+import com.lgy.oms.interfaces.ods.bean.response.BaseResponse;
+import com.lgy.oms.interfaces.ods.service.IODSService;
 import com.lgy.oms.service.business.IOrderGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +110,7 @@ public class OrderGetImpl implements IOrderGet {
 
         //4返回
         if (response.isStatus()) {
-           return new CommonResponse<Trade>().ok((Trade) response.getBody());
+            return new CommonResponse<Trade>().ok((Trade) response.getBody());
         } else {
             logger.error(response.getMessage());
             return new CommonResponse<Trade>().error(Constants.FAIL, response.getMessage());

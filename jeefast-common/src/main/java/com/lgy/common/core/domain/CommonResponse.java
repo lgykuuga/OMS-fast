@@ -7,6 +7,9 @@ import com.lgy.common.constant.Constants;
  * @Description 通用返回消息
  * @Author LGy
  * @Date 2019/10/14 10:20
+ *
+ * 返回码码标识
+ * @see Constants
  **/
 public class CommonResponse<T> {
     private String code;
