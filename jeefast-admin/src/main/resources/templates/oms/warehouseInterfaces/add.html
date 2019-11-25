@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增仓库接口设置')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-interfaces-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>仓库：</label>
+                <div class="col-sm-8">
+                    <select name="warehouse" class="form-control" th:with="warehouseList=${@base.selectWarehouse()}" required>
+                        <option value="">--请选择仓库--</option>
+                        <option th:each="warehouse : ${warehouseList}" th:text="${warehouse.gna}" th:value="${warehouse.gco}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">appkey：</label>
+                <div class="col-sm-8">
+                    <input name="appk" class="form-control" type="text" autocomplete="off" >
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">sercret：</label>
+                <div class="col-sm-8">
+                    <input name="secr" class="form-control" type="text" autocomplete="off" >
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">token：</label>
+                <div class="col-sm-8">
+                    <input name="toke" class="form-control" type="text" autocomplete="off" >
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">请求地址：</label>
+                <div class="col-sm-8">
+                    <input name="surl" class="form-control" type="text" autocomplete="off" >
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-6 control-label">加密:</label>
+                    <div class="col-sm-6">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="encr">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">数据格式：</label>
+                    <div class="col-sm-6">
+                        <select name="fmat" class="form-control" id="fmat">
+                            <option th:each="pushFormat : ${pushFormatList}" th:text="${pushFormat.configValue}" th:value="${pushFormat.configKey}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">接口类型：</label>
+                <div class="col-sm-8">
+                    <select name="jklx" class="form-control" id="jklx">
+                        <option th:each="interfaceType : ${interfaceTypeList}" th:text="${interfaceType.configValue}" th:value="${interfaceType.configKey}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control" autocomplete="off" ></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/warehouseInterfaces"
+        $("#form-interfaces-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                var data = $("#form-interfaces-add").serializeArray();
+                var encr = $("input[id='encr']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "encr", "value": encr});
+                $.operate.save(prefix + "/add", data);
+            }
+        }
+    </script>
+</body>
+</html>

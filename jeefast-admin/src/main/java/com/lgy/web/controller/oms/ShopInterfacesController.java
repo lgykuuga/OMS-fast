@@ -32,26 +32,26 @@ import java.util.List;
  * @date 2019-10-11
  */
 @Controller
-@RequestMapping("/oms/interfaces")
+@RequestMapping("/oms/shopInterfaces")
 public class ShopInterfacesController extends BaseController {
-    private String prefix = "oms/interfaces";
+    private String prefix = "oms/shopInterfaces";
 
     @Autowired
     private IShopInterfacesService shopInterfacesService;
     @Autowired
     private IShopService shopService;
 
-    @RequiresPermissions("oms:interfaces:view")
+    @RequiresPermissions("oms:shopInterfaces:view")
     @GetMapping()
     public String interfaces() {
 
-        return prefix + "/interfaces";
+        return prefix + "/shopInterfaces";
     }
 
     /**
      * 查询店铺接口设置列表
      */
-    @RequiresPermissions("oms:interfaces:list")
+    @RequiresPermissions("oms:shopInterfaces:list")
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(ShopInterfaces shopInterfaces) {
@@ -83,14 +83,14 @@ public class ShopInterfacesController extends BaseController {
     /**
      * 导出店铺接口设置列表
      */
-    @RequiresPermissions("oms:interfaces:export")
+    @RequiresPermissions("oms:shopInterfaces:export")
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(ShopInterfaces shopInterfaces) {
         QueryWrapper<ShopInterfaces> queryWrapper = getShopInterfacesQueryWrapper(shopInterfaces);
         List<ShopInterfaces> list = shopInterfacesService.list(queryWrapper);
         ExcelUtil<ShopInterfaces> util = new ExcelUtil<>(ShopInterfaces.class);
-        return util.exportExcel(list, "interfaces");
+        return util.exportExcel(list, "shopInterfaces");
     }
 
     /**
@@ -110,7 +110,7 @@ public class ShopInterfacesController extends BaseController {
     /**
      * 新增保存店铺接口设置
      */
-    @RequiresPermissions("oms:interfaces:add")
+    @RequiresPermissions("oms:shopInterfaces:add")
     @Log(title = "店铺接口设置", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
@@ -152,7 +152,7 @@ public class ShopInterfacesController extends BaseController {
     /**
      * 修改保存店铺接口设置
      */
-    @RequiresPermissions("oms:interfaces:edit")
+    @RequiresPermissions("oms:shopInterfaces:edit")
     @Log(title = "店铺接口设置", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
@@ -163,7 +163,7 @@ public class ShopInterfacesController extends BaseController {
     /**
      * 删除店铺接口设置
      */
-    @RequiresPermissions("oms:interfaces:remove")
+    @RequiresPermissions("oms:shopInterfaces:remove")
     @Log(title = "店铺接口设置", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody

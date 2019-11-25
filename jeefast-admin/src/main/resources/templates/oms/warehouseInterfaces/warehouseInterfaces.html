@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('仓库接口设置列表')" />
+    <style type="text/css">
+        .select-table table {
+            table-layout:fixed;
+        }
+
+        .select-table .table td {
+            /* 超出部分隐藏 */
+            overflow:hidden;
+            /* 超出部分显示省略号 */
+            text-overflow:ellipsis;
+            /*规定段落中的文本不进行换行 */
+            white-space:nowrap;
+            /* 配合宽度来使用 */
+            height:40px;
+        }
+
+    </style>
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>仓库编码：</p>
+                                <input type="text" name="warehouse"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:interfaces:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:interfaces:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:interfaces:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:interfaces:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('oms:interfaces:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:interfaces:remove')}]];
+        var prefix = ctx + "oms/warehouseInterfaces";
+        var warehouses = [[${@base.selectWarehouse()}]];
+        var datas = [[${@dict.getType('sys_normal_disable')}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "仓库接口设置",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'id',
+                    visible: false
+                },
+                {
+                    field: 'warehouse',
+                    title: '仓库',
+                    align: 'center',
+                    width: 150,
+                    formatter: function(value, row, index) {
+                        return $.table.selectGna(warehouses, value);
+                    }
+                },
+                {
+                    field : 'surl', 
+                    title : '请求地址',
+                    width: 150
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
+                },
+                {
+                    field : 'remark', 
+                    title : '备注',
+                    width: 120
+                },
+                {
+                    field : 'createBy',
+                    title : '创建人'
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                },
+                {
+                    field : 'updateBy',
+                    title : '修改人'
+                },
+                {
+                    field : 'updateTime',
+                    title : '修改时间',
+                },
+                ]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

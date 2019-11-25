@@ -77,9 +77,9 @@
     </div>
     <th:block th:include="include :: footer"/>
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('oms:interfaces:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('oms:interfaces:remove')}]];
-        var prefix = ctx + "oms/interfaces";
+        var editFlag = [[${@permission.hasPermi('oms:shopInterfaces:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:shopInterfaces:remove')}]];
+        var prefix = ctx + "oms/shopInterfaces";
         var datas = [[${@dict.getType('sys_normal_disable')}]];
         var shops = [[${@base.selectShop()}]];
         var platforms = [[${@base.selectPlatform()}]];

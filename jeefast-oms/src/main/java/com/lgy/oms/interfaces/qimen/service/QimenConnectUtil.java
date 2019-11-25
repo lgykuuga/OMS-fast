@@ -2,6 +2,7 @@ package com.lgy.oms.interfaces.qimen.service;
 
 import com.lgy.common.utils.DateUtils;
 import com.lgy.common.utils.security.Md5Utils;
+import com.lgy.oms.domain.WarehouseInterfaces;
 import com.lgy.oms.interfaces.qimen.contant.QimenConstants;
 import com.lgy.oms.domain.ShopInterfaces;
 import org.apache.http.HttpEntity;
@@ -51,7 +52,13 @@ public class QimenConnectUtil {
         String cuid = "";
         String secret = "";
         if (QimenConstants.WMS.equals(type)) {
-            //TODO
+            WarehouseInterfaces warehouseInterfaces = (WarehouseInterfaces) object;
+            url = warehouseInterfaces.getSurl();
+            appkey = warehouseInterfaces.getAppk();
+            cuid = warehouseInterfaces.getToke();
+            secret = warehouseInterfaces.getSecr();
+            //格式
+            format = warehouseInterfaces.getFmat();
             //跳过奇门路由,直接请求到WMS。删除请求方法名前缀(taobao.qimen.)
             if (!QimenConstants.URL.equals(url)) {
                 method = method.replace(QimenConstants.PREFIX, "");
