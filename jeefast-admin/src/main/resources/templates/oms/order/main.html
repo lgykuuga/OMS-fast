@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('订单审核信息列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>订单编号：</p>
+                                <input type="text" name="biid"/>
+                            </li>
+                            <li>
+                                <p>来源单号：</p>
+                                <input type="text" name="tid"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:main:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:main:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:main:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('oms:main:edit')}]];
+        var prefix = ctx + "oms/order";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                exportUrl: prefix + "/export",
+                modalName: "订单审核信息",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : '发货时间',
+                    visible: false
+                },
+                {
+                    field : 'biid', 
+                    title : '订单流水编号'
+                },
+                {
+                    field : 'tid', 
+                    title : '来源单号'
+                },
+                {
+                    field : 'shop', 
+                    title : '店铺编码'
+                },
+                {
+                    field : 'owner', 
+                    title : '货主编码'
+                },
+                {
+                    field : 'frozen', 
+                    title : '订单是否冻结'
+                },
+                {
+                    field : 'active', 
+                    title : '是否参与活动'
+                },
+                {
+                    field : 'handEdit', 
+                    title : '是否人工编辑'
+                },
+                {
+                    field : 'refund', 
+                    title : '是否退款'
+                },
+                {
+                    field : 'intercept', 
+                    title : '是否拦截'
+                },
+                {
+                    field : 'aftersales', 
+                    title : '是否售后'
+                },
+                {
+                    field : 'invoice', 
+                    title : '是否发票'
+                },
+                {
+                    field : 'orderLock', 
+                    title : '是否用户锁定'
+                },
+                {
+                    field : 'lockUser', 
+                    title : '锁定人编码'
+                },
+                {
+                    field : 'lockTime', 
+                    title : '锁定时间'
+                },
+                {
+                    field : 'mark', 
+                    title : '订单标记'
+                },
+                {
+                    field : 'markContent', 
+                    title : '标记内容'
+                },
+                {
+                    field : 'sellerFlag', 
+                    title : '卖家备注旗帜'
+                },
+                {
+                    field : 'sizeType', 
+                    title : '尺码类型'
+                },
+                {
+                    field : 'skuNum', 
+                    title : 'sku种类数量'
+                },
+                {
+                    field : 'qty', 
+                    title : '总件数'
+                },
+                {
+                    field : 'commodity', 
+                    title : '商品编码集合'
+                },
+                {
+                    field : 'volume', 
+                    title : '总体积'
+                },
+                {
+                    field : 'weight', 
+                    title : '总重量'
+                },
+                {
+                    field : 'warehouse', 
+                    title : '发货仓库编码(支持多条)'
+                },
+                {
+                    field : 'logistics', 
+                    title : '物流商编码(支持多条)'
+                },
+                {
+                    field : 'expressNumber', 
+                    title : '快递单号(支持多条)'
+                },
+                {
+                    field : 'sendoutTime', 
+                    title : '发货时间'
+                },
+                {
+                    field : 'remark', 
+                    title : '备注'
+                }
+
+                ]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

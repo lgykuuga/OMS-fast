@@ -143,7 +143,7 @@ var table = {
                         pageNum:        params.offset / params.limit + 1,
                         searchValue:    params.search,
                         orderByColumn:  params.sort,
-                        isAsc:          com.lgy.oms.interfaces.qimen.bean.order
+                        isAsc:          params.order,
             		};
             	var currentId = $.common.isEmpty(table.options.formId) ? $('form').attr('id') : table.options.formId;
             	return $.extend(curParams, $.common.formToJSON(currentId)); 
@@ -328,7 +328,7 @@ var table = {
                     search.pageNum = params.offset / params.limit + 1;
                     search.searchValue = params.search;
                     search.orderByColumn = params.sort;
-                    search.isAsc = com.lgy.oms.interfaces.qimen.bean.order;
+                    search.isAsc = params.order;
     		        return search;
     		    }
     		    if($.common.isNotEmpty(tableId)){

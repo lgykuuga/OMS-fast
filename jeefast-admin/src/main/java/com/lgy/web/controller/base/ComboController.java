@@ -1,47 +1,51 @@
 package com.lgy.web.controller.base;
 
-import java.util.Arrays;
-import java.util.List;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Combo;
+import com.lgy.base.domain.Commodity;
+import com.lgy.base.domain.vo.CommodityVO;
+import com.lgy.base.service.IComboService;
+import com.lgy.base.service.ICommodityService;
+import com.lgy.common.annotation.Log;
+import com.lgy.common.core.controller.BaseController;
+import com.lgy.common.core.domain.AjaxResult;
+import com.lgy.common.core.page.TableDataInfo;
+import com.lgy.common.core.text.Convert;
+import com.lgy.common.enums.BusinessType;
+import com.lgy.common.utils.StringUtils;
+import com.lgy.common.utils.poi.ExcelUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.web.bind.annotation.*;
 
-import com.lgy.common.annotation.Log;
-import com.lgy.common.enums.BusinessType;
-import com.lgy.base.domain.Combo;
-import com.lgy.base.service.IComboService;
-import com.lgy.common.core.controller.BaseController;
-import com.lgy.common.core.domain.AjaxResult;
-import com.lgy.common.utils.StringUtils;
-import com.lgy.common.utils.poi.ExcelUtil;
-import com.lgy.common.core.text.Convert;
-import com.lgy.common.core.page.TableDataInfo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 组合商品Controller
- * 
+ *
  * @author lgy
  * @date 2019-10-25
  */
 @Controller
 @RequestMapping("/base/combo")
 public class ComboController extends BaseController {
-    private String prefix = "base/combo";
+    private String prefix = "base/combo" ;
 
     @Autowired
     private IComboService comboService;
 
+    @Autowired
+    private ICommodityService commodityService;
+
     @RequiresPermissions("base:combo:view")
     @GetMapping()
     public String combo() {
-        return prefix + "/combo";
+        return prefix + "/combo" ;
     }
 
     /**
@@ -89,7 +93,7 @@ public class ComboController extends BaseController {
      */
     @GetMapping("/add")
     public String add() {
-        return prefix + "/add";
+        return prefix + "/add" ;
     }
 
     /**
@@ -110,7 +114,7 @@ public class ComboController extends BaseController {
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         Combo combo = comboService.getById(id);
         mmap.put("combo", combo);
-        return prefix + "/edit";
+        return prefix + "/edit" ;
     }
 
     /**
@@ -129,9 +133,28 @@ public class ComboController extends BaseController {
      */
     @RequiresPermissions("base:combo:remove")
     @Log(title = "组合商品", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
         return toAjax(comboService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
+
+
+    /**
+     * 获取商品档案信息
+     */
+    @GetMapping("/selectCommodityParent/{combo}")
+    @ResponseBody
+    public AjaxResult selectCommodityParent(@PathVariable("combo") String combo) {
+        AjaxResult ajax = new AjaxResult();
+
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "gco", "gna");
+        queryWrapper.eq("combo", combo);
+        List<Commodity> commodityList = commodityService.list(queryWrapper);
+        ajax.put("code", 200);
+        ajax.put("value", commodityList);
+        return ajax;
+    }
+
 }

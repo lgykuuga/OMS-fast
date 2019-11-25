@@ -45,4 +45,8 @@ public class Combo extends BaseEntity implements Serializable {
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+    /** 备注 */
+    @Excel(name = "备注")
+    private String remark;
+
 }

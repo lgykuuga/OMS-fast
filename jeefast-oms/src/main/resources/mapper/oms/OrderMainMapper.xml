@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgy.oms.mapper.OrderMainMapper">
+    <!--
+    <resultMap type="OrderMain" id="OrderMainResult">
+        <result property="id"    column="id"    />
+        <result property="biid"    column="biid"    />
+        <result property="tid"    column="tid"    />
+        <result property="shop"    column="shop"    />
+        <result property="owner"    column="owner"    />
+        <result property="frozen"    column="frozen"    />
+        <result property="active"    column="active"    />
+        <result property="handEdit"    column="hand_edit"    />
+        <result property="refund"    column="refund"    />
+        <result property="intercept"    column="intercept"    />
+        <result property="aftersales"    column="aftersales"    />
+        <result property="invoice"    column="invoice"    />
+        <result property="orderLock"    column="order_lock"    />
+        <result property="lockUser"    column="lock_user"    />
+        <result property="lockTime"    column="lock_time"    />
+        <result property="mark"    column="mark"    />
+        <result property="markContent"    column="mark_content"    />
+        <result property="sellerFlag"    column="seller_flag"    />
+        <result property="sizeType"    column="size_type"    />
+        <result property="skuNum"    column="sku_num"    />
+        <result property="qty"    column="qty"    />
+        <result property="commodity"    column="commodity"    />
+        <result property="volume"    column="volume"    />
+        <result property="weight"    column="weight"    />
+        <result property="warehouse"    column="warehouse"    />
+        <result property="logistics"    column="logistics"    />
+        <result property="expressNumber"    column="express_number"    />
+        <result property="sendoutTime"    column="sendout_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+    -->
+
+</mapper>
+

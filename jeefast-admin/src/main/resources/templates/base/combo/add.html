@@ -11,8 +11,14 @@
                 <label class="col-sm-3 control-label"><span style="color: red; ">*</span>组合商品：</label>
                 <div class="col-sm-8">
                     <div class="input-group">
-                        <input name="parent" onclick="selectParent('parent')" id="parent" type="text" placeholder="请选择组合商品" class="form-control" autocomplete="off" required>
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        <input type="text" class="form-control" name="parent" id="parent" autocomplete="off" required>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -21,8 +27,14 @@
                 <label class="col-sm-3 control-label"><span style="color: red; ">*</span>明细商品：</label>
                 <div class="col-sm-8">
                     <div class="input-group">
-                        <input name="children" onclick="selectParent('children')" id="children" type="text" placeholder="请选择明细商品" class="form-control" autocomplete="off" required>
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        <input type="text" class="form-control" name="children" id="children" autocomplete="off" required>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -30,36 +42,67 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">数量：</label>
                 <div class="col-sm-8">
-                    <input name="qty" class="form-control" type="text">
+                    <input name="qty" class="form-control" type="text" autocomplete="off">
                 </div>
             </div>
-            <div class="form-group">    
+            <div class="form-group">
                 <label class="col-sm-3 control-label">货主：</label>
                 <div class="col-sm-8">
-                    <input name="owner" class="form-control" type="text">
+                    <select name="owner" class="form-control" th:with="ownerList=${@base.selectOwner()}">
+                        <option value="">--请选择货主--</option>
+                        <option th:each="owner : ${ownerList}" th:text="${owner.configValue}" th:value="${owner.configKey}"></option>
+                    </select>
                 </div>
             </div>
-            <div class="form-group">    
+            <div class="form-group">
                 <label class="col-sm-3 control-label">状态：</label>
                 <div class="col-sm-8">
-                    <div class="radio-box">
-                        <input type="radio" name="status" value="">
-                        <label th:for="status" th:text="未知"></label>
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
                     </div>
-                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control"></textarea>
                 </div>
             </div>
         </form>
     </div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: bootstrap-suggest-js" />
+    <th:block th:include="include :: bootstrap-typeahead-js" />
     <script type="text/javascript">
+
         var prefix = ctx + "base/combo"
 
-        /*选择商品*/
-        function selectParent(combo) {
-            var url = ctx + "base/commodity/selectCommodityParent/" + combo;
-            $.modal.open("选择商品", url);
-        }
+        //组合商品
+        $("#parent").bsSuggest({
+            url: ctx + "base/combo/selectCommodityParent/" + "Y",
+            hideOnSelect: true,
+            effectiveFields: ["id", "gco", "gna"],
+            effectiveFieldsAlias:{gco: "商品编码", gna: "商品名称"},
+            idField: "gna",
+            keyField: "gco"
+        }).on('onDataRequestSuccess', function (e, result) {
+        }).on('onSetSelectValue', function (e, keyword) {
+        }).on('onUnsetSelectValue', function (e) {
+        });
+
+        //明细商品
+        $("#children").bsSuggest({
+            url: ctx + "base/combo/selectCommodityParent/" + "N",
+            hideOnSelect: true,
+            effectiveFields: ["id", "gco", "gna"],
+            effectiveFieldsAlias:{gco: "商品编码", gna: "商品名称"},
+            idField: "gna",
+            keyField: "gco"
+        }).on('onDataRequestSuccess', function (e, result) {
+        }).on('onSetSelectValue', function (e, keyword) {
+        }).on('onUnsetSelectValue', function (e) {
+        });
 
         $("#form-combo-add").validate({
             focusCleanup: true
@@ -70,6 +113,7 @@
                 $.operate.save(prefix + "/add", $('#form-combo-add').serialize());
             }
         }
+
     </script>
 </body>
 </html>

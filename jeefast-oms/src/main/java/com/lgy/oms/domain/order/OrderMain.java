@@ -14,8 +14,8 @@ import java.util.List;
  * @author lgy
  * @date 2019-10-22
  */
-@TableName("oms_order_audit")
-public class OrderAudit extends BaseEntity implements Serializable {
+@TableName("oms_order_main")
+public class OrderMain extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
