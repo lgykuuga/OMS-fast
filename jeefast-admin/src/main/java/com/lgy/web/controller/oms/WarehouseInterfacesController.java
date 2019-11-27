@@ -107,7 +107,7 @@ public class WarehouseInterfacesController extends BaseController {
         wrapper.eq("warehouse", warehouseInterfaces.getWarehouse());
         WarehouseInterfaces one = warehouseInterfacesService.getOne(wrapper);
         if (one != null) {
-            return AjaxResult.error("改仓库已存在配置接口");
+            return AjaxResult.error("该仓库已存在配置接口");
         }
         return toAjax(warehouseInterfacesService.save(warehouseInterfaces));
     }
