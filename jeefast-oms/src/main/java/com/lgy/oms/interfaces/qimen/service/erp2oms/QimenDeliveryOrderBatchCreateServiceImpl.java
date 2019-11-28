@@ -31,7 +31,7 @@ public class QimenDeliveryOrderBatchCreateServiceImpl implements QimenService {
     public QimenResponse requestExec(HashMap<String, String> paramMap) {
 
         QimenResponse response = new QimenResponse();
-        DeliveryorderBatchCreateRequest request = null;
+        DeliveryorderBatchCreateRequest request;
 
         /** 1. XML转换 检查参数 */
         try {

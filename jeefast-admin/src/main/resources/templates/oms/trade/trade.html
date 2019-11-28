@@ -69,6 +69,7 @@
         var prefix = ctx + "oms/trade";
         var shops = [[${@base.selectShop()}]];
         var orderStatusList = [[${orderStatusList}]];
+        var tradeTranformStatusList = [[${tradeTranformStatusList}]];
 
         $(function() {
             var options = {
@@ -124,7 +125,9 @@
                     field : 'flag',
                     title : '转单状态',
                     align: 'center',
-                    width: 80
+                    formatter: function(key, row, index) {
+                        return $.table.selectValue(tradeTranformStatusList, key);
+                    }
                 },
                 {
                     field : 'frequency',
@@ -132,13 +135,6 @@
                     align: 'center',
                     width: 80
                 },
-                // {
-                //     field : 'response',
-                //     title : '请求返回消息',
-                //     formatter: function(value, row, index) {
-                //         return $.table.tooltip(value);
-                //     }
-                // },
                 {
                     title: '操作',
                     align: 'center',

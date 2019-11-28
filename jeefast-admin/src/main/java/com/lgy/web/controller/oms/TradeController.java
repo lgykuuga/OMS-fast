@@ -8,6 +8,7 @@ import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
+import com.lgy.oms.enums.TradeTranformStatusEnum;
 import com.lgy.oms.service.ITradeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class TradeController extends BaseController {
     public String trade(Model model) {
         //下单订单接口
         model.addAttribute("orderStatusList", PlatformOrderStatusEnum.getList());
+        model.addAttribute("tradeTranformStatusList", TradeTranformStatusEnum.getList());
         return prefix + "/trade";
     }
 
