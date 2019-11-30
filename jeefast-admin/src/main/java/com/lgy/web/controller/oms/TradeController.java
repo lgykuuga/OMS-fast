@@ -101,4 +101,16 @@ public class TradeController extends BaseController {
         return AjaxResult.success(tradeService.previewOrder(tableId));
     }
 
+    /**
+     * 生成订单
+     * @param tids 平台单号
+     * @return
+     */
+    @RequiresPermissions("tool:trade:add")
+    @PostMapping("/convert")
+    @ResponseBody
+    public AjaxResult convert(String tids) {
+        return AjaxResult.success(tradeService.previewOrder(tids));
+    }
+
 }
