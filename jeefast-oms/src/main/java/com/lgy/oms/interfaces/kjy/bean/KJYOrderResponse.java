@@ -1,5 +1,6 @@
 package com.lgy.oms.interfaces.kjy.bean;
 
+
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
 public class KJYOrderResponse {
 
     private String has_next;
-    private List<Trades> trades;
+    private List<KjyTrade> trades;
 
     private String msg;
     private String state;
@@ -18,18 +19,20 @@ public class KJYOrderResponse {
     public final String ERROR_CODE = "0";
 
     public void setHas_next(String has_next) {
-         this.has_next = has_next;
-     }
-     public String getHas_next() {
-         return has_next;
-     }
+        this.has_next = has_next;
+    }
 
-    public void setTrades(List<Trades> trades) {
-         this.trades = trades;
-     }
-     public List<Trades> getTrades() {
-         return trades;
-     }
+    public String getHas_next() {
+        return has_next;
+    }
+
+    public void setTrades(List<KjyTrade> trades) {
+        this.trades = trades;
+    }
+
+    public List<KjyTrade> getTrades() {
+        return trades;
+    }
 
     public String getMsg() {
         return msg;

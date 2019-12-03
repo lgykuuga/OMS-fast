@@ -87,4 +87,11 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
 
         return count;
     }
+
+
+    @Override
+    public StrategyConvert getStrategyByShop(String shop) {
+        return shopMapper.getStrategyByShop(shop);
+
+    }
 }

@@ -22,6 +22,16 @@ public class Constants {
     public static final String FAIL = "1";
 
     /**
+     * 通用YES标识
+     */
+    public static final String YES = "0";
+
+    /**
+     * 通用NO标识
+     */
+    public static final String NO = "1";
+
+    /**
      * 登录成功
      */
     public static final String LOGIN_SUCCESS = "Success";

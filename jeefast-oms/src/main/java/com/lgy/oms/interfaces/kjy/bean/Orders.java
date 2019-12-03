@@ -1,7 +1,7 @@
-/**
-  * Copyright 2019 bejson.com 
-  */
+
 package com.lgy.oms.interfaces.kjy.bean;
+
+import java.util.List;
 
 /**
  * Auto-generated: 2019-10-17 17:35:35
@@ -11,12 +11,13 @@ package com.lgy.oms.interfaces.kjy.bean;
  */
 public class Orders {
 
-    private Order order;
-    public void setOrder(Order order) {
-         this.order = order;
-     }
-     public Order getOrder() {
-         return order;
-     }
+    private List<Order> orders;
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 }

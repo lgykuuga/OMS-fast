@@ -8,10 +8,12 @@ import com.lgy.common.utils.DateUtils;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
+import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.kjy.bean.KJYOrderResponse;
-import com.lgy.oms.interfaces.kjy.bean.Trades;
+import com.lgy.oms.interfaces.kjy.bean.KjyTrade;
 import com.lgy.oms.interfaces.kjy.service.IKJYService;
-import com.lgy.oms.util.ApacheHttpUtils;
+import com.lgy.oms.interfaces.kjy.util.ApacheHttpUtils;
+import com.lgy.oms.interfaces.kjy.util.KjyConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -70,9 +72,9 @@ public class KJYServiceImpl implements IKJYService {
             }
 
             //跨境翼返回对象
-            List<Trades> kjyTrades = response.getTrades();
+            List<KjyTrade> kjyTrades = response.getTrades();
 
-            for (Trades kjyTrade : kjyTrades) {
+            for (KjyTrade kjyTrade : kjyTrades) {
 
                 Trade trade = new Trade();
                 //平台单号
@@ -87,6 +89,9 @@ public class KJYServiceImpl implements IKJYService {
                 trade.setShop(shopInterfaces.getShop());
                 //请求返回消息
                 trade.setResponse(JSON.toJSONString(kjyTrade));
+                //订单标准格式
+                StandardOrder standardOrder = KjyConvert.changeStandard(kjyTrade, shopInterfaces);
+                trade.setStandard(JSON.toJSONString(standardOrder));
                 tradeList.add(trade);
             }
 
@@ -105,6 +110,7 @@ public class KJYServiceImpl implements IKJYService {
         return new CommonResponse<List<Trade>>().error(Constants.FAIL, "请求订单明细为空");
 
     }
+
 
     /**
      * 发送请求

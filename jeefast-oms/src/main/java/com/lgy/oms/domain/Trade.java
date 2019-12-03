@@ -48,6 +48,10 @@ public class Trade extends BaseEntity implements Serializable {
     @Excel(name = "请求返回消息")
     private String response;
 
+    /** 标准订单数据 */
+    @Excel(name = "标准订单数据")
+    private String standard;
+
     /** 店铺编码 */
     @Excel(name = "店铺编码")
     private String shop;

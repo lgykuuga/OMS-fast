@@ -228,15 +228,15 @@
 
             if (rows.length == 1) {
                 //只有一条时,弹窗勾选是否生成订单
-                $("#myModalLabel").text(rows[0].tid);
+                $("#myModalLabel").text("生成订单");
                 $('#myModal').modal(rows[0]);
                 return;
             }
 
             //平台单号
             var tids = "";
-            for (var i=0; i<rows.length; i++){
-                if(rows[i].status != 5){
+            for (var i=0; i<rows.length; i++) {
+                if (rows[i].status != 5) {
                     $.modal.alertWarning("所选单据[" + rows[i].tid + "]状态不为等待卖家发货,勾选批量订单无法生成。");
                     return;
                 }

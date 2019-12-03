@@ -24,10 +24,9 @@ public interface IDownloadOrderService extends IService<DownloadOrder> {
      * 根据单号下载订单
      * @param shop 店铺编码
      * @param tids 多条订单号用','分隔
-     * @param downloadRefundDetails 是否下载退款明细
      * @return
      */
-    CommonResponse<String> downloadByTid(String shop, String tids, boolean downloadRefundDetails);
+    CommonResponse<String> downloadByTid(String shop, String tids);
 
     /**
      * 清空订单下载请求日志

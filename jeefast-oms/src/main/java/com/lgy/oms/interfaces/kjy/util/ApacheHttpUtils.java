@@ -1,4 +1,4 @@
-package com.lgy.oms.util;
+package com.lgy.oms.interfaces.kjy.util;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;

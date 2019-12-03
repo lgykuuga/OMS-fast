@@ -62,7 +62,7 @@ public enum ConvertTriggerNodeEnum {
         for (ConvertTriggerNodeEnum nodeEnum : ConvertTriggerNodeEnum.values()) {
             json += "{\"key\":\"" + nodeEnum.getKey() + "\",\"val\":\"" + nodeEnum.getValue() + "\"},";
         }
-        return json = json.substring(0, json.length() - 1) + "]";
+        return json.substring(0, json.length() - 1) + "]";
     }
 
     public String getKey() {

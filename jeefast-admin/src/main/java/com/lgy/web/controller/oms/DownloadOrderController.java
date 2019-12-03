@@ -171,7 +171,7 @@ public class DownloadOrderController extends BaseController {
         if (StringUtils.isEmpty(tids)) {
             return AjaxResult.error("订单号不能为空");
         }
-        CommonResponse<String> response = downloadOrderService.downloadByTid(shop, tids, downloadRefundDetails);
+        CommonResponse<String> response = downloadOrderService.downloadByTid(shop, tids);
         if (Constants.SUCCESS.equals(response.getCode())) {
             return AjaxResult.success("下载成功");
         }

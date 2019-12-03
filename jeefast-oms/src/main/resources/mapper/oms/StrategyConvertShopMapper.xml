@@ -48,5 +48,23 @@
             AND gna like  concat('%', #{shopName}, '%')
         </if>
     </select>
+
+
+    <select id="getStrategyByShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvert">
+        select *
+        from
+        oms_strategy_convert
+        where gco = (
+        select
+        gco
+        from
+        oms_strategy_convert_shop
+        <where>
+        <if test="shop != null and shop != ''">
+            shop = #{shop}
+        </if>
+        </where>
+        )
+    </select>
 </mapper>
 

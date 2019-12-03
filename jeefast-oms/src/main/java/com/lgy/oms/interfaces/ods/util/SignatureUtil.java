@@ -1,4 +1,4 @@
-package com.lgy.oms.util;
+package com.lgy.oms.interfaces.ods.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

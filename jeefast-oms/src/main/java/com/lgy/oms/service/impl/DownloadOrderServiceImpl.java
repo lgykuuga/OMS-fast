@@ -65,7 +65,7 @@ public class DownloadOrderServiceImpl extends ServiceImpl<DownloadOrderMapper, D
     }
 
     @Override
-    public CommonResponse<String> downloadByTid(String shop, String tids, boolean downloadRefundDetails) {
+    public CommonResponse<String> downloadByTid(String shop, String tids) {
         //获取店铺接口设置
         QueryWrapper<ShopInterfaces> wrapper = new QueryWrapper<>();
         wrapper.eq("shop", shop);

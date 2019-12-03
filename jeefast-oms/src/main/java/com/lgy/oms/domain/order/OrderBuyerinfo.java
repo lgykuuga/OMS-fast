@@ -1,6 +1,7 @@
 package com.lgy.oms.domain.order;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * @author lgy
  * @date 2019-10-22
  */
+@Data
 @TableName("oms_order_buyerinfo")
 public class OrderBuyerinfo implements Serializable {
 
@@ -20,12 +22,12 @@ public class OrderBuyerinfo implements Serializable {
     /**
      * 订单编码
      */
-    private String biid;
+    private String orderId;
 
     /**
      * 来源单号
      */
-    private String tid;
+    private String sourceId;
 
     /**
      * 买家ID
@@ -127,179 +129,4 @@ public class OrderBuyerinfo implements Serializable {
      */
     private String sellerMessage;
 
-    public String getBiid() {
-        return biid;
-    }
-
-    public void setBiid(String biid) {
-        this.biid = biid;
-    }
-
-    public String getTid() {
-        return tid;
-    }
-
-    public void setTid(String tid) {
-        this.tid = tid;
-    }
-
-    public String getBuyerId() {
-        return buyerId;
-    }
-
-    public void setBuyerId(String buyerId) {
-        this.buyerId = buyerId;
-    }
-
-    public String getBuyerName() {
-        return buyerName;
-    }
-
-    public void setBuyerName(String buyerName) {
-        this.buyerName = buyerName;
-    }
-
-    public String getBuyerPhone() {
-        return buyerPhone;
-    }
-
-    public void setBuyerPhone(String buyerPhone) {
-        this.buyerPhone = buyerPhone;
-    }
-
-    public String getBuyerEmail() {
-        return buyerEmail;
-    }
-
-    public void setBuyerEmail(String buyerEmail) {
-        this.buyerEmail = buyerEmail;
-    }
-
-    public String getConsigneeName() {
-        return consigneeName;
-    }
-
-    public void setConsigneeName(String consigneeName) {
-        this.consigneeName = consigneeName;
-    }
-
-    public String getConsigneeMobile() {
-        return consigneeMobile;
-    }
-
-    public void setConsigneeMobile(String consigneeMobile) {
-        this.consigneeMobile = consigneeMobile;
-    }
-
-    public String getConsigneeTelephone() {
-        return consigneeTelephone;
-    }
-
-    public void setConsigneeTelephone(String consigneeTelephone) {
-        this.consigneeTelephone = consigneeTelephone;
-    }
-
-    public String getConsigneeEmail() {
-        return consigneeEmail;
-    }
-
-    public void setConsigneeEmail(String consigneeEmail) {
-        this.consigneeEmail = consigneeEmail;
-    }
-
-    public String getNationCode() {
-        return nationCode;
-    }
-
-    public void setNationCode(String nationCode) {
-        this.nationCode = nationCode;
-    }
-
-    public String getNation() {
-        return nation;
-    }
-
-    public void setNation(String nation) {
-        this.nation = nation;
-    }
-
-    public String getProvinceCode() {
-        return provinceCode;
-    }
-
-    public void setProvinceCode(String provinceCode) {
-        this.provinceCode = provinceCode;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCityCode() {
-        return cityCode;
-    }
-
-    public void setCityCode(String cityCode) {
-        this.cityCode = cityCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrictCode() {
-        return districtCode;
-    }
-
-    public void setDistrictCode(String districtCode) {
-        this.districtCode = districtCode;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    public String getBuyerMessage() {
-        return buyerMessage;
-    }
-
-    public void setBuyerMessage(String buyerMessage) {
-        this.buyerMessage = buyerMessage;
-    }
-
-    public String getSellerMessage() {
-        return sellerMessage;
-    }
-
-    public void setSellerMessage(String sellerMessage) {
-        this.sellerMessage = sellerMessage;
-    }
 }

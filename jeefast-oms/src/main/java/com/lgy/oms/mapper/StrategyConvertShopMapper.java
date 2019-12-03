@@ -1,6 +1,7 @@
 package com.lgy.oms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.StrategyConvertShop;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -43,4 +44,12 @@ public interface StrategyConvertShopMapper extends BaseMapper<StrategyConvertSho
      */
     List<StrategyConvertShop> getNotJoThisStrategyShop(@Param("shopCode") String shopCode, @Param("shopName") String shopName,
                                                        @Param("gco") String gco);
+
+    /**
+     * 根据店铺编码获取策略
+     *
+     * @param shop 店铺编码
+     * @return
+     */
+    StrategyConvert getStrategyByShop(@Param("shop") String shop);
 }

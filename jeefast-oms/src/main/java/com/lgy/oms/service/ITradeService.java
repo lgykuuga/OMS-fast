@@ -28,4 +28,5 @@ public interface ITradeService extends IService<Trade> {
      * @return
      */
     String previewOrder(String tid);
+
 }

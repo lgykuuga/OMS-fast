@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.mapper.TradeMapper;
 import com.lgy.oms.service.ITradeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -45,4 +44,5 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
         }
         return "";
     }
+
 }

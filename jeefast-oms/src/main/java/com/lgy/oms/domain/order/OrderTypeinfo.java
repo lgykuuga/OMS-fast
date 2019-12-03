@@ -2,6 +2,7 @@ package com.lgy.oms.domain.order;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.core.domain.BaseEntity;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @author lgy
  * @date 2019-10-22
  */
+@Data
 @TableName("oms_order_typeinfo")
 public class OrderTypeinfo extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -23,12 +25,12 @@ public class OrderTypeinfo extends BaseEntity implements Serializable {
     /**
      * 订单编码
      */
-    private String biid;
+    private String orderId;
 
     /**
      * 来源单号
      */
-    private String tid;
+    private String sourceId;
 
     /**
      * 目标单号
@@ -70,83 +72,4 @@ public class OrderTypeinfo extends BaseEntity implements Serializable {
      */
     private Integer level;
 
-    public String getBiid() {
-        return biid;
-    }
-
-    public void setBiid(String biid) {
-        this.biid = biid;
-    }
-
-    public String getTid() {
-        return tid;
-    }
-
-    public void setTid(String tid) {
-        this.tid = tid;
-    }
-
-    public String getAimId() {
-        return aimId;
-    }
-
-    public void setAimId(String aimId) {
-        this.aimId = aimId;
-    }
-
-    public Integer getSourceType() {
-        return sourceType;
-    }
-
-    public void setSourceType(Integer sourceType) {
-        this.sourceType = sourceType;
-    }
-
-    public Integer getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(Integer orderType) {
-        this.orderType = orderType;
-    }
-
-    public Integer getDeliveryType() {
-        return deliveryType;
-    }
-
-    public void setDeliveryType(Integer deliveryType) {
-        this.deliveryType = deliveryType;
-    }
-
-    public Integer getOutboundType() {
-        return outboundType;
-    }
-
-    public void setOutboundType(Integer outboundType) {
-        this.outboundType = outboundType;
-    }
-
-    public Integer getCod() {
-        return cod;
-    }
-
-    public void setCod(Integer cod) {
-        this.cod = cod;
-    }
-
-    public Integer getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Integer invoice) {
-        this.invoice = invoice;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
 }

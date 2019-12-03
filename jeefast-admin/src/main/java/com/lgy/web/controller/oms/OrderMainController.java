@@ -73,11 +73,11 @@ public class OrderMainController extends BaseController {
     private QueryWrapper<OrderMain> getOrderMainQueryWrapper(OrderMain orderMain) {
         QueryWrapper<OrderMain> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
-        if (StringUtils.isNotEmpty(orderMain.getBiid())) {
-            queryWrapper.like("biid", orderMain.getBiid());
+        if (StringUtils.isNotEmpty(orderMain.getOrderId())) {
+            queryWrapper.like("orderId", orderMain.getOrderId());
         }
-        if (StringUtils.isNotEmpty(orderMain.getTid())) {
-            queryWrapper.like("tid", orderMain.getTid());
+        if (StringUtils.isNotEmpty(orderMain.getSourceId())) {
+            queryWrapper.like("sourceId", orderMain.getSourceId());
         }
         return queryWrapper;
     }

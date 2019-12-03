@@ -14,7 +14,9 @@ public class OrderFullInfoServiceGetRequest extends BaseExecuteParams {
 
     private String orderCode = null;
 
-    //扩展参数
+    /**
+     * 扩展参数
+     */
     private Map<String, String> extendPropsMap;
 
     public void analysis(String params) throws Exception {

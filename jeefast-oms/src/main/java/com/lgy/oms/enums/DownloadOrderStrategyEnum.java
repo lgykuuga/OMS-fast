@@ -45,7 +45,7 @@ public enum DownloadOrderStrategyEnum {
         for (DownloadOrderStrategyEnum downloadOrderStrategyEnum : DownloadOrderStrategyEnum.values()) {
             JsOrderFlag += "{\"key\":\"" + downloadOrderStrategyEnum.name() + "\",\"val\":\"" + downloadOrderStrategyEnum.getValue() + "\"},";
         }
-        return JsOrderFlag = JsOrderFlag.substring(0, JsOrderFlag.length() - 1) + "]";
+        return JsOrderFlag.substring(0, JsOrderFlag.length() - 1) + "]";
     }
 
     /**

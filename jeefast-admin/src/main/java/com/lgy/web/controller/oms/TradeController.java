@@ -10,6 +10,7 @@ import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
 import com.lgy.oms.enums.TradeTranformStatusEnum;
 import com.lgy.oms.service.ITradeService;
+import com.lgy.oms.service.business.ITradeConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,11 @@ public class TradeController extends BaseController {
     private String prefix = "oms/trade";
 
     @Autowired
-    private ITradeService tradeService;
+    ITradeService tradeService;
+
+    /** 交易订单转换策略 */
+    @Autowired
+    ITradeConvertService tradeConvertService;
 
     @RequiresPermissions("oms:trade:view")
     @GetMapping()
@@ -110,7 +115,11 @@ public class TradeController extends BaseController {
     @PostMapping("/convert")
     @ResponseBody
     public AjaxResult convert(String tids) {
-        return AjaxResult.success(tradeService.previewOrder(tids));
+        String[] tidz = tids.split(",");
+        for (String tid : tidz) {
+            tradeConvertService.execute(tid, null);
+        }
+        return null;
     }
 
 }

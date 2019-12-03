@@ -51,7 +51,7 @@ public enum DownloadOrderInterfaceEnum {
         for (DownloadOrderInterfaceEnum downloadOrderStrategyEnum : DownloadOrderInterfaceEnum.values()) {
             JsOrderFlag += "{\"key\":\"" + downloadOrderStrategyEnum.name() + "\",\"val\":\"" + downloadOrderStrategyEnum.getValue() + "\"},";
         }
-        return JsOrderFlag = JsOrderFlag.substring(0, JsOrderFlag.length() - 1) + "]";
+        return JsOrderFlag.substring(0, JsOrderFlag.length() - 1) + "]";
     }
 
     /**
