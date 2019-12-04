@@ -6,6 +6,7 @@ import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.oms.domain.ShopInterfaces;
+import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
@@ -89,9 +90,17 @@ public class KJYServiceImpl implements IKJYService {
                 trade.setShop(shopInterfaces.getShop());
                 //请求返回消息
                 trade.setResponse(JSON.toJSONString(kjyTrade));
-                //订单标准格式
+                /** 订单标准格式-快照 */
+                StandardOrderData standardOrderData = new StandardOrderData();
+                //平台单号
+                standardOrderData.setTid(kjyTrade.getTid());
+                //平台更新时间
+                standardOrderData.setModified(DateUtils.getDateByTimestamp(kjyTrade.getModified()));
+                ////订单标准格式
                 StandardOrder standardOrder = KjyConvert.changeStandard(kjyTrade, shopInterfaces);
-                trade.setStandard(JSON.toJSONString(standardOrder));
+                standardOrderData.setStandard(JSON.toJSONString(standardOrder));
+                trade.setStandard(standardOrderData);
+
                 tradeList.add(trade);
             }
 

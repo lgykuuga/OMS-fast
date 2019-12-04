@@ -1,8 +1,10 @@
 package com.lgy.web.controller.oms;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.common.constant.Constants;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
+import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
@@ -15,7 +17,6 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -36,7 +37,9 @@ public class TradeController extends BaseController {
     @Autowired
     ITradeService tradeService;
 
-    /** 交易订单转换策略 */
+    /**
+     * 交易订单转换策略
+     */
     @Autowired
     ITradeConvertService tradeConvertService;
 
@@ -100,14 +103,15 @@ public class TradeController extends BaseController {
      * 预览订单报文
      */
     @RequiresPermissions("tool:trade:view")
-    @GetMapping("/preview/{tid}")
+    @GetMapping("/preview/{tid}/{type}")
     @ResponseBody
-    public AjaxResult preview(@PathVariable("tid") String tableId) throws IOException {
-        return AjaxResult.success(tradeService.previewOrder(tableId));
+    public AjaxResult preview(@PathVariable("tid") String tableId, @PathVariable("type") String type) throws IOException {
+        return AjaxResult.success(tradeService.previewOrder(tableId, type));
     }
 
     /**
      * 生成订单
+     *
      * @param tids 平台单号
      * @return
      */
@@ -120,6 +124,37 @@ public class TradeController extends BaseController {
             tradeConvertService.execute(tid, null);
         }
         return null;
+    }
+
+    /**
+     * 生成订单快照
+     *
+     * @param tids 平台单号
+     * @return
+     */
+    @RequiresPermissions("tool:trade:add")
+    @PostMapping("/createSnapshot")
+    @ResponseBody
+    public AjaxResult createSnapshot(String tids) {
+        String[] tidCollection = tids.split(",");
+        //全部成功标识
+        boolean flag = true;
+        //失败原因
+        StringBuffer failureMessage = new StringBuffer();
+
+        for (String tid : tidCollection) {
+            CommonResponse<String> createSnapshot = tradeService.createSnapshot(tid);
+            if (!Constants.SUCCESS.equals(createSnapshot.getCode())) {
+                flag = false;
+                failureMessage.append(createSnapshot.getMsg());
+            }
+        }
+
+        if (flag) {
+            return AjaxResult.success("生成订单快照成功");
+        }
+
+        return AjaxResult.error(failureMessage.toString());
     }
 
 }

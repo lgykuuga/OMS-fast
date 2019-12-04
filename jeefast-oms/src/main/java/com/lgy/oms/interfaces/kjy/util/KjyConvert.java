@@ -6,7 +6,6 @@ import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
 import com.lgy.oms.interfaces.kjy.bean.KjyTrade;
 import com.lgy.oms.interfaces.kjy.bean.Order;
-import com.lgy.oms.interfaces.kjy.bean.Orders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class KjyConvert {
         //平台编码
         standardOrder.setPlatform(shopInterfaces.getPlatform());
         //货主编码
-        standardOrder.setTid(shopInterfaces.getOwner());
+        standardOrder.setOwner(shopInterfaces.getOwner());
         //卖家昵称
         standardOrder.setSeller_nick(kjyTrade.getSeller_nick());
         //商品图片绝对途径
@@ -92,12 +91,12 @@ public class KjyConvert {
         standardOrder.setReceiver_district(kjyTrade.getReceiver_district());
 
         //订单明细信息
-        Orders orders = kjyTrade.getOrders();
-        if (orders != null && !orders.getOrders().isEmpty()) {
+        List<Order> orders = kjyTrade.getOrders();
+        if (orders != null && !orders.isEmpty()) {
 
-            List<StandardOrderDetail> details = new ArrayList<>(orders.getOrders().size());
+            List<StandardOrderDetail> details = new ArrayList<>(orders.size());
 
-            for (Order order : orders.getOrders()) {
+            for (Order order : orders) {
                 StandardOrderDetail detail = new StandardOrderDetail();
                 //订单快照URL
                 detail.setSnapshot_url(order.getSnapshot_url());

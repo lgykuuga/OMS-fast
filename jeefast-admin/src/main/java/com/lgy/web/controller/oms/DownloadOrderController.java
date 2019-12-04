@@ -159,12 +159,12 @@ public class DownloadOrderController extends BaseController {
     }
 
     /**
-     * 根据时间段下载订单
+     * 根据订单号下载订单
      */
     @RequiresPermissions("oms:downloadorder:add")
     @PostMapping("/downloadByTid")
     @ResponseBody
-    public AjaxResult downloadByTid(String shop, String tids, boolean downloadRefundDetails) {
+    public AjaxResult downloadByTid(String shop, String tids) {
         if (StringUtils.isEmpty(shop)) {
             return AjaxResult.error("店铺不能为空");
         }

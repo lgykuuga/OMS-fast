@@ -19,4 +19,6 @@ public interface ITradeConvertService {
      * @return
      */
     CommonResponse<String> execute(String tid, Map<String, Object> map);
+
+
 }

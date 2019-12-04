@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
+import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.domain.order.*;
@@ -68,8 +69,8 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         }
 
         //订单报文信息
-        String standardOrderStr = trade.getStandard();
-        StandardOrder standardOrder = JSON.parseObject(standardOrderStr, StandardOrder.class);
+        StandardOrderData standard = trade.getStandard();
+        StandardOrder standardOrder = JSON.parseObject(standard.getStandard(), StandardOrder.class);
         //转换成主订单信息
         OrderMain orderMain = convert(standardOrder, strategy, map);
 

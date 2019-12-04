@@ -1,5 +1,6 @@
 package com.lgy.oms.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.annotation.Excel;
 import com.lgy.common.core.domain.BaseEntity;
@@ -25,47 +26,69 @@ import java.util.Date;
 public class Trade extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**
+     * $column.columnComment
+     */
     private Long id;
 
-    /** 平台交易单号 */
+    /**
+     * 平台交易单号
+     */
     @Excel(name = "平台交易单号")
     private String tid;
 
-    /** 平台交易状态 */
+    /**
+     * 平台交易状态
+     */
     @Excel(name = "平台交易状态")
     private Integer status;
 
-    /** 交易修改时间 */
+    /**
+     * 交易修改时间
+     */
     @Excel(name = "交易修改时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date modified;
 
-    /** 数据校验字段 */
+    /**
+     * 数据校验字段
+     */
     @Excel(name = "数据校验字段")
     private String hashcode;
 
-    /** 请求返回消息 */
+    /**
+     * 请求返回消息
+     */
     @Excel(name = "请求返回消息")
     private String response;
 
-    /** 标准订单数据 */
-    @Excel(name = "标准订单数据")
-    private String standard;
-
-    /** 店铺编码 */
+    /**
+     * 店铺编码
+     */
     @Excel(name = "店铺编码")
     private String shop;
 
-    /** 货主编码 */
+    /**
+     * 货主编码
+     */
     @Excel(name = "货主编码")
     private String owner;
 
-    /** 转单状态 */
+    /**
+     * 转单状态
+     */
     @Excel(name = "转单状态")
     private Integer flag;
 
-    /** 更新次数 */
+    /**
+     * 更新次数
+     */
     @Excel(name = "更新次数")
     private Integer frequency;
+
+    /**
+     * 标准订单数据
+     */
+    @TableField(exist = false)
+    private StandardOrderData standard;
 
 }

@@ -137,7 +137,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      */
     public static Long stringToLong(String datetime) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         Date date = null;
         try {
             date = formatter.parse(datetime);
@@ -155,7 +155,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      */
     public static String longToString(Long timestamp) {
         Date date = new Date(timestamp);
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         return formatter.format(date);
     }
 
@@ -197,7 +197,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static Date getDateByTimestamp(Long Timestamp) {
         return new Date(Timestamp);
     }
-
 
     public static void main(String[] args) {
         String date = "Wed Oct 16 06:10:17 CST 2019";

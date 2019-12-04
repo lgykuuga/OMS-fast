@@ -3,11 +3,12 @@ package com.lgy.oms.interfaces.kjy.bean;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
- * Auto-generated: 2019-10-17 17:35:35
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
+ * @Description 跨境翼交易订单
+ * @Author LGy
+ * @Date 2019/12/4
  */
 @Data
 public class KjyTrade {
@@ -29,7 +30,6 @@ public class KjyTrade {
     private String num_iid;
     private String order_tax_fee;
     private String order_tax_promotion_fee;
-    private Orders orders;
     private Long pay_time;
     private String payment;
     private String pic_path;
@@ -59,4 +59,6 @@ public class KjyTrade {
     private String trade_from;
     private String type;
     private String you_xiang;
+
+    private List<Order> orders;
 }

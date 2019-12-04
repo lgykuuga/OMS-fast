@@ -1,6 +1,7 @@
 package com.lgy.oms.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
@@ -12,6 +13,7 @@ import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.service.IDownloadOrderService;
 import com.lgy.oms.service.IShopInterfacesService;
 import com.lgy.oms.service.ITradeService;
+import com.lgy.oms.service.ITradeStandardService;
 import com.lgy.oms.service.business.IAsyncExecuteOrderService;
 import com.lgy.oms.service.business.IOrderGet;
 import com.lgy.oms.service.business.IRequestRemoteInterfaceService;
@@ -47,6 +49,9 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
 
     @Autowired
     ITradeService tradeService;
+
+    @Autowired
+    ITradeStandardService tradeStandardService;
 
     @Autowired
     IAsyncExecuteOrderService asyncExecuteOrderService;
@@ -100,7 +105,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                 int faultSaveCount = 0;
                 StringBuilder sbMsg = new StringBuilder();
                 //需要新增保存的订单
-                if (saveList.size() > 0) {
+                if (!saveList.isEmpty()) {
                     long startSaveOrderList = System.currentTimeMillis();
                     for (OrderDTO order : saveList) {
                         try {
@@ -111,6 +116,8 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                             logger.debug("完成调用订单[{}]详细信息接口(保存订单),耗时:[{}]ms", order.getTid(), (System.currentTimeMillis() - startSave));
                             if (Constants.SUCCESS.equals(tradeResponse.getCode())) {
                                 Trade trade = tradeResponse.getData();
+                                //保存订单快照信息
+                                tradeStandardService.save(trade.getStandard());
 
                                 boolean save = tradeService.save(trade);
                                 if (save) {
@@ -141,7 +148,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                     downloadorder.setResp(sbMsg.toString());
                 }
                 //需要更新的订单
-                if (updateList.size() > 0) {
+                if (!updateList.isEmpty()) {
                     //需要更新订单列表
                     List<Trade> updateTradeList = new ArrayList<>();
                     logger.debug("开始更新订单列表");
@@ -175,6 +182,10 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                     int updateCount = 0;
 
                     for (Trade trade : updateTradeList) {
+
+                        //保存订单快照信息
+                        tradeStandardService.save(trade.getStandard());
+
                         //最新订单的平台最后更新时间 大于 系统订单平台最后更新时间,则进行更新
                         QueryWrapper<Trade> queryWrapper = new QueryWrapper<>();
                         queryWrapper.eq("tid", trade.getTid());
@@ -213,8 +224,6 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         return new CommonResponse<String>().ok("订单请求完成，请查看详细信息");
     }
 
-
-
     /**
      * 开始订单分类
      *
@@ -235,7 +244,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
             if (orderDTO.getPlatformState() <= PlatformOrderStatusEnum.WAIT_SELLER_SEND_GOODS.getValue()) {
                 //等待卖家发货之前调用下载订单接口
                 if (trade != null) {
-                    if (orderDTO.getPlatformModified().getTime() > trade.getModified().getTime()) {
+                    if (orderDTO.getPlatformModified().after(trade.getModified())) {
                         logger.debug("订单[{}]状态为[{}],订单平台系统更新时间大于系统平台更新时间,下载订单详情",
                                 orderDTO.getTid(), orderDTO.getPlatformState());
                         updateList.add(orderDTO);
@@ -297,6 +306,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         //记录总订单量
         downloadOrder.setOnum(tidArray.length);
         int sucNum = 0;
+        int updNum = 0;
         int faiNum = 0;
         //返回前端消息
         StringBuilder sbMsg = new StringBuilder();
@@ -330,22 +340,46 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
             }
         }
 
-        if (tradeList.size() == 0) {
+        if (tradeList.isEmpty()) {
             logger.debug("没有下载到订单！");
             return new CommonResponse<String>().error(Constants.FAIL, "没有下载到订单！");
         } else {
             //调用接口进行数据持久化
             for (Trade trade : tradeList) {
-                boolean b = tradeService.save(trade);
-                if (b) {
-                    logger.debug("订单保存成功！");
-                    sbMsg.append("订单保存成功！");
-                    sucNum++;
+
+                Trade origin = tradeService.checkOrderExist(trade.getTid(), trade.getShop(), false);
+
+                if (origin == null) {
+                    //保存订单快照信息
+                    tradeStandardService.save(trade.getStandard());
+
+                    boolean b = tradeService.save(trade);
+                    if (b) {
+                        logger.debug("订单保存成功！");
+                        sbMsg.append("订单保存成功！");
+                        sucNum++;
+                    } else {
+                        logger.debug("订单[{}]保存失败", trade.getTid());
+                        sbMsg.append("订单保存失败:").append(trade.getTid());
+                        msg.append(trade.getTid()).append("保存失败;");
+                        faiNum++;
+                    }
                 } else {
-                    logger.debug("订单[{}]保存失败", trade.getTid());
-                    sbMsg.append("订单保存失败:").append(trade.getTid());
-                    msg.append(trade.getTid()).append("保存失败;");
-                    faiNum++;
+                    //已存在下载订单
+                    if (trade.getModified().after(origin.getModified())) {
+                        //最新订单的平台最后更新时间 大于 系统订单平台最后更新时间,则进行更新
+                        //更新次数+1
+                        trade.setFrequency(origin.getFrequency() + 1);
+                        UpdateWrapper<Trade> updateWrapper = new UpdateWrapper<>();
+                        updateWrapper.eq("tid", origin.getTid());
+                        //更新
+                        tradeService.update(trade, updateWrapper);
+                        //保存订单快照信息
+                        tradeStandardService.save(trade.getStandard());
+                        updNum++;
+                    } else {
+                        logger.debug("订单[{}]平台更新时间不大于交易订单池平台更新时间,不更新订单", trade.getTid());
+                    }
                 }
             }
         }
@@ -353,6 +387,8 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         downloadOrder.setResp(msg.toString());
         //成功数量
         downloadOrder.setSnum(sucNum);
+        //更新
+        downloadOrder.setUnum(updNum);
         //失败数量
         downloadOrder.setFnum(faiNum);
         //保存根据单号请求信息
@@ -403,6 +439,8 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                 queryWrapper.eq("tid", trade.getTid());
                 Trade one = tradeService.getOne(queryWrapper);
                 if (one == null) {
+                    //订单快照
+                    tradeStandardService.save(trade.getStandard());
                     boolean save = tradeService.save(trade);
                     if (save) {
                         successSaveCount++;
@@ -410,13 +448,20 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
                         faultSaveCount++;
                     }
                 } else {
-                    //更新次数+1
-                    trade.setFrequency(one.getFrequency() + 1);
-                    boolean update = tradeService.update(trade, queryWrapper);
-                    if (update) {
-                        successUpdateCount++;
+                    if (trade.getModified().after(one.getModified())) {
+                        //订单快照
+                        tradeStandardService.save(trade.getStandard());
+                        //更新次数+1
+                        trade.setFrequency(one.getFrequency() + 1);
+                        boolean update = tradeService.update(trade, queryWrapper);
+                        if (update) {
+                            successUpdateCount++;
+                        } else {
+                            faultSaveCount++;
+                        }
                     } else {
-                        faultSaveCount++;
+                        logger.debug("订单[{}]平台更新时间[{}]不大于上次更新时间[{}],不更新订单。", trade.getTid(),
+                                trade.getModified(), one.getModified());
                     }
                 }
             }
@@ -434,7 +479,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         //保存订单请求信息
         downloadOrderService.save(downloadorder);
         logger.debug("下载订单接口:下载店铺[{}]订单耗时:[{}]ms", shopInterfaces.getShop(), (System.currentTimeMillis() - startTime));
-        return new CommonResponse<String>(listResponse.getCode(), listResponse.getMsg(), null);
+        return new CommonResponse<>(listResponse.getCode(), listResponse.getMsg(), null);
     }
 
     @Override

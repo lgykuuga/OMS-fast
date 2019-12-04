@@ -26,6 +26,11 @@ public enum DownloadOrderInterfaceEnum {
     GODS("GODS"),
 
     /**
+     * 淘宝RDS数据库
+     */
+    RDS("RDS"),
+
+    /**
      * 奇门接口
      */
     QIMEN("奇门");

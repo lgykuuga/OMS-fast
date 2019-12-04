@@ -6,10 +6,12 @@ import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.Trade;
+import com.lgy.oms.enums.DownloadOrderInterfaceEnum;
 import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.interfaces.kjy.service.IKJYService;
 import com.lgy.oms.interfaces.ods.bean.response.BaseResponse;
 import com.lgy.oms.interfaces.ods.service.IODSService;
+import com.lgy.oms.interfaces.rds.service.IJdpTbTradeService;
 import com.lgy.oms.service.business.IOrderGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,10 @@ public class OrderGetImpl implements IOrderGet {
 
     @Autowired
     IKJYService kjyService;
+
+    /** RDS Service */
+    @Autowired
+    IJdpTbTradeService jdpTbTradeService;
 
     @Override
     public CommonResponse<List<OrderDTO>> orderListDownload(ShopInterfaces shopInterfaces, Date beginDate, Date endDate) {
@@ -99,7 +105,29 @@ public class OrderGetImpl implements IOrderGet {
 
     @Override
     public CommonResponse<Trade> orderFullInfoDownLoad(ShopInterfaces shopInterfaces, OrderDTO orderDTO) {
-        logger.info("调用下载订单服务：订单编号[{}]", orderDTO.getTid());
+
+        if (DownloadOrderInterfaceEnum.GODS.name().equals(shopInterfaces.getJklx())) {
+            //ODS 下载订单明细
+            return odsDownloadOrderFullInfo(shopInterfaces, orderDTO);
+        }
+
+        if (DownloadOrderInterfaceEnum.RDS.name().equals(shopInterfaces.getJklx())) {
+            //RDS推送库获取订单明细
+            return jdpTbTradeService.createOrder2Trade(shopInterfaces, orderDTO);
+        }
+
+        return new CommonResponse<Trade>().error(Constants.FAIL, "接口未定义");
+
+    }
+
+    /**
+     * ODS 下载订单明细
+     * @param shopInterfaces 订单接口
+     * @param orderDTO 订单信息
+     * @return
+     */
+    private CommonResponse<Trade> odsDownloadOrderFullInfo(ShopInterfaces shopInterfaces, OrderDTO orderDTO) {
+        logger.debug("调用下载订单服务：订单编号[{}]", orderDTO.getTid());
         //1自定义转换参数map
         Map<String, Object> parametersMap = new HashMap<>(3);
         parametersMap.put("shopInterfaces", shopInterfaces);

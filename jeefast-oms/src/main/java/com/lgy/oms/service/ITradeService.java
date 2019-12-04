@@ -1,6 +1,7 @@
 package com.lgy.oms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.domain.Trade;
 
 /**
@@ -24,9 +25,17 @@ public interface ITradeService extends IService<Trade> {
     /**
      * 预览订单报文
      *
-     * @param tid 订单号
+     * @param tid  订单号
+     * @param type 类型
      * @return
      */
-    String previewOrder(String tid);
+    String previewOrder(String tid, String type);
 
+    /**
+     * 创建订单快照
+     *
+     * @param tid 订单明细
+     * @return
+     */
+    CommonResponse<String> createSnapshot(String tid);
 }
