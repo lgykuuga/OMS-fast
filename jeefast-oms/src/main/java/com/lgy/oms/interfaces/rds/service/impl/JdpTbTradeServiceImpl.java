@@ -14,13 +14,15 @@ import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
 import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
-import com.lgy.oms.interfaces.kjy.util.KjyConvert;
 import com.lgy.oms.interfaces.rds.bean.JdpTbTrade;
 import com.lgy.oms.interfaces.rds.bean.RdsTradeMain;
 import com.lgy.oms.interfaces.rds.mapper.JdpTbTradeMapper;
 import com.lgy.oms.interfaces.rds.service.IJdpTbTradeService;
 import com.lgy.oms.interfaces.rds.util.RdsConvert;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 订单推送库 服务层实现
@@ -40,15 +42,22 @@ public class JdpTbTradeServiceImpl extends ServiceImpl<JdpTbTradeMapper, JdpTbTr
     }
 
     @Override
-    public CommonResponse<Trade> createOrder2Trade(ShopInterfaces shopInterfaces, OrderDTO orderDTO) {
-        JdpTbTrade jdpTbTrade = selectJdpTbTrade(orderDTO.getTid());
+    public CommonResponse<Trade> createOrder2Trade(ShopInterfaces shopInterfaces, String tid) {
+        JdpTbTrade jdpTbTrade = selectJdpTbTrade(tid);
         if (jdpTbTrade == null) {
-            return new CommonResponse<Trade>().error(Constants.FAIL, orderDTO.getTid() + "单号不存在RDS");
+            return new CommonResponse<Trade>().error(Constants.FAIL, tid + "单号不存在RDS");
         }
 
+        Trade trade = convertTrade(jdpTbTrade, shopInterfaces);
+        return new CommonResponse<Trade>().ok(trade);
+    }
+
+
+    @Override
+    public Trade convertTrade(JdpTbTrade jdpTbTrade, ShopInterfaces shopInterfaces) {
         Trade trade = new Trade();
         //平台单号
-        trade.setTid(jdpTbTrade.getTid()+"");
+        trade.setTid(jdpTbTrade.getTid() + "");
         //平台交易状态
         trade.setStatus(PlatformOrderStatusEnum.switchStatus(jdpTbTrade.getStatus()));
         //平台更新时间,时间戳格式
@@ -63,7 +72,7 @@ public class JdpTbTradeServiceImpl extends ServiceImpl<JdpTbTradeMapper, JdpTbTr
         /** 订单标准格式-快照 */
         StandardOrderData standardOrderData = new StandardOrderData();
         //平台单号
-        standardOrderData.setTid(jdpTbTrade.getTid()+"");
+        standardOrderData.setTid(jdpTbTrade.getTid() + "");
         //平台更新时间
         standardOrderData.setModified(jdpTbTrade.getModified());
         ////订单标准格式
@@ -71,8 +80,20 @@ public class JdpTbTradeServiceImpl extends ServiceImpl<JdpTbTradeMapper, JdpTbTr
         StandardOrder standardOrder = RdsConvert.changeStandard(rdsTradeMain, shopInterfaces);
         standardOrderData.setStandard(JSON.toJSONString(standardOrder));
         trade.setStandard(standardOrderData);
+        return trade;
+    }
 
-        return new CommonResponse<Trade>().ok(trade);
+    @Override
+    public List<JdpTbTrade> getJdpTbTradeListByTime(ShopInterfaces shopInterfaces, Date bedt, Date endt) {
+
+        QueryWrapper queryWrapper = new QueryWrapper();
+        //店铺名称
+        queryWrapper.eq("seller_nick", shopInterfaces.getAppk());
+        //大于等于开始时间
+        queryWrapper.ge("modified", DateUtils.toStandardTime(bedt.toString()));
+        //小于等于结束时间
+        queryWrapper.le("modified", DateUtils.toStandardTime(endt.toString()));
+        return list(queryWrapper);
     }
 
 

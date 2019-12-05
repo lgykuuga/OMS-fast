@@ -39,9 +39,9 @@ public class AsyncExecuteOrderServiceImpl implements IAsyncExecuteOrderService {
     @Async
     @Override
     public void updateOrderStatus(List<OrderDTO> updateList) {
-        logger.debug("开始异步处理:平台状态变更,更新订单√");
+        logger.debug("开始异步处理:平台状态变更,更新订单");
         onlyUpdateOrder(updateList);
-        logger.debug("完成异步处理:平台状态变更,更新订单√");
+        logger.debug("完成异步处理:平台状态变更,更新订单");
     }
 
     @Async

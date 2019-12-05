@@ -57,6 +57,11 @@ public class DownloadOrderServiceImpl extends ServiceImpl<DownloadOrderMapper, D
             return requestRemoteInterfaceService.getOrderListByTime(shopInterfaces,
                     downloadorder.getBedt(), downloadorder.getEndt());
 
+        } else if (DownloadOrderInterfaceEnum.RDS.name().equals(shopInterfaces.getJklx())) {
+            //RDS
+            return requestRemoteInterfaceService.getOrderByRDS(shopInterfaces,
+                    downloadorder.getBedt(), downloadorder.getEndt());
+
         } else if (DownloadOrderInterfaceEnum.DIRECT.name().equals(shopInterfaces.getJklx())) {
             //TODO 直接对接平台
             return new CommonResponse<String>().error(Constants.FAIL, "直接对接平台未开发,敬请期待");

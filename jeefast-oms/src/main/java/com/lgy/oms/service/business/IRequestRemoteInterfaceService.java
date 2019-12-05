@@ -1,12 +1,12 @@
 package com.lgy.oms.service.business;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.domain.ShopInterfaces;
 import org.apache.poi.ss.formula.functions.T;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 订单系统请求远程服务
@@ -69,4 +69,13 @@ public interface IRequestRemoteInterfaceService {
      */
     CommonResponse<String> getAppraisal(Map<String, Object> map);
 
+    /**
+     * 根据时间段在RDS获取订单详细信息并保存
+     *
+     * @param shopInterfaces 店铺接口设置
+     * @param bedt           开始时间
+     * @param endt           结束时间
+     * @return
+     */
+    CommonResponse<String> getOrderByRDS(ShopInterfaces shopInterfaces, Date bedt, Date endt);
 }

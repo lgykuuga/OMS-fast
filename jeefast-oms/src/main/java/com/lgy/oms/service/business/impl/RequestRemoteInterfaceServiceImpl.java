@@ -10,6 +10,8 @@ import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
 import com.lgy.oms.interfaces.common.dto.OrderDTO;
+import com.lgy.oms.interfaces.rds.bean.JdpTbTrade;
+import com.lgy.oms.interfaces.rds.service.IJdpTbTradeService;
 import com.lgy.oms.service.IDownloadOrderService;
 import com.lgy.oms.service.IShopInterfacesService;
 import com.lgy.oms.service.ITradeService;
@@ -52,6 +54,9 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
 
     @Autowired
     ITradeStandardService tradeStandardService;
+
+    @Autowired
+    IJdpTbTradeService jdpTbTradeService;
 
     @Autowired
     IAsyncExecuteOrderService asyncExecuteOrderService;
@@ -280,10 +285,10 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         }
 
         //异步处理 更新订单、取消订单 请求
-        if (cancelList.size() > 0) {
+        if (!cancelList.isEmpty()) {
             logger.debug("存在更新订单,异步处理数据");
             asyncExecuteOrderService.updateOrderStatus(onlyUpdateList);
-        } else if (onlyUpdateList.size() > 0) {
+        } else if (!onlyUpdateList.isEmpty()) {
             logger.debug("存在取消订单,异步处理数据");
             asyncExecuteOrderService.cancelOrderStatus(cancelList);
         }
@@ -387,7 +392,7 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         downloadOrder.setResp(msg.toString());
         //成功数量
         downloadOrder.setSnum(sucNum);
-        //更新
+        //更新数量
         downloadOrder.setUnum(updNum);
         //失败数量
         downloadOrder.setFnum(faiNum);
@@ -495,5 +500,71 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
     @Override
     public CommonResponse<String> getAppraisal(Map<String, Object> map) {
         return null;
+    }
+
+    @Override
+    public CommonResponse<String> getOrderByRDS(ShopInterfaces shopInterfaces, Date bedt, Date endt) {
+        DownloadOrder downloadorder = new DownloadOrder();
+        downloadorder.setBedt(bedt);
+        downloadorder.setEndt(endt);
+        //默认成功
+        downloadorder.setStat(Constants.SUCCESS);
+        //执行时间
+        downloadorder.setDodt(DateUtils.getNowDate());
+        //设置店铺
+        downloadorder.setShop(shopInterfaces.getShop());
+
+        int successSaveCount = 0;
+        int successUpdateCount = 0;
+        int faultSaveCount = 0;
+        //获取订单列表
+        List<JdpTbTrade> jdpTbTradeList = jdpTbTradeService.getJdpTbTradeListByTime(shopInterfaces, bedt, endt);
+        if (jdpTbTradeList != null && !jdpTbTradeList.isEmpty()) {
+            //记录总订单量
+            downloadorder.setOnum(jdpTbTradeList.size());
+            for (JdpTbTrade jdpTbTrade : jdpTbTradeList) {
+                QueryWrapper<Trade> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("tid", jdpTbTrade.getTid());
+                Trade one = tradeService.getOne(queryWrapper);
+                if (one == null) {
+                    Trade trade = jdpTbTradeService.convertTrade(jdpTbTrade, shopInterfaces);
+                    //订单快照
+                    tradeStandardService.save(trade.getStandard());
+                    if (tradeService.save(trade)) {
+                        successSaveCount++;
+                    } else {
+                        faultSaveCount++;
+                    }
+                } else {
+                    if (jdpTbTrade.getModified().after(one.getModified())) {
+
+                        Trade trade = jdpTbTradeService.convertTrade(jdpTbTrade, shopInterfaces);
+                        //订单快照
+                        tradeStandardService.save(trade.getStandard());
+                        //更新次数+1
+                        trade.setFrequency(one.getFrequency() + 1);
+                        if (tradeService.update(trade, queryWrapper)) {
+                            successUpdateCount++;
+                        } else {
+                            faultSaveCount++;
+                        }
+                    } else {
+                        logger.debug("订单[{}]平台更新时间[{}]不大于上次更新时间[{}],不更新订单。", jdpTbTrade.getTid(),
+                                jdpTbTrade.getModified(), one.getModified());
+                    }
+                }
+            }
+        } else {
+            downloadorder.setStat(Constants.FAIL);
+            downloadorder.setOnum(0);
+            downloadorder.setResp("根据查询条件获取订单列表为空");
+        }
+
+        downloadorder.setSnum(successSaveCount);
+        downloadorder.setUnum(successUpdateCount);
+        downloadorder.setFnum(faultSaveCount);
+        //保存订单请求信息
+        downloadOrderService.save(downloadorder);
+        return new CommonResponse<String>().ok("订单请求完成，请查看详细信息");
     }
 }

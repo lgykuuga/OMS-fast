@@ -112,8 +112,8 @@ public class OrderGetImpl implements IOrderGet {
         }
 
         if (DownloadOrderInterfaceEnum.RDS.name().equals(shopInterfaces.getJklx())) {
-            //RDS推送库获取订单明细
-            return jdpTbTradeService.createOrder2Trade(shopInterfaces, orderDTO);
+            //RDS推送库获取订单明细,一般不会用订单号去手动获取订单,所以偷懒不改代码,一条条获取.
+            return jdpTbTradeService.createOrder2Trade(shopInterfaces, orderDTO.getTid());
         }
 
         return new CommonResponse<Trade>().error(Constants.FAIL, "接口未定义");
