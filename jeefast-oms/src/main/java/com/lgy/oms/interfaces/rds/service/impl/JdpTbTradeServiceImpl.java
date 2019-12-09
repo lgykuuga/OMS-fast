@@ -12,7 +12,6 @@ import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.PlatformOrderStatusEnum;
-import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.rds.bean.JdpTbTrade;
 import com.lgy.oms.interfaces.rds.bean.RdsTradeMain;

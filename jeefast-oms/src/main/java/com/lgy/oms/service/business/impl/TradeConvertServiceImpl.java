@@ -15,6 +15,7 @@ import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
 import com.lgy.oms.service.IOrderMainService;
 import com.lgy.oms.service.IStrategyConvertService;
 import com.lgy.oms.service.ITradeService;
+import com.lgy.oms.service.ITradeStandardService;
 import com.lgy.oms.service.business.ITradeConvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,21 +33,18 @@ import java.util.Map;
 @Service
 public class TradeConvertServiceImpl implements ITradeConvertService {
 
-    /**
-     * 交易订单
-     */
+    /** 交易订单 */
     @Autowired
     ITradeService tradeService;
-    /**
-     * 转单策略
-     */
+    /** 转单策略 */
     @Autowired
     IStrategyConvertService strategyConvertService;
-    /**
-     * 审核订单
-     */
+    /** 审核订单 */
     @Autowired
     IOrderMainService orderMainService;
+    /** 订单快照 */
+    @Autowired
+    ITradeStandardService tradeStandardService;
 
     @Override
     public CommonResponse<String> execute(String tid, Map<String, Object> map) {
@@ -59,7 +57,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "信息不完整;");
         }
 
-        if (!TradeTranformStatusEnum.WAIT_TRANFORM.equals(trade.getFlag())) {
+        if (!trade.getFlag().equals(TradeTranformStatusEnum.WAIT_TRANFORM.getValue())) {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "已转单或已取消;");
         }
 
@@ -69,10 +67,16 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         }
 
         //订单报文信息
-        StandardOrderData standard = trade.getStandard();
-        StandardOrder standardOrder = JSON.parseObject(standard.getStandard(), StandardOrder.class);
-        //转换成主订单信息
-        OrderMain orderMain = convert(standardOrder, strategy, map);
+        StandardOrderData latestStandardOrderData = tradeStandardService.getLatestStandardOrderData(tid);
+        if (latestStandardOrderData != null) {
+            StandardOrder standardOrder = JSON.parseObject(latestStandardOrderData.getStandard(), StandardOrder.class);
+            //转换成主订单信息
+            OrderMain orderMain = convert(standardOrder, strategy, map);
+
+            orderMainService.saveOrder(orderMain);
+        } else {
+            //TODO 若无快照,则先 生成快照
+        }
 
         return null;
 

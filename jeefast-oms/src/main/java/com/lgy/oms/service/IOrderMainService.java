@@ -11,4 +11,12 @@ import com.lgy.oms.domain.order.OrderMain;
  */
 public interface IOrderMainService extends IService<OrderMain> {
 
+
+    /**
+     * 保存订单
+     *
+     * @param orderMain 订单主体
+     * @return
+     */
+    OrderMain saveOrder(OrderMain orderMain);
 }
