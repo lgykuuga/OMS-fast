@@ -1,7 +1,6 @@
 package com.lgy.web.controller.oms;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.lgy.common.annotation.Log;
@@ -13,9 +12,9 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.StrategyConvertShop;
-import com.lgy.oms.enums.ConvertMatchCommodityEnum;
-import com.lgy.oms.enums.ConvertTriggerNodeEnum;
-import com.lgy.oms.enums.ProcessEnum;
+import com.lgy.oms.enums.strategy.ConvertMatchCommodityEnum;
+import com.lgy.oms.enums.strategy.ConvertTriggerNodeEnum;
+import com.lgy.oms.enums.strategy.ProcessEnum;
 import com.lgy.oms.service.IStrategyConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

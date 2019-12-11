@@ -31,8 +31,6 @@ public class KjyConvert {
         standardOrder.setOwner(shopInterfaces.getOwner());
         //卖家昵称
         standardOrder.setSeller_nick(kjyTrade.getSeller_nick());
-        //商品图片绝对途径
-        standardOrder.setPic_path(kjyTrade.getPic_path());
         //实付金额
         standardOrder.setPayment(kjyTrade.getPayment());
         //邮费

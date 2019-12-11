@@ -6,7 +6,7 @@ import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.Trade;
-import com.lgy.oms.enums.DownloadOrderInterfaceEnum;
+import com.lgy.oms.enums.strategy.DownloadOrderInterfaceEnum;
 import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.interfaces.kjy.service.IKJYService;
 import com.lgy.oms.interfaces.ods.bean.response.BaseResponse;

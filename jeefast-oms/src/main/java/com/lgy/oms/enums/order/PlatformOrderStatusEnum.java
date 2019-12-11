@@ -1,4 +1,4 @@
-package com.lgy.oms.enums;
+package com.lgy.oms.enums.order;
 
 import com.lgy.system.domain.vo.Config;
 

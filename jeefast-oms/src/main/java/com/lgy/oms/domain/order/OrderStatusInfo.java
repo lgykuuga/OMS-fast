@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("oms_order_status")
-public class OrderStatusinfo extends BaseEntity implements Serializable {
+public class OrderStatusInfo extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -40,11 +40,16 @@ public class OrderStatusinfo extends BaseEntity implements Serializable {
     /**
      * 合并状态
      */
-    private String merge;
+    private Integer merge;
 
     /**
      * 拆分状态
      */
-    private String split;
+    private Integer split;
+
+    /**
+     * 状态(有效、无效)
+     */
+    private Integer status;
 
 }

@@ -9,13 +9,13 @@ import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.domain.order.*;
-import com.lgy.oms.enums.TradeTranformStatusEnum;
+import com.lgy.oms.enums.order.*;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
-import com.lgy.oms.service.IOrderMainService;
 import com.lgy.oms.service.IStrategyConvertService;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.ITradeStandardService;
+import com.lgy.oms.service.business.ICreateOrderMainService;
 import com.lgy.oms.service.business.ITradeConvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,9 +39,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
     /** 转单策略 */
     @Autowired
     IStrategyConvertService strategyConvertService;
-    /** 审核订单 */
+    /** 创建主订单服务 */
     @Autowired
-    IOrderMainService orderMainService;
+    ICreateOrderMainService createOrderMainService;
     /** 订单快照 */
     @Autowired
     ITradeStandardService tradeStandardService;
@@ -57,7 +57,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "信息不完整;");
         }
 
-        if (!trade.getFlag().equals(TradeTranformStatusEnum.WAIT_TRANFORM.getValue())) {
+        if (TradeTranformStatusEnum.WAIT_TRANFORM.getValue() != trade.getFlag()) {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "已转单或已取消;");
         }
 
@@ -68,18 +68,18 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
 
         //订单报文信息
         StandardOrderData latestStandardOrderData = tradeStandardService.getLatestStandardOrderData(tid);
-        if (latestStandardOrderData != null) {
-            StandardOrder standardOrder = JSON.parseObject(latestStandardOrderData.getStandard(), StandardOrder.class);
-            //转换成主订单信息
-            OrderMain orderMain = convert(standardOrder, strategy, map);
-
-            orderMainService.saveOrder(orderMain);
-        } else {
-            //TODO 若无快照,则先 生成快照
+        if (latestStandardOrderData == null) {
+            return new CommonResponse<String>().error(Constants.FAIL, tid + "单据找不到快照信息,请检查代码");
         }
 
-        return null;
+        StandardOrder standardOrder = JSON.parseObject(latestStandardOrderData.getStandard(), StandardOrder.class);
+        //转换成主订单信息
+        OrderMain orderMain = convert(standardOrder, strategy, map);
 
+        //匹配铺货关系
+
+        orderMain = createOrderMainService.saveOrder(orderMain);
+        return null;
     }
 
     /**
@@ -96,6 +96,8 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         boolean auto = map != null && map.get("auto") != null && (boolean) map.get("auto");
         //生成退款明细
         boolean refund = map != null && map.get("refund") != null && (boolean) map.get("refund");
+        //是否存在退款明细
+        boolean isExistRefund = false;
 
         /** 订单主信息 */
         OrderMain orderMain = new OrderMain();
@@ -112,15 +114,14 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //订单是否冻结
         orderMain.setFrozen(Constants.NO);
         //是否参与活动
-        orderMain.setFrozen(Constants.NO);
+        orderMain.setActive(Constants.NO);
         //是否人工编辑
         orderMain.setHandEdit(Constants.NO);
-
         //是否拦截
         orderMain.setIntercept(Constants.NO);
         //是否售后
         orderMain.setAftersales(Constants.NO);
-        //是否发票
+        //是否已经开发票
         orderMain.setInvoice(Constants.NO);
         //是否用户锁定
         orderMain.setOrderLock(Constants.NO);
@@ -134,9 +135,6 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderMain.setMarkContent("");
         //卖家备注旗帜
         orderMain.setSellerFlag(standardOrder.getSeller_flag());
-
-        //是否存在退款明细
-        orderMain.setRefund("");
         //尺码类型
         orderMain.setSizeType(0);
         //sku种类数量
@@ -150,18 +148,34 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //总重量
         orderMain.setVolume(BigDecimal.ZERO);
         //发货仓库编码
-        orderMain.setWarehouse("");
+        orderMain.setWarehouse(standardOrder.getWarehouse());
         //物流商编码
-        orderMain.setLogistics("");
+        orderMain.setLogistics(standardOrder.getLogistics());
         //快递单号
-        orderMain.setExpressNumber("");
+        orderMain.setExpressNumber(standardOrder.getExpress_number());
         //发货时间
-        orderMain.setSendoutTime("");
+        orderMain.setSendoutTime(standardOrder.getEst_con_time());
         //备注
         orderMain.setRemark("");
 
+        /** 订单状态信息 */
+        OrderStatusInfo orderStatusInfo = new OrderStatusInfo();
+        //订单流水编号
+        orderStatusInfo.setOrderId("");
+        //来源单号
+        orderStatusInfo.setSourceId(standardOrder.getTid());
+        //订单状态:新增
+        orderStatusInfo.setFlag(OrderFlagEnum.NEW.getCode());
+        //合并状态
+        orderStatusInfo.setMerge(OrderMergeEnum.WAIT.getCode());
+        //拆分状态
+        orderStatusInfo.setSplit(OrderSplitEnum.WAIT.getCode());
+        //订单状态:有效
+        orderStatusInfo.setStatus(Constants.VALID);
+        orderMain.setOrderStatusinfo(orderStatusInfo);
+
         /** 订单买家信息 */
-        OrderBuyerinfo orderBuyer = new OrderBuyerinfo();
+        OrderBuyerInfo orderBuyer = new OrderBuyerInfo();
         //订单编码
         orderBuyer.setOrderId("");
         //来源单号
@@ -169,19 +183,21 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //买家ID
         orderBuyer.setBuyerId(standardOrder.getBuyer_nick());
         //买家姓名
-        orderBuyer.setBuyerName("");
+        orderBuyer.setBuyerName(standardOrder.getBuyer_name());
         //买家电话
-        orderBuyer.setBuyerPhone("");
+        orderBuyer.setBuyerPhone(standardOrder.getBuyer_phone());
         //买家邮件地址
-        orderBuyer.setBuyerEmail("");
+        orderBuyer.setBuyerEmail(standardOrder.getBuyer_email());
+        //买家身份证号
+        orderBuyer.setBuyerCardID(standardOrder.getBuyer_card_id());
         //收件人姓名
         orderBuyer.setConsigneeName(standardOrder.getReceiver_name());
         //收件人移动电话
         orderBuyer.setConsigneeMobile(standardOrder.getReceiver_mobile());
-        //收件人固定电话
-        orderBuyer.setConsigneeTelephone("");
         //收件人邮箱地址
-        orderBuyer.setConsigneeEmail("");
+        orderBuyer.setConsigneeEmail(standardOrder.getReceiver_email());
+        //收件人身份证号
+        orderBuyer.setConsigneeCardID(standardOrder.getReceiver_card_id());
         //收件人国家编码
         orderBuyer.setNationCode("");
         //收件人国家
@@ -189,7 +205,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //收件人省份编码
         orderBuyer.setProvinceCode("");
         //收件人省/州
-        orderBuyer.setProvince("");
+        orderBuyer.setProvince(standardOrder.getReceiver_state());
         //收件人城市编码
         orderBuyer.setCityCode("");
         //收件人市
@@ -209,7 +225,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderMain.setOrderBuyerinfo(orderBuyer);
 
         /** 订单支付信息 */
-        OrderPayinfo orderPayinfo = new OrderPayinfo();
+        OrderPayInfo orderPayinfo = new OrderPayInfo();
         //订单编码
         orderPayinfo.setOrderId("");
         //来源单号
@@ -219,14 +235,14 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //支付时间
         orderPayinfo.setPayTime(standardOrder.getPay_time());
         //币别
-        orderPayinfo.setCurrency("");
+        orderPayinfo.setCurrency(standardOrder.getCurrency());
         //订单金额
-        orderPayinfo.setOrderAmount(standardOrder.getPrice() != null
-                ? new BigDecimal(standardOrder.getPrice()) : BigDecimal.ZERO);
+        orderPayinfo.setOrderAmount(standardOrder.getTotal_fee() != null
+                ? new BigDecimal(standardOrder.getTotal_fee()) : BigDecimal.ZERO);
         //支付金额
         orderPayinfo.setPayAmount(standardOrder.getPayment() != null
                 ? new BigDecimal(standardOrder.getPayment()) : BigDecimal.ZERO);
-        //TODO 实收金额
+        //实收金额
         orderPayinfo.setReceivedAmount(standardOrder.getPayment() != null
                 ? new BigDecimal(standardOrder.getPayment()) : BigDecimal.ZERO);
         //折扣
@@ -243,7 +259,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderMain.setOrderPayinfo(orderPayinfo);
 
         /** 订单业务类型信息 */
-        OrderTypeinfo orderTypeinfo = new OrderTypeinfo();
+        OrderTypeInfo orderTypeinfo = new OrderTypeInfo();
         //订单编码
         orderTypeinfo.setOrderId("");
         //来源单号
@@ -251,26 +267,39 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //目标单号
         orderTypeinfo.setAimId(standardOrder.getTid());
         //来源类型
-        orderTypeinfo.setSourceType(0);
-        //单据类型(线上订单、线下订单、特殊订单)
-        orderTypeinfo.setOrderType(0);
-        //发货类型(正常发货、第三方发货、刷单发货、刷单不发货)
-        orderTypeinfo.setDeliveryType(0);
-        //出库类型(正常出库、补货出库、换货出库)
-        orderTypeinfo.setOutboundType(0);
+        orderTypeinfo.setSourceType(OrderSourceTypeEnum.TRADE.getCode());
+        if (standardOrder.getPlatform_send()) {
+            //发货类型:平台发货
+            orderTypeinfo.setDeliveryType(OrderSendOutTypeEnum.PLATFORM_DELIVER.getCode());
+        } else {
+            //发货类型:正常发货
+            orderTypeinfo.setDeliveryType(OrderSendOutTypeEnum.NORMAL_DELIVER.getCode());
+        }
+        //出库类型:一般交易出库
+        orderTypeinfo.setOutboundType(OrderOutBoundTypeEnum.JYCK.getCode());
         //货到付款
-        orderTypeinfo.setCod(0);
-        //发票申请
-        orderTypeinfo.setInvoice(0);
-        //发货级别(正常、加急、特急)
-        orderTypeinfo.setLevel(0);
+        orderTypeinfo.setCod(Integer.valueOf(standardOrder.getCod() ? Constants.YES :  Constants.NO));
+        //是否存在发票申请
+        orderTypeinfo.setInvoice(Integer.valueOf(standardOrder.getInvoice() ? Constants.YES :  Constants.NO));
+        //发货级别:普通
+        orderTypeinfo.setLevel(OrderSendOutLevelEnum.GENERAL.getCode());
         orderMain.setOrderTypeinfo(orderTypeinfo);
 
         /** 订单明细信息 */
         List<OrderDetail> orderDetails = new ArrayList<>(standardOrder.getOrderDetails().size());
         //行序号
-        int rowNumber = 0;
+        int rowNumber = 1;
         for (StandardOrderDetail standardDetail : standardOrder.getOrderDetails()) {
+
+            //明细退款状态
+            if (!OrderDetailRefundStatusEnum.NO_REFUND.name().equals(standardDetail.getRefund_status())) {
+                isExistRefund = true;
+                //是否生成退款订单
+                if (!refund) {
+                    continue;
+                }
+            }
+
             OrderDetail orderDetail = new OrderDetail();
             //订单编号
             orderDetail.setOrderId("");
@@ -279,14 +308,14 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
             //发货仓库编码
             orderDetail.setWarehouse(standardDetail.getStore_code());
             //物流商编码
-            orderDetail.setLogistics("");
+            orderDetail.setLogistics(standardOrder.getLogistics());
             //快递单号
             orderDetail.setExpressNumber(standardDetail.getInvoice_no());
             //行序号
             orderDetail.setRowNumber(rowNumber+"");
             //来源行序号
             orderDetail.setSourceRow(rowNumber+"");
-            //TODO 商品编码
+            //商品编码
             orderDetail.setCommodity("");
             //数量
             orderDetail.setQty(Integer.parseInt(standardDetail.getNum()));
@@ -295,9 +324,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
             //平台子订单编号
             orderDetail.setOid(standardDetail.getOid());
             //退款状态
-            orderDetail.setRefundStatus(standardDetail.getRefund_status());
-            //TODO 商品类型
-            orderDetail.setType(0);
+            orderDetail.setRefundStatus(OrderDetailRefundStatusEnum.convert(standardDetail.getRefund_status()));
+            //商品类型
+            orderDetail.setType(OrderDetailTypeEnum.DEFAULT.getCode());
             //商品图片绝对路径
             orderDetail.setPicPath(standardDetail.getPic_path());
             //商品数字ID
@@ -329,9 +358,17 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
             //活动编码
             orderDetail.setActive("");
             orderDetails.add(orderDetail);
+            rowNumber++;
         }
 
+        //是否存在退款明细
+        orderMain.setRefund(isExistRefund ? Constants.YES :  Constants.NO);
+
         orderMain.setOrderDetails(orderDetails);
+
+        if (auto) {
+            orderMain.setCreateBy(Constants.SYSTEM);
+        }
 
         return orderMain;
 

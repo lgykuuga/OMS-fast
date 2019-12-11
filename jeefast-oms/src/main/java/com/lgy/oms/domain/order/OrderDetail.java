@@ -80,7 +80,7 @@ public class OrderDetail implements Serializable {
     /**
      * 退款状态
      */
-    private String refundStatus;
+    private Integer refundStatus;
 
     /**
      * 商品类型

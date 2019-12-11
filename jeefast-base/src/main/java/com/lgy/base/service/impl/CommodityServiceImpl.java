@@ -78,6 +78,13 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return successMsg.toString();
     }
 
+    @Override
+    public Commodity getOne(String gco) {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("gco", gco);
+        return getOne(queryWrapper);
+    }
+
     /**
      * 校验商品信息
      *

@@ -35,7 +35,7 @@ public class Combo extends BaseEntity implements Serializable {
 
     /** 数量 */
     @Excel(name = "数量")
-    private Long qty;
+    private Integer qty;
 
     /** 货主 */
     @Excel(name = "货主")

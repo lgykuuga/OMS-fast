@@ -1,4 +1,4 @@
-package com.lgy.oms.enums;
+package com.lgy.oms.enums.strategy;
 
 import com.lgy.system.domain.vo.Config;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 转单匹配商品方式
+ * @Description 转单策略匹配商品方式
  * @Author LGy
  * @Date 2019/11/1 17:01
  **/

@@ -32,6 +32,26 @@ public class Constants {
     public static final String NO = "1";
 
     /**
+     * 通用正常标识
+     */
+    public static final String ENABLE = "0";
+
+    /**
+     * 通用停用标识
+     */
+    public static final String DISABLE = "1";
+
+    /**
+     * 通用有效标识
+     */
+    public static final Integer VALID = 0;
+
+    /**
+     * 通用无效标识
+     */
+    public static final Integer INVALID = 1;
+
+    /**
      * 登录成功
      */
     public static final String LOGIN_SUCCESS = "Success";
@@ -75,4 +95,9 @@ public class Constants {
      * 资源映射路径 前缀
      */
     public static final String RESOURCE_PREFIX = "/profile";
+
+    /**
+     * 系统操作
+     */
+    public static final String SYSTEM = "SYSTEM";
 }

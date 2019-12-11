@@ -1,4 +1,4 @@
-package com.lgy.oms.enums;
+package com.lgy.oms.enums.strategy;
 
 import com.lgy.system.domain.vo.Config;
 
@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 接口类型
+ * @Description 仓库接口类型
  * @Author LGy
  * @Date 2019/11/25
  */
-public enum InterfaceTypeEnum {
+public enum WarehouseInterfaceTypeEnum {
 
     /**
      * 奇门接口
@@ -29,7 +29,7 @@ public enum InterfaceTypeEnum {
         return value;
     }
 
-    InterfaceTypeEnum(String value) {
+    WarehouseInterfaceTypeEnum(String value) {
         this.value = value;
     }
 
@@ -39,7 +39,7 @@ public enum InterfaceTypeEnum {
     public final static List<Config> getList() {
         if (configs == null) {
             configs = new ArrayList<>();
-            for (InterfaceTypeEnum strategyEnum : InterfaceTypeEnum.values()) {
+            for (WarehouseInterfaceTypeEnum strategyEnum : WarehouseInterfaceTypeEnum.values()) {
                 configs.add(new Config(strategyEnum.name(), strategyEnum.getValue()));
             }
         }

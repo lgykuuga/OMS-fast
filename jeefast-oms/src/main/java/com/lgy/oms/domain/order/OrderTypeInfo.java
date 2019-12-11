@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("oms_order_typeinfo")
-public class OrderTypeinfo extends BaseEntity implements Serializable {
+public class OrderTypeInfo extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -41,11 +41,6 @@ public class OrderTypeinfo extends BaseEntity implements Serializable {
      * 来源类型
      */
     private Integer sourceType;
-
-    /**
-     * 单据类型(线上订单、线下订单、特殊订单)
-     */
-    private Integer orderType;
 
     /**
      * 发货类型(正常发货、第三方发货、刷单发货、刷单不发货)

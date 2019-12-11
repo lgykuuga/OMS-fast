@@ -173,17 +173,22 @@ public class OrderMain extends BaseEntity implements Serializable {
     /**
      * 订单买家信息
      */
-    private OrderBuyerinfo orderBuyerinfo;
+    private OrderBuyerInfo orderBuyerinfo;
 
     /**
      * 订单支付信息
      */
-    private OrderPayinfo orderPayinfo;
+    private OrderPayInfo orderPayinfo;
 
     /**
      * 订单业务类型信息
      */
-    private OrderTypeinfo orderTypeinfo;
+    private OrderTypeInfo orderTypeinfo;
+
+    /**
+     * 订单状态类型信息
+     */
+    private OrderStatusInfo orderStatusinfo;
 
     /**
      * 订单明细信息

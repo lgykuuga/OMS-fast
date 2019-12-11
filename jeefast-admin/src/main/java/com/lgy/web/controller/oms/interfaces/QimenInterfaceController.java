@@ -1,6 +1,6 @@
 package com.lgy.web.controller.oms.interfaces;
 
-import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.lgy.common.utils.xml.XMLUtils;
 import com.lgy.oms.interfaces.qimen.bean.QimenResponse;
 import com.lgy.oms.interfaces.qimen.contant.QimenConstants;
@@ -225,7 +225,7 @@ public class QimenInterfaceController {
         if (XML.equalsIgnoreCase(format)) {
             return XMLUtils.parseObj2XML(qimenResponse);
         } else {
-            return JSONUtils.toJSONString(qimenResponse);
+            return com.alibaba.fastjson.JSON.toJSONString(qimenResponse);
         }
 
     }

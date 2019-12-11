@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("oms_order_buyerinfo")
-public class OrderBuyerinfo implements Serializable {
+public class OrderBuyerInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,6 +50,11 @@ public class OrderBuyerinfo implements Serializable {
     private String buyerEmail;
 
     /**
+     * 买家身份证号
+     */
+    private String buyerCardID;
+
+    /**
      * 收件人姓名
      */
     private String consigneeName;
@@ -60,14 +65,14 @@ public class OrderBuyerinfo implements Serializable {
     private String consigneeMobile;
 
     /**
-     * 收件人固定电话
-     */
-    private String consigneeTelephone;
-
-    /**
      * 收件人邮箱地址
      */
     private String consigneeEmail;
+
+    /**
+     * 收件人身份证号
+     */
+    private String consigneeCardID;
 
     /**
      * 国家编码

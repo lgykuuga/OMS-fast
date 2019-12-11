@@ -1,37 +1,31 @@
 package com.lgy.web.controller.oms;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.lgy.oms.enums.DownloadOrderInterfaceEnum;
-import com.lgy.oms.enums.InterfaceTypeEnum;
-import com.lgy.oms.enums.PushFormatEnum;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.common.annotation.Log;
+import com.lgy.common.core.controller.BaseController;
+import com.lgy.common.core.domain.AjaxResult;
+import com.lgy.common.core.page.TableDataInfo;
+import com.lgy.common.core.text.Convert;
+import com.lgy.common.enums.BusinessType;
+import com.lgy.common.utils.StringUtils;
+import com.lgy.common.utils.poi.ExcelUtil;
+import com.lgy.oms.domain.WarehouseInterfaces;
+import com.lgy.oms.enums.strategy.PushFormatEnum;
+import com.lgy.oms.enums.strategy.WarehouseInterfaceTypeEnum;
+import com.lgy.oms.service.IWarehouseInterfacesService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.web.bind.annotation.*;
 
-import com.lgy.common.annotation.Log;
-import com.lgy.common.enums.BusinessType;
-import com.lgy.oms.domain.WarehouseInterfaces;
-import com.lgy.oms.service.IWarehouseInterfacesService;
-import com.lgy.common.core.controller.BaseController;
-import com.lgy.common.core.domain.AjaxResult;
-import com.lgy.common.utils.StringUtils;
-import com.lgy.common.utils.poi.ExcelUtil;
-import com.lgy.common.core.text.Convert;
-import com.lgy.common.core.page.TableDataInfo;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 仓库接口设置Controller
- * 
+ *
  * @author lgy
  * @date 2019-11-25
  */
@@ -64,7 +58,7 @@ public class WarehouseInterfacesController extends BaseController {
     private QueryWrapper<WarehouseInterfaces> getWarehouseInterfacesQueryWrapper(WarehouseInterfaces warehouseInterfaces) {
         QueryWrapper<WarehouseInterfaces> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
-        if(StringUtils.isNotEmpty(warehouseInterfaces.getWarehouse())) {
+        if (StringUtils.isNotEmpty(warehouseInterfaces.getWarehouse())) {
             queryWrapper.like("warehouse", warehouseInterfaces.getWarehouse());
         }
         return queryWrapper;
@@ -89,7 +83,7 @@ public class WarehouseInterfacesController extends BaseController {
     @GetMapping("/add")
     public String add(Model model) {
         //接口类型
-        model.addAttribute("interfaceTypeList", InterfaceTypeEnum.getList());
+        model.addAttribute("interfaceTypeList", WarehouseInterfaceTypeEnum.getList());
         //接口推送报文格式类型
         model.addAttribute("pushFormatList", PushFormatEnum.getList());
         return prefix + "/add";
@@ -120,7 +114,7 @@ public class WarehouseInterfacesController extends BaseController {
         WarehouseInterfaces warehouseInterfaces = warehouseInterfacesService.getById(id);
         mmap.put("warehouseInterfaces", warehouseInterfaces);
         //接口类型
-        mmap.put("interfaceTypeList", InterfaceTypeEnum.getList());
+        mmap.put("interfaceTypeList", WarehouseInterfaceTypeEnum.getList());
         //接口推送报文格式类型
         mmap.put("pushFormatList", PushFormatEnum.getList());
         return prefix + "/edit";
@@ -142,7 +136,7 @@ public class WarehouseInterfacesController extends BaseController {
      */
     @RequiresPermissions("oms:warehouseInterfaces:remove")
     @Log(title = "仓库接口设置", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
         return toAjax(warehouseInterfacesService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));

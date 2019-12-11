@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  */
 @Data
 @TableName("oms_order_payinfo")
-public class OrderPayinfo implements Serializable {
+public class OrderPayInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**

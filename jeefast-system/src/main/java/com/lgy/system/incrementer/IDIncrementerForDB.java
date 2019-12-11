@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ import java.util.Map;
  * @Author LGy
  * @Date 2019/12/9
  */
-@Component(value="idIncrementerForDB")
+@Component(value = "idIncrementerForDB")
 public class IDIncrementerForDB implements IDIncrementer {
 
     public Logger logger = LoggerFactory.getLogger(getClass());
@@ -63,8 +62,9 @@ public class IDIncrementerForDB implements IDIncrementer {
 
     /**
      * 获取当前ID值。最终的结果是：prefix + ymd + idFormat生成的结果。
+     *
      * @param moid 模块编码
-     * @return  String PO2017060800001
+     * @return String PO2017060800001
      */
     @Override
     public String getNextId(String moid) {
@@ -74,7 +74,7 @@ public class IDIncrementerForDB implements IDIncrementer {
             idIncrementerInitializer.initializer();
         }
 
-        String selectSql = "select  next,updt from sys_gids where moid ='"+moid+"'";
+        String selectSql = "select  next,updt from sys_gids where moid ='" + moid + "'";
 
         Map<String, Object> map = jdbcTemplate.queryForMap(selectSql);
         if (map != null) {
@@ -83,16 +83,16 @@ public class IDIncrementerForDB implements IDIncrementer {
             String dateStr = DateUtils.getDate();
             int row = -1;
             //当时间不对时，重置生成规则
-            if(!dateStr.equals(map.get("updt"))){
+            if (!dateStr.equals(map.get("updt"))) {
                 updateGidsDate(dateStr);
                 row = 1;
-            }else{
-                String updateSql = "update sys_gids set next = next+1 where moid ='"+moid+"' and next="+next;
+            } else {
+                String updateSql = "update sys_gids set next = next+1 where moid ='" + moid + "' and next=" + next;
                 //更新单号
                 row = jdbcTemplate.update(updateSql);
             }
 
-            if(row ==1){
+            if (row == 1) {
                 IDIncrementerBean idb = IDIncrementerInitializer.IDMODE.get(moid);
                 return idb.getNextFormatID(Long.parseLong(next));
             }
@@ -102,10 +102,11 @@ public class IDIncrementerForDB implements IDIncrementer {
 
     /**
      * 更新gids表的 updt和vid 字段
-     * @param dateStr  更新时间
+     *
+     * @param dateStr 更新时间
      */
-    private void updateGidsDate(String dateStr){
-        String updateSql = "update sys_gids set next = 1,updt='"+dateStr+"'";
+    private void updateGidsDate(String dateStr) {
+        String updateSql = "update sys_gids set next = 1,updt='" + dateStr + "'";
         jdbcTemplate.update(updateSql);
     }
 

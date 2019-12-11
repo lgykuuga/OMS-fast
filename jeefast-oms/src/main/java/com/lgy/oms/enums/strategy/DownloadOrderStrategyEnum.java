@@ -1,4 +1,4 @@
-package com.lgy.oms.enums;
+package com.lgy.oms.enums.strategy;
 
 import com.lgy.system.domain.vo.Config;
 
@@ -6,40 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 下单策略接口类型枚举(对接订单下载系统)
+ * @Description 下单策略枚举
  * @Author LGy
- * @Date 2019/10/17
+ * @Date 2019/10/14
  */
-public enum DownloadOrderInterfaceEnum {
+public enum DownloadOrderStrategyEnum {
 
     /**
-     * 直接对接平台
+     * 用户自定义
      */
-    DIRECT("对接平台"),
+    DEFINED("用户自定义"),
     /**
-     * globale:跨境翼
+     * 标准模式
      */
-    KJY("跨境翼"),
+    STANDARD("标准模式"),
     /**
-     * gwall: ODS
+     * 大促模式
      */
-    GODS("GODS"),
-
-    /**
-     * 淘宝RDS数据库
-     */
-    RDS("RDS"),
-
-    /**
-     * 奇门接口
-     */
-    QIMEN("奇门");
-
+    PROMOTIONAL("大促模式");
 
     private String value;
 
     /**
-     * 订单状态集合
+     * 策略集合
      */
     private static List<Config> configs;
 
@@ -47,25 +36,25 @@ public enum DownloadOrderInterfaceEnum {
         return value;
     }
 
-    DownloadOrderInterfaceEnum(String value) {
+    DownloadOrderStrategyEnum(String value) {
         this.value = value;
     }
 
     public static String toJson() {
         String JsOrderFlag = "[";
-        for (DownloadOrderInterfaceEnum downloadOrderStrategyEnum : DownloadOrderInterfaceEnum.values()) {
+        for (DownloadOrderStrategyEnum downloadOrderStrategyEnum : DownloadOrderStrategyEnum.values()) {
             JsOrderFlag += "{\"key\":\"" + downloadOrderStrategyEnum.name() + "\",\"val\":\"" + downloadOrderStrategyEnum.getValue() + "\"},";
         }
         return JsOrderFlag.substring(0, JsOrderFlag.length() - 1) + "]";
     }
 
     /**
-     * 获取订单状态集合
+     * 获取策略状态集合
      */
     public final static List<Config> getList() {
         if (configs == null) {
             configs = new ArrayList<>();
-            for (DownloadOrderInterfaceEnum strategyEnum : DownloadOrderInterfaceEnum.values()) {
+            for (DownloadOrderStrategyEnum strategyEnum : DownloadOrderStrategyEnum.values()) {
                 configs.add(new Config(strategyEnum.name(), strategyEnum.getValue()));
             }
         }
