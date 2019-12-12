@@ -16,6 +16,7 @@ import com.lgy.oms.service.IStrategyConvertService;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.ITradeStandardService;
 import com.lgy.oms.service.business.ICreateOrderMainService;
+import com.lgy.oms.service.business.IOrderDetailProcessingService;
 import com.lgy.oms.service.business.ITradeConvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
     /** 订单快照 */
     @Autowired
     ITradeStandardService tradeStandardService;
+    /** 订单明细处理 */
+    @Autowired
+    IOrderDetailProcessingService orderDetailProcessingService;
 
     @Override
     public CommonResponse<String> execute(String tid, Map<String, Object> map) {
@@ -76,8 +80,13 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //转换成主订单信息
         OrderMain orderMain = convert(standardOrder, strategy, map);
 
-        //匹配铺货关系
+        //匹配商品编码
+        orderMain = orderDetailProcessingService.matchCommodity(orderMain, strategy);
 
+        //解析组合商品
+        orderMain = orderDetailProcessingService.analysisCombCommodity(orderMain);
+
+        //保存订单
         orderMain = createOrderMainService.saveOrder(orderMain);
         return null;
     }

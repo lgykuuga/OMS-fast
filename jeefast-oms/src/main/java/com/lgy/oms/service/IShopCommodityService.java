@@ -24,4 +24,16 @@ public interface IShopCommodityService extends IService<ShopCommodity> {
      */
     CommonResponse<String> importShopCommodity(List<ShopCommodity> shopCommodities, boolean updateSupport, String operName);
 
+
+    /**
+     * 根据订单信息获取铺货关系
+     *
+     * @param shop       店铺编码
+     * @param numIid     商品数字ID
+     * @param skuId      平台skuID
+     * @param outerIid   商家外部编码
+     * @param outerSkuId 外部网店自己定义的Sku编号
+     * @return
+     */
+    CommonResponse<ShopCommodity> getShopCommodityByOrder(String shop, String numIid, String skuId, String outerIid, String outerSkuId);
 }

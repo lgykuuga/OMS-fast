@@ -147,4 +147,30 @@ public class ShopCommodityServiceImpl extends ServiceImpl<ShopCommodityMapper, S
         logger.error("铺货关系导入保存失败");
         return new CommonResponse<String>().error(Constants.FAIL, "铺货关系导入保存失败");
     }
+
+    @Override
+    public CommonResponse<ShopCommodity> getShopCommodityByOrder(String shop, String numIid, String skuId,
+                                                                 String outerIid, String outerSkuId) {
+
+        ShopCommodity shopCommodity;
+
+        QueryWrapper<ShopCommodity> queryWrapper  = new QueryWrapper();
+        queryWrapper.eq("shop", shop);
+        queryWrapper.eq("status", Constants.VALID);
+
+        //用商家编码和商家sku匹配商品
+        if (StringUtils.isNotEmpty(numIid)) {
+            queryWrapper.eq("numIid", numIid);
+        }
+        if (StringUtils.isNotEmpty(skuId)) {
+            queryWrapper.eq("skuId", skuId);
+        }
+        try {
+            shopCommodity = this.getOne(queryWrapper);
+        } catch (Exception e) {
+            logger.error("存在多条相同有效的铺货关系");
+            return new CommonResponse<ShopCommodity>().error(Constants.FAIL, "存在多条相同有效的铺货关系");
+        }
+        return new CommonResponse<ShopCommodity>().ok(shopCommodity);
+    }
 }

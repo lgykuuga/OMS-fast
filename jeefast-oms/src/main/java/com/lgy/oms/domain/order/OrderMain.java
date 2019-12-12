@@ -117,6 +117,7 @@ public class OrderMain extends BaseEntity implements Serializable {
 
     /**
      * 尺码类型
+     * @see com.lgy.oms.enums.order.OrderSizeTypeEnum
      */
     private Integer sizeType;
 
@@ -189,6 +190,11 @@ public class OrderMain extends BaseEntity implements Serializable {
      * 订单状态类型信息
      */
     private OrderStatusInfo orderStatusinfo;
+
+    /**
+     * 订单拦截信息表
+     */
+    private OrderInterceptInfo orderInterceptInfo;
 
     /**
      * 订单明细信息

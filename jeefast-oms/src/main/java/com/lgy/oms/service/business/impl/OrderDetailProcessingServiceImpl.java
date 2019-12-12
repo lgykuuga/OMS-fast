@@ -8,8 +8,15 @@ import com.lgy.base.service.ICommodityService;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
+import com.lgy.oms.domain.ShopCommodity;
+import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.order.OrderDetail;
+import com.lgy.oms.domain.order.OrderInterceptInfo;
+import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.enums.order.OrderDetailTypeEnum;
+import com.lgy.oms.enums.order.OrderInterceptTypeEnum;
+import com.lgy.oms.enums.strategy.ConvertMatchCommodityEnum;
+import com.lgy.oms.service.IShopCommodityService;
 import com.lgy.oms.service.business.IOrderDetailProcessingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +41,8 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
     IComboService comboService;
     @Autowired
     ICommodityService commodityService;
+    @Autowired
+    IShopCommodityService shopCommodityService;
 
     @Override
     public CommonResponse<List<OrderDetail>> analysisCombCommodity(OrderDetail orderDetail) {
@@ -123,5 +132,144 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
         rtnMessage.setCode(flag ? Constants.SUCCESS : Constants.FAIL);
         rtnMessage.setData(combDetailList);
         return rtnMessage;
+    }
+
+    @Override
+    public OrderMain matchCommodity(OrderMain orderMain, StrategyConvert strategy) {
+
+        //匹配商品编码成功标识
+        boolean flag = true;
+        //记录匹配失败原因
+        StringBuffer failReason = new StringBuffer();
+
+        for (OrderDetail orderDetail : orderMain.getOrderDetails()) {
+
+            if (StringUtils.isNotEmpty(orderDetail.getCommodity())) {
+
+                if (ConvertMatchCommodityEnum.ORDER_OUT_NUM.getKey().equals(strategy.getMatchCommodity())) {
+                    /** 根据订单外部编码匹配商品编码 */
+                    if (StringUtils.isNotEmpty(orderDetail.getSkuId()) && StringUtils.isNotEmpty(orderDetail.getOuterSkuId())) {
+                        //SKU外部编码
+                        orderDetail.setCommodity(orderDetail.getOuterSkuId().trim());
+                    } else if (StringUtils.isNotEmpty(orderDetail.getOuterIid()) && StringUtils.isEmpty(orderDetail.getSkuId())) {
+                        //平台商品外部ID
+                        orderDetail.setCommodity(orderDetail.getOuterIid().trim());
+                    } else {
+                        flag = false;
+                        logger.error("订单[{}]根据外部编码匹配商品编码,行序号[{}]外部编码信息为空;",
+                                orderMain.getOrderId(), orderDetail.getRowNumber());
+                        failReason.append("根据外部编码匹配商品编码,行序号[").append(orderDetail.getRowNumber())
+                                .append("]外部编码信息为空;");
+                        break;
+                    }
+                } else if (ConvertMatchCommodityEnum.SHOP_COMMODITY.getKey().equals(strategy.getMatchCommodity())) {
+                    /** 根据铺货关系匹配商品编码 */
+                    if (StringUtils.isNotEmpty(orderDetail.getNumIid()) || StringUtils.isNotEmpty(orderDetail.getSkuId())
+                            || StringUtils.isNotEmpty(orderDetail.getOuterIid()) || StringUtils.isNotEmpty(orderDetail.getOuterSkuId())) {
+                        //匹配铺货关系
+                        try {
+                            CommonResponse<ShopCommodity> shopCommodityResp = shopCommodityService.getShopCommodityByOrder(orderMain.getShop(), orderDetail.getNumIid(),
+                                    orderDetail.getSkuId(), orderDetail.getOuterIid(), orderDetail.getOuterSkuId());
+
+                            //订单明细信息完整,并且能找到铺货关系
+                            if (Constants.SUCCESS.equals(shopCommodityResp.getCode()) && shopCommodityResp.getData() != null) {
+                                //匹配商品
+                                orderDetail.setCommodity(shopCommodityResp.getData().getCommodity());
+                            } else {
+                                flag = false;
+                                logger.error("订单[{}]存在商品没有维护铺货关系或多条相同铺货关系,匹配不到商品编码", orderDetail.getOrderId());
+                                failReason.append("订单存在商品没有维护铺货关系或多条相同铺货关系,匹配不到商品编码;");
+                                break;
+                            }
+                        } catch (Exception e) {
+                            flag = false;
+                            logger.error("订单" + orderDetail.getOrderId() + "请求解析铺货关系失败:", e);
+                            failReason.append("订单请求解析铺货关系失败;");
+                            break;
+                        }
+                    } else {
+                        flag = false;
+                        logger.error("订单[{}]商品平台商品ID或平台SKU编码为空,匹配不到商品编码", orderMain.getOrderId());
+                        failReason.append("订单商品平台商品ID或平台SKU编码为空,匹配不到商品编码;");
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!flag) {
+            //设置拦截
+            orderMain.setIntercept(Constants.YES);
+            //订单拦截信息
+            OrderInterceptInfo orderIntercept = new OrderInterceptInfo();
+            orderIntercept.setOrderId(orderMain.getOrderId());
+            orderIntercept.setSourceId(orderMain.getSourceId());
+            //设置匹配铺货关系异常
+            orderIntercept.setType(OrderInterceptTypeEnum.MATCH_GOODS_CODE.getCode());
+            //设置异常内容
+            orderIntercept.setContent(failReason.toString());
+            orderMain.setOrderInterceptInfo(orderIntercept);
+        }
+
+        return orderMain;
+    }
+
+    @Override
+    public OrderMain analysisCombCommodity(OrderMain orderMain) {
+
+        //解析组合商品成功标识
+        boolean flag = true;
+        //记录解析失败原因
+        StringBuffer failReason = new StringBuffer();
+
+        //订单明细信息
+        if (StringUtils.isNotEmpty(orderMain.getOrderDetails())) {
+            //新增的订单明细
+            List<OrderDetail> addOrderDetails = new ArrayList<>();
+
+            for (OrderDetail orderDetail : orderMain.getOrderDetails()) {
+
+                if (StringUtils.isNotEmpty(orderDetail.getCommodity())) {
+                    /** 存在商品编码,解析组合商品 */
+                    //关联商品档案
+                    Commodity commodity = commodityService.getOne(orderDetail.getCommodity());
+                    if (commodity != null) {
+                        //普通商品
+                        orderDetail.setType(OrderDetailTypeEnum.DEFAULT.getCode());
+
+                        //判断是否组合商品
+                        if (Constants.YES.equals(commodity.getCombo())) {
+                            //解析组合商品
+                            CommonResponse<List<OrderDetail>> analysisResp = analysisCombCommodity(orderDetail);
+                            if (Constants.SUCCESS.equals(analysisResp.getCode())) {
+                                addOrderDetails.addAll(analysisResp.getData());
+                                //组合商品
+                                orderDetail.setType(OrderDetailTypeEnum.COMB.getCode());
+                            } else {
+                                flag =false;
+                                failReason.append(analysisResp.getMsg());
+                            }
+                        }
+                        //图片
+                        orderDetail.setPicPath(commodity.getImgUrl());
+                        //尺寸
+                        orderDetail.setSize("");
+                        //商品条码
+                        orderDetail.setBarCode("");
+                        //品牌
+                        orderDetail.setBrand("");
+                    } else {
+                        //未解析商品
+                        orderDetail.setType(OrderDetailTypeEnum.UNPARSED.getCode());
+                    }
+                }
+            }
+
+            if (StringUtils.isNotEmpty(addOrderDetails)) {
+                orderMain.getOrderDetails().addAll(addOrderDetails);
+            }
+        }
+
+        return orderMain;
     }
 }

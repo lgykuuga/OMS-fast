@@ -1,5 +1,6 @@
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.mapper.TradeMapper;
+import com.lgy.oms.service.IShopCommodityService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.annotation.MapperScan;
@@ -23,13 +24,18 @@ public class TestClass {
 
     @Autowired
     TradeMapper tradeMapper;
+    @Autowired
+    IShopCommodityService shopCommodityService;
 
     @Test
     public void test1() {
         String tid = "12345";
         String shop = "12345";
-        boolean valid = true;
-        List<Trade> trades = tradeMapper.checkOrderExist(tid, shop, valid);
+        List<Trade> trades = tradeMapper.checkOrderExist(tid, shop, true);
         System.out.println(trades);
+    }
+
+    public void test2() {
+
     }
 }

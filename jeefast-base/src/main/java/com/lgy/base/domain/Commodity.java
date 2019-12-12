@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 商品档案表 base_commodity
@@ -39,6 +40,18 @@ public class Commodity extends BaseEntity implements Serializable {
 
     /** 缩略图url */
     private String imgUrl;
+
+    /** 类别 */
+    @Excel(name = "类别")
+    private String category;
+
+    /** 重量 */
+    @Excel(name = "重量")
+    private BigDecimal weight;
+
+    /** 体积 */
+    @Excel(name = "体积")
+    private BigDecimal volume;
 
     /** 货主编码 */
     @Excel(name = "货主")
