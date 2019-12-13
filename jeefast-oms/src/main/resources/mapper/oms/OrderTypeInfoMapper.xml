@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgy.oms.mapper.OrderTypeInfoMapper">
+    <!--
+    <resultMap type="OrderTypeinfo" id="OrderTypeinfoResult">
+        <result property="id"    column="id"    />
+        <result property="orderid"    column="orderId"    />
+        <result property="sourceid"    column="sourceId"    />
+        <result property="aimId"    column="aim_id"    />
+        <result property="sourceType"    column="source_type"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="deliveryType"    column="delivery_type"    />
+        <result property="outboundType"    column="outbound_type"    />
+        <result property="cod"    column="cod"    />
+        <result property="invoice"    column="invoice"    />
+        <result property="level"    column="level"    />
+    </resultMap>
+    -->
+
+</mapper>
+

@@ -19,11 +19,8 @@ public enum TradeTranformStatusEnum {
     /**
      * 已转单
      */
-    TRANFORM(1, "已转单"),
-    /**
-     * 已取消
-     */
-    CANCEL(2, "已取消");
+    TRANFORM(1, "已转单");
+
 
     private final int value;
     private final String name;

@@ -1,6 +1,7 @@
 package com.lgy.oms.interfaces.rds.util;
 
 import com.lgy.oms.domain.ShopInterfaces;
+import com.lgy.oms.enums.order.OrderDetailRefundStatusEnum;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
 import com.lgy.oms.interfaces.rds.bean.*;
@@ -32,7 +33,12 @@ public class RdsConvert {
             standardOrder.setPlatform(shopInterfaces.getPlatform());
             //货主编码
             standardOrder.setOwner(shopInterfaces.getOwner());
-
+            //平台发货
+            standardOrder.setPlatform_send(true);
+            //货到付款
+            standardOrder.setCod(false);
+            //存在发票申请
+            standardOrder.setInvoice(false);
             //订单明细信息
             RdsOrders orders = trade.getOrders();
             if (orders != null && orders.getOrder() != null && !orders.getOrder().isEmpty()) {
@@ -42,6 +48,10 @@ public class RdsConvert {
                     StandardOrderDetail detail = new StandardOrderDetail();
 
                     BeanUtils.copyProperties(order, detail);
+
+                    //无申请退款
+                    detail.setRefund_status(OrderDetailRefundStatusEnum.NO_REFUND.name());
+
                     details.add(detail);
                 }
 

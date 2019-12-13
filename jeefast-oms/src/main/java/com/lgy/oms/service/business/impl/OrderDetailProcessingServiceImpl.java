@@ -250,14 +250,6 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
                                 failReason.append(analysisResp.getMsg());
                             }
                         }
-                        //图片
-                        orderDetail.setPicPath(commodity.getImgUrl());
-                        //尺寸
-                        orderDetail.setSize("");
-                        //商品条码
-                        orderDetail.setBarCode("");
-                        //品牌
-                        orderDetail.setBrand("");
                     } else {
                         //未解析商品
                         orderDetail.setType(OrderDetailTypeEnum.UNPARSED.getCode());

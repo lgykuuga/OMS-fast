@@ -41,6 +41,14 @@ public class Commodity extends BaseEntity implements Serializable {
     /** 缩略图url */
     private String imgUrl;
 
+    /** 商品条码 */
+    @Excel(name = "商品条码")
+    private String barCode;
+
+    /** 品牌 */
+    @Excel(name = "品牌")
+    private String brand;
+
     /** 类别 */
     @Excel(name = "类别")
     private String category;
@@ -52,6 +60,10 @@ public class Commodity extends BaseEntity implements Serializable {
     /** 体积 */
     @Excel(name = "体积")
     private BigDecimal volume;
+
+    /** 尺寸 */
+    @Excel(name = "尺寸")
+    private String size;
 
     /** 货主编码 */
     @Excel(name = "货主")

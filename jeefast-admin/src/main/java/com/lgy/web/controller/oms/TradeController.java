@@ -20,7 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 交易订单Controller
@@ -119,11 +121,28 @@ public class TradeController extends BaseController {
     @PostMapping("/convert")
     @ResponseBody
     public AjaxResult convert(String tids) {
+
+        //全部成功标识
+        boolean flag = true;
+        //失败原因
+        StringBuffer failureMessage = new StringBuffer();
+
         String[] tidz = tids.split(",");
+        Map map = new HashMap(2);
+        map.put("auto", false);
+        map.put("refund", false);
         for (String tid : tidz) {
-            tradeConvertService.execute(tid, null);
+            CommonResponse response = tradeConvertService.execute(tid, map);
+            if (!Constants.SUCCESS.equals(response.getCode())) {
+                failureMessage.append(response.getMsg());
+                flag = false;
+            }
         }
-        return null;
+
+        if (flag) {
+            return AjaxResult.success("生成订单成功");
+        }
+        return AjaxResult.error(failureMessage.toString());
     }
 
     /**

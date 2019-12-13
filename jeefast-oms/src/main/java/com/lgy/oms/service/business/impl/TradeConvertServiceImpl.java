@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
+import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.Trade;
@@ -12,11 +13,13 @@ import com.lgy.oms.domain.order.*;
 import com.lgy.oms.enums.order.*;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
+import com.lgy.oms.service.IOrderMainService;
 import com.lgy.oms.service.IStrategyConvertService;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.ITradeStandardService;
 import com.lgy.oms.service.business.ICreateOrderMainService;
 import com.lgy.oms.service.business.IOrderDetailProcessingService;
+import com.lgy.oms.service.business.IOrderStatisticsService;
 import com.lgy.oms.service.business.ITradeConvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
     /** 转单策略 */
     @Autowired
     IStrategyConvertService strategyConvertService;
+    /** 订单主服务 */
+    @Autowired
+    IOrderMainService orderMainService;
     /** 创建主订单服务 */
     @Autowired
     ICreateOrderMainService createOrderMainService;
@@ -49,6 +55,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
     /** 订单明细处理 */
     @Autowired
     IOrderDetailProcessingService orderDetailProcessingService;
+    /** 订单统计处理 */
+    @Autowired
+    IOrderStatisticsService orderStatisticsService;
 
     @Override
     public CommonResponse<String> execute(String tid, Map<String, Object> map) {
@@ -61,8 +70,15 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "信息不完整;");
         }
 
+        //订单池存在单号
+        List<String> orderList = orderMainService.getOrderIdBySourceId(tid, true);
+        if (StringUtils.isNotEmpty(orderList)) {
+            return new CommonResponse<String>().error(Constants.FAIL, tid + "无需再次转单,已存在有效单据：" +
+                    StringUtils.join(orderList, ","));
+        }
+
         if (TradeTranformStatusEnum.WAIT_TRANFORM.getValue() != trade.getFlag()) {
-            return new CommonResponse<String>().error(Constants.FAIL, tid + "已转单或已取消;");
+            return new CommonResponse<String>().error(Constants.FAIL, tid + "已转单;");
         }
 
         StrategyConvert strategy = strategyConvertService.getStrategyByShop(trade.getShop());
@@ -81,13 +97,13 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         OrderMain orderMain = convert(standardOrder, strategy, map);
 
         //匹配商品编码
-        orderMain = orderDetailProcessingService.matchCommodity(orderMain, strategy);
-
+        orderDetailProcessingService.matchCommodity(orderMain, strategy);
         //解析组合商品
-        orderMain = orderDetailProcessingService.analysisCombCommodity(orderMain);
-
+        orderDetailProcessingService.analysisCombCommodity(orderMain);
+        //订单统计处理
+        orderStatisticsService.orderStatisticsMethod(orderMain);
         //保存订单
-        orderMain = createOrderMainService.saveOrder(orderMain);
+        createOrderMainService.saveOrder(orderMain);
         return null;
     }
 
@@ -129,7 +145,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //是否拦截
         orderMain.setIntercept(Constants.NO);
         //是否售后
-        orderMain.setAftersales(Constants.NO);
+        orderMain.setAfterSales(Constants.NO);
         //是否已经开发票
         orderMain.setInvoice(Constants.NO);
         //是否用户锁定

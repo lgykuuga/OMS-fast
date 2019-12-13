@@ -1,5 +1,6 @@
 package com.lgy.oms.domain.order;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -78,7 +79,7 @@ public class OrderMain extends BaseEntity implements Serializable {
     /**
      * 是否售后
      */
-    private String aftersales;
+    private String afterSales;
 
     /**
      * 是否发票
@@ -174,31 +175,37 @@ public class OrderMain extends BaseEntity implements Serializable {
     /**
      * 订单买家信息
      */
+    @TableField(exist = false)
     private OrderBuyerInfo orderBuyerinfo;
 
     /**
      * 订单支付信息
      */
+    @TableField(exist = false)
     private OrderPayInfo orderPayinfo;
 
     /**
      * 订单业务类型信息
      */
+    @TableField(exist = false)
     private OrderTypeInfo orderTypeinfo;
 
     /**
      * 订单状态类型信息
      */
+    @TableField(exist = false)
     private OrderStatusInfo orderStatusinfo;
 
     /**
      * 订单拦截信息表
      */
+    @TableField(exist = false)
     private OrderInterceptInfo orderInterceptInfo;
 
     /**
      * 订单明细信息
      */
+    @TableField(exist = false)
     private List<OrderDetail> orderDetails;
 
 }

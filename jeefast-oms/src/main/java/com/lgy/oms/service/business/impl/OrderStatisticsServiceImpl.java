@@ -38,6 +38,7 @@ public class OrderStatisticsServiceImpl implements IOrderStatisticsService {
     public void orderStatisticsMethod(OrderMain orderMain) {
 
         List<OrderDetail> orderDetails = orderMain.getOrderDetails();
+
         if (StringUtils.isNotEmpty(orderDetails)) {
 
             //订单明细数量
@@ -66,14 +67,30 @@ public class OrderStatisticsServiceImpl implements IOrderStatisticsService {
                         weight = weight.add(new BigDecimal(orderDetail.getQty())
                                 .multiply(commodity.getWeight() == null ? BigDecimal.ZERO : commodity.getWeight()));
                     }
+                    //图片
+                    orderDetail.setPicPath(commodity.getImgUrl());
+                    //尺寸
+                    orderDetail.setSize(commodity.getSize());
+                    //商品条码
+                    orderDetail.setBarCode(commodity.getBarCode());
+                    //品牌
+                    orderDetail.setBrand(commodity.getBrand());
                     //sku种类
                     skus.add(commodity.getGco());
                 }
             }
 
+            //总件数
             orderMain.setQty(size);
+            //总体积
             orderMain.setVolume(volume);
+            //总重量
             orderMain.setWeight(weight);
+            //sku种类数量
+            orderMain.setSkuNum(skus.size());
+            //商品编码集合
+            String skuCollection = StringUtils.join(skus, ",");
+            orderMain.setCommodity(skuCollection);
 
             /**设置订单数量类型 */
             if (size == 1) {
@@ -86,10 +103,6 @@ public class OrderStatisticsServiceImpl implements IOrderStatisticsService {
                 //一单多货
                 orderMain.setSizeType(OrderSizeTypeEnum.MULTIPLE_CARGO.getCode());
             }
-
-            String skus = StringUtils.join(skus, ",");
-
-
         }
 
     }
