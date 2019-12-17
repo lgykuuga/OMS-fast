@@ -12,6 +12,11 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyAudit;
 import com.lgy.oms.domain.StrategyAuditShop;
+import com.lgy.oms.domain.StrategyConvert;
+import com.lgy.oms.enums.strategy.AuditAmountEnum;
+import com.lgy.oms.enums.strategy.AuditNumberEnum;
+import com.lgy.oms.enums.strategy.AuditTimeEnum;
+import com.lgy.oms.enums.strategy.ProcessEnum;
 import com.lgy.oms.service.IStrategyAuditService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +45,15 @@ public class StrategyAuditController extends BaseController {
 
     @RequiresPermissions("oms:audit:view")
     @GetMapping()
-    public String audit() {
+    public String audit(Model model) {
+        //金额拦截类型
+        model.addAttribute("auditAmountList", AuditAmountEnum.getList());
+        //数值拦截类型
+        model.addAttribute("auditNumberList", AuditNumberEnum.getList());
+        //时间拦截类型
+        model.addAttribute("auditTimeList", AuditTimeEnum.getList());
+        //表单对象
+        model.addAttribute("strategyAudit", new StrategyAudit());
         return prefix + "/audit";
     }
 

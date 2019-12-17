@@ -174,12 +174,6 @@ public class StrategyAudit extends BaseEntity implements Serializable {
     private Integer waitMinute;
 
     /**
-     * 毛利率拦截开启
-     */
-    @Excel(name = "毛利率拦截开启")
-    private Integer profit;
-
-    /**
      * 毛利率拦截值
      */
     @Excel(name = "毛利率拦截值")
