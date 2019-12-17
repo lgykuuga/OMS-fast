@@ -2,36 +2,43 @@ package com.lgy.oms.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lgy.common.annotation.Excel;
 import com.lgy.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
- * 转单策略店铺表 oms_strategy_convert
+ * 审单策略适用店铺表 oms_strategy_audit_shop
  *
  * @author lgy
- * @date 2019-10-31
+ * @date 2019-12-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("oms_strategy_convert_shop")
-public class StrategyConvertShop extends BaseEntity implements Serializable {
+@Accessors(chain = true)
+@TableName("oms_strategy_audit_shop")
+public class StrategyAuditShop extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * $column.columnComment
+     */
     private Long id;
 
     /**
      * 策略编码
      */
+    @Excel(name = "策略编码")
     private String gco;
 
     /**
-     * 策略店铺编码
+     * 适用店铺
      */
+    @Excel(name = "适用店铺")
     private String shop;
 
     /**
@@ -43,6 +50,7 @@ public class StrategyConvertShop extends BaseEntity implements Serializable {
     /**
      * 开启自动(0:开启,1:关闭)
      */
+    @Excel(name = "开启自动(0:开启,1:关闭)")
     private String auto;
 
 }

@@ -126,7 +126,7 @@ public class StrategyConvertController extends BaseController {
     public AjaxResult loadStrategy(@PathVariable("id") Long id, Model model) {
         StrategyConvert strategyConvert = strategyConvertService.getById(id);
         //表单对象
-        model.addAttribute("strategyConvert", strategyConvertService.getById(id));
+        model.addAttribute("strategyConvert", strategyConvert);
         return AjaxResult.success(strategyConvert);
     }
 
@@ -138,7 +138,7 @@ public class StrategyConvertController extends BaseController {
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
-        List<String> idList = Arrays.asList(Convert.toStrArray(ids));
+        String[] idList = Convert.toStrArray(ids);
         for (String id : idList) {
             StrategyConvert strategyConvert = strategyConvertService.getById(id);
             //删除策略店铺

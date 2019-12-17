@@ -2,23 +2,21 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-
-<mapper namespace="com.lgy.oms.mapper.StrategyConvertShopMapper">
+<mapper namespace="com.lgy.oms.mapper.StrategyAuditShopMapper">
 
     <update id="changeAuto">
-        update oms_strategy_convert_shop set auto = #{auto}
+        update oms_strategy_audit_shop set auto = #{auto}
         where id = #{id}
     </update>
 
-    <select id="getConvertShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvertShop">
+    <select id="getStrategyShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyAuditShop">
         select
         a.id as id,
         a.gco,
         a.shop,
         b.gna as shopName,
         a.auto
-        from oms_strategy_convert_shop a
+        from oms_strategy_audit_shop a
         left join base_shop b on b.gco = a.shop
         <where>
             <if test="gco != null and gco != ''">
@@ -27,15 +25,14 @@
         </where>
     </select>
 
-
-    <select id="getNotJoThisStrategyShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvertShop">
+    <select id="getNotJoThisStrategyShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyAuditShop">
         SELECT
-	    p.gco as shop,
-	    p.gna as shopName
+        p.gco as shop,
+        p.gna as shopName
         FROM
-	    base_shop p
+        base_shop p
         WHERE
-	    p.gco NOT IN (SELECT DISTINCT shop FROM oms_strategy_convert_shop
+        p.gco NOT IN (SELECT DISTINCT shop FROM oms_strategy_audit_shop
         <where>
             <if test="gco != null and gco != ''">
                 AND gco = #{gco}
@@ -50,22 +47,22 @@
         </if>
     </select>
 
-
-    <select id="getStrategyByShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyConvert">
+    <select id="getStrategyByShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyAudit">
         select *
         from
-        oms_strategy_convert
+        oms_strategy_audit
         where gco = (
         select
         gco
         from
         oms_strategy_convert_shop
         <where>
-        <if test="shop != null and shop != ''">
-            shop = #{shop}
-        </if>
+            <if test="shop != null and shop != ''">
+                shop = #{shop}
+            </if>
         </where>
         )
     </select>
+
 </mapper>
 

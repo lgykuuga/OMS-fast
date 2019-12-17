@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('新增策略店铺')" />
+</head>
+<body class="gray-bg">
+     <!-- 查询框 -->
+	 <div class="col-sm-12 search-collapse">
+		 <form id="formId">
+			 <div class="select-list">
+				 <ul>
+					 <li>
+						 <p>店铺编码</p>
+						 <input type="text" name="shopCode" autocomplete="off"/>
+					 </li>
+					 <li>
+						 <p>店铺名称</p>
+						 <input type="text" name="shopName" autocomplete="off"/>
+					 </li>
+					 <li>
+						 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+						 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+					 </li>
+				 </ul>
+			 </div>
+		 </form>
+	 </div>
+
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+
+    <div th:include="include :: footer"></div>
+
+    <script th:inline="javascript">
+        var prefix = ctx + "oms/audit";
+        //策略编码
+		var gco = [[${gco}]];
+		//是否强制新增店铺
+		var enforce = [[${enforce}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/addLoadShop",
+				queryParams: queryParams,
+		        showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+				createUrl: prefix + "/addLoadShop",
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id',
+					title : 'id',
+					visible: false
+				},
+				{
+					field : 'gco',
+					title : '策略编码',
+					visible: false
+				},
+				{
+					field : 'shop',
+					title : '店铺编码'
+				},
+				{
+					field : 'shopName',
+					title : '店铺'
+				},
+		        ]
+            };
+            $.table.init(options);
+        });
+
+		function queryParams(params) {
+			var search = $.table.queryParams(params);
+			search.gco = gco;
+			search.enforce = enforce;
+			search.shopCode = search.shop;
+			return search;
+		}
+
+		/* 添加店铺-选择店铺-提交 */
+		function submitHandler(index, layero) {
+			var data = $('#bootstrap-table').bootstrapTable('getSelections');
+			if (data.length == 0) {
+				$.modal.alertWarning("请至少选择一条记录");
+				return;
+			}
+
+			for(var i=0;i<data.length;i++){
+				data[i].gco = gco;
+			}
+			
+			var url = prefix + "/addNotJoinShop";
+			if (enforce) {
+				url = prefix + "/addNotInShop";
+			}
+
+			data = JSON.stringify(data);
+			data = {
+				data:data
+			}
+			$.operate.save(url, data);
+		}
+	</script>
+</body>
+</html>

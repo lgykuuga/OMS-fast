@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgy.oms.mapper.StrategyAuditMapper">
+    <!--
+    <resultMap type="StrategyAudit" id="StrategyAuditResult">
+        <result property="id"    column="id"    />
+        <result property="gco"    column="gco"    />
+        <result property="gna"    column="gna"    />
+        <result property="source"    column="source"    />
+        <result property="addressValid"    column="address_valid"    />
+        <result property="buyMessage"    column="buy_message"    />
+        <result property="sellerMessage"    column="seller_message"    />
+        <result property="sellerMessageMatch"    column="seller_message_match"    />
+        <result property="cod"    column="cod"    />
+        <result property="sellerFlag"    column="seller_flag"    />
+        <result property="refund"    column="refund"    />
+        <result property="mark"    column="mark"    />
+        <result property="amount"    column="amount"    />
+        <result property="amountMin"    column="amount_min"    />
+        <result property="amountMax"    column="amount_max"    />
+        <result property="timeRange"    column="time_range"    />
+        <result property="timeStart"    column="time_start"    />
+        <result property="timeEnd"    column="time_end"    />
+        <result property="number"    column="number"    />
+        <result property="numberMin"    column="number_min"    />
+        <result property="numberMax"    column="number_max"    />
+        <result property="validDateType"    column="valid_date_type"    />
+        <result property="validDate"    column="valid_date"    />
+        <result property="autoAuditType"    column="auto_audit_type"    />
+        <result property="waitMinute"    column="wait_minute"    />
+        <result property="profit"    column="profit"    />
+        <result property="profitValue"    column="profit_value"    />
+        <result property="orderIntercept"    column="order_intercept"    />
+        <result property="commodityIntercept"    column="commodity_intercept"    />
+        <result property="addressIntercept"    column="address_intercept"    />
+        <result property="comboIntercept"    column="combo_intercept"    />
+        <result property="owner"    column="owner"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+    -->
+
+</mapper>
+

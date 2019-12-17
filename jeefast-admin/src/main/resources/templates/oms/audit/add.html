@@ -5,7 +5,7 @@
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-convert-add">
+        <form class="form-horizontal m" id="form-audit-add">
             <div class="form-group">
                 <label class="col-sm-3 control-label">策略编码：</label>
                 <div class="col-sm-8">
@@ -37,14 +37,14 @@
     </div>
     <th:block th:include="include :: footer" />
     <script type="text/javascript">
-        var prefix = ctx + "oms/convert"
-        $("#form-convert-add").validate({
+        var prefix = ctx + "oms/audit"
+        $("#form-audit-add").validate({
             focusCleanup: true
         });
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/add", $('#form-convert-add').serialize());
+                $.operate.save(prefix + "/add", $('#form-audit-add').serialize());
             }
         }
     </script>
