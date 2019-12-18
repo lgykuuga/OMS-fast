@@ -198,9 +198,9 @@ public class StrategyAudit extends BaseEntity implements Serializable {
     private Integer addressIntercept;
 
     /**
-     * 指定商品拦截是否开启
+     * 组合信息拦截是否开启
      */
-    @Excel(name = "指定商品拦截是否开启")
+    @Excel(name = "组合信息是否开启")
     private Integer comboIntercept;
 
     /** 货主 */

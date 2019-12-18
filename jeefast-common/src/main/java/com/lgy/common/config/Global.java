@@ -53,6 +53,7 @@ public class Global {
                 yamlMap = YamlUtil.loadYaml(NAME);
                 value = String.valueOf(YamlUtil.getProperty(yamlMap, key));
                 map.put(key, value != null ? value : StringUtils.EMPTY);
+                log.info("获取全局配置{}:{}", key, value);
             } catch (FileNotFoundException e) {
                 log.error("获取全局配置异常 {}", key);
             }

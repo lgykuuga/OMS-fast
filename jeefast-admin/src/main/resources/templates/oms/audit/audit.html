@@ -5,6 +5,7 @@
     <th:block th:include="include :: datetimepicker-css"/>
     <link th:href="@{/css/ionRangeSlider/ion.rangeSlider.css}" rel="stylesheet">
     <link th:href="@{/css/ionRangeSlider/ion.rangeSlider.skinFlat.css}" rel="stylesheet">
+
 </head>
 
 <body class="gray-bg">
@@ -44,6 +45,15 @@
             <div class="col-sm-12 select-table table-striped">
                 <!-- table -->
                 <table id="bootstrap-table1" data-mobile-responsive="true"></table>
+
+                <!-- btn -->
+                <div class="btn-group-sm" id="toolbar3" role="group">
+                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">逻辑顺序</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至特定信息拦截</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至指定商品拦截</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至特殊地址拦截</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至组合信息拦截</button>
+                </div>
 
                 <div class="row">
                     <!-- 店铺table -->
@@ -120,6 +130,85 @@
                                     </div>
 
                                     <div class="container">
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">货到付款拦截:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="cod" th:checked="${strategyAudit.cod == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">退款拦截:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="refund" th:checked="${strategyAudit.refund == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">卖家留言匹配:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="sellerMessageMatch" th:checked="${strategyAudit.sellerMessageMatch == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">卖家备注旗帜拦截:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="sellerFlag" th:checked="${strategyAudit.sellerFlag == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container">
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">特定信息拦截:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="orderIntercept" th:checked="${strategyAudit.orderIntercept == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">指定商品拦截:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="commodityIntercept" th:checked="${strategyAudit.commodityIntercept == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">特殊地址拦截:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="addressIntercept" th:checked="${strategyAudit.addressIntercept == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">组合信息拦截:</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="comboIntercept" th:checked="${strategyAudit.comboIntercept == '0' ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="container">
                                         <div class="form-group col-sm-6">
                                             <label class="col-sm-3 control-label">金额拦截类型：</label>
                                             <div class="col-sm-8">
@@ -155,7 +244,7 @@
 
                                     <div class="container">
                                         <div class="form-group col-sm-6">
-                                            <label class="col-sm-3 control-label">时间拦截类型：</label>
+                                            <label class="col-sm-3 control-label">时间段拦截：</label>
                                             <div class="col-sm-8">
                                                 <select name="timeRange" class="form-control" id="timeRange">
                                                     <option th:each="auditTime : ${auditTimeList}"
@@ -178,19 +267,59 @@
 
                                     <div class="container">
                                         <div class="form-group col-sm-6">
-                                            <div class="m-r-md inline">
-                                                <input type="text" value="60" class="dial m-r" data-fgColor="#ED5565" data-width="85" data-height="85" data-angleOffset=-125 data-angleArc=250 />
+                                            <div class="form-group col-sm-9">
+                                                <label class="col-sm-4 control-label">有效期类型：</label>
+                                                <div class="col-sm-8">
+                                                    <select name="validDateType" class="form-control" id="validDateType">
+                                                        <option th:each="auditTime : ${auditTimeList}"
+                                                                th:text="${auditTime.configValue}"
+                                                                th:value="${auditTime.configKey}"
+                                                                th:selected="${strategyAudit.validDateType == auditTime.configKey}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-3">
+                                                <div class="col-sm-12">
+                                                    <input name="validDate" th:field="*{validDate}" class="form-control" type="text" placeholder="单位:天">
+                                                </div>
                                             </div>
                                         </div>
 
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-6 control-label"><strong>毛利率拦截值：</strong>设置值100时为不拦截</label>
+                                            <div class="m-r-md inline">
+                                                <!-- 毛利率拦截值 -->
+                                                <input name="profitValue" th:field="*{profitValue}" type="text" class="dial m-r"
+                                                       data-fgColor="#ED5565" data-width="85" data-height="85" data-angleOffset=-125 data-angleArc=250 />
+                                            </div>
+                                        </div>
                                     </div>
 
 
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="container">
+                                        <div class="form-group col-sm-6">
+                                            <div class="form-group col-sm-9">
+                                                <label class="col-sm-4 control-label">等待时间类型：</label>
+                                                <div class="col-sm-8">
+                                                    <select name="autoAuditType" class="form-control" id="autoAuditType">
+                                                        <option th:each="auditTime : ${auditTimeList}"
+                                                                th:text="${auditTime.configValue}"
+                                                                th:value="${auditTime.configKey}"
+                                                                th:selected="${strategyAudit.autoAuditType == auditTime.configKey}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-3">
+                                                <div class="col-sm-12">
+                                                    <input name="waitMinute" th:field="*{waitMinute}" class="form-control" type="text" placeholder="分钟">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="right">
                                             <button type="button" class="btn btn-sm btn-primary" onclick="submit2()"><i
                                                     class="fa fa-check"></i>更新
-                                            </button>&nbsp;
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
@@ -208,6 +337,10 @@
     <!-- IonRangeSlider -->
     <script src="../../../static/js/plugins/ionRangeSlider/ion.rangeSlider.min.js"
             th:src="@{/js/plugins/ionRangeSlider/ion.rangeSlider.min.js}"></script>
+    <!-- JSKnob -->
+    <script src="../../../static/js/plugins/jsKnob/jquery.knob.js"
+            th:src="@{/js/plugins/jsKnob/jquery.knob.js}"></script>
+
     <script th:inline="javascript">
 
         var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
@@ -293,7 +426,7 @@
                 showToggle: false,
                 showColumns: false,
                 queryParams: queryParams,
-                height: 360,
+                height: 650,
                 columns: [
                     {
                         field: 'id',
@@ -379,7 +512,6 @@
         }
 
         function submit2() {
-
             var data = $("#form-audit-edit").serializeArray();
             var source = $("input[id='source']").is(':checked') == true ? 0 : 1;
             var addressValid = $("input[id='addressValid']").is(':checked') == true ? 0 : 1;
@@ -511,6 +643,7 @@
             });
         });
 
+        $(".dial").knob();
 
     </script>
 </body>
