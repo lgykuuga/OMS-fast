@@ -249,4 +249,13 @@ public class StrategyAuditController extends BaseController {
         return toAjax(SqlHelper.retBool(count));
     }
 
+    /**
+     * 打开逻辑顺序窗口
+     */
+    @GetMapping("/sortStrategy/{gco}")
+    public String sortStrategy(@PathVariable("gco") String gco, ModelMap mmap) {
+        mmap.put("gco", gco);
+        return prefix + "/sortStrategy";
+    }
+
 }

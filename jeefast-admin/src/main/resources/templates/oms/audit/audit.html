@@ -5,7 +5,6 @@
     <th:block th:include="include :: datetimepicker-css"/>
     <link th:href="@{/css/ionRangeSlider/ion.rangeSlider.css}" rel="stylesheet">
     <link th:href="@{/css/ionRangeSlider/ion.rangeSlider.skinFlat.css}" rel="stylesheet">
-
 </head>
 
 <body class="gray-bg">
@@ -48,12 +47,13 @@
 
                 <!-- btn -->
                 <div class="btn-group-sm" id="toolbar3" role="group">
-                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">逻辑顺序</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="sortStrategy()">逻辑顺序</button>
                     <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至特定信息拦截</button>
                     <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至指定商品拦截</button>
                     <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至特殊地址拦截</button>
                     <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至组合信息拦截</button>
                 </div>
+
 
                 <div class="row">
                     <!-- 店铺table -->
@@ -465,6 +465,7 @@
                 type: "get",
                 success: function (result) {
                     var strategyAudit = result.data;
+                    //填充表单
                     $("#form-audit-edit").setForm(strategyAudit);
                 }
             };
@@ -494,6 +495,15 @@
         /* 打开策略店铺窗口 */
         function shop(gco) {
             $.modal.openWindow("策略店铺", prefix + "/selectShop/" + gco);
+        }
+
+        /* 打开逻辑顺序窗口 */
+        function sortStrategy() {
+            if (gco == "") {
+                $.modal.alertError('请先选择策略');
+                return;
+            }
+            $.modal.openWindow("逻辑顺序", prefix + "/sortStrategy/" + gco);
         }
 
         function remove(id) {
@@ -534,7 +544,7 @@
                             shade: [0.1, '#8F8F8F']
                         });
                     } else {
-                        alert(result.msg);
+                        $.modal.alertError(result.msg);
                     }
                 }
             })
