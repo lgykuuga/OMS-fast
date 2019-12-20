@@ -9,7 +9,7 @@ lgy:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/temp/lgy/uploadPath，Linux配置 /usr/local/oms/uploadPath）
-  profile: D:/temp/lgy/uploadPath
+  profile: /usr/local/oms/uploadPath
   # 获取ip地址开关
   addressEnabled: true
 
