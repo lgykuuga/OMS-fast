@@ -1,4 +1,4 @@
-package com.lgy.oms.enums.order;
+package com.lgy.oms.enums.distibution;
 
 import com.lgy.system.domain.vo.Config;
 
@@ -6,38 +6,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 配货单状态
- * @author wh
+ * 配货单拦截状态
+ * @author Haru Skch
  * @since 2019-12-21
  */
-public enum OrderDisbutionStatusEnum {
+public enum DisbutionInterceptEnum {
+
     /**
-     * 等待配货
+     * 无拦截
      */
-    WAITDISBUTION(0, "等待配货"),
+    NONE(0, "无拦截"),
+
     /**
-     * 取消
+     * 分配仓库拦截
      */
-    CANCLE(1, "取消"),
+    WAREHOUSE(1, "分配仓库拦截"),
+
     /**
-     * 已配货
+     * 分配物流商拦截
      */
-    DISTIBUTION(2, "已配货"),
+    LOGISTICS(2, "分配物流商拦截"),
+
     /**
-     * 待发货
+     * 取消请求拦截
      */
-    WAITDILVER(3, "待发货"),
+    CANCLE(3, "取消请求拦截"),
+
     /**
-     * 已发货
+     * 客服标记拦截
      */
-    DILIVERGOODS(5, "已发货");
+    CUSTOMER(4, "客服标记拦截"),
+
+    /**
+     * 委托发货拦截
+     */
+    SENDOUT(5, "委托发货拦截"),
+
+    /**
+     * 系统异常(try-catch)
+     */
+    OTHERS(99, "其它异常");
 
     private Integer value;
     private String name;
 
     private static List<Config> list = new ArrayList<>();
 
-    OrderDisbutionStatusEnum(Integer value, String name) {
+    DisbutionInterceptEnum(Integer value, String name) {
         this.value = value;
         this.name = name;
     }
@@ -60,7 +75,7 @@ public enum OrderDisbutionStatusEnum {
 
     public static List<Config> getList(){
         if(list.isEmpty()){
-            for (OrderDisbutionStatusEnum temp : OrderDisbutionStatusEnum.values()) {
+            for (DisbutionInterceptEnum temp : DisbutionInterceptEnum.values()) {
                 list.add(new Config(temp.value.toString(), temp.getName()));
             }
         }
