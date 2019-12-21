@@ -271,7 +271,7 @@
                  * 标准模式
                  */
                 //下单前置不可用
-                $("#xdqz").prop("disabled", true);
+                $("#xdqz").attr({'readOnly':true});
                 $("#xdqz").val(["120"]).trigger("change");
                 //下单后置不可用
                 $("#xdhz").prop("disabled", true);
@@ -284,7 +284,7 @@
                  * 大促模式
                  */
                 //下单前置不可用
-                $("#xdqz").prop("disabled", true);
+                $("#xdqz").attr({'readOnly':true});
                 $("#xdqz").val(["0"]).trigger("change");
                 //下单后置不可用
                 $("#xdhz").prop("disabled", true);
@@ -297,7 +297,7 @@
                  * 用户自定义
                  */
                 //下单前置可用
-                $("#xdqz").prop("disabled", false);
+                $("#xdqz").attr({'readOnly':false});
                 //下单后置可用
                 $("#xdhz").prop("disabled", false);
                 //延迟抓单可用
