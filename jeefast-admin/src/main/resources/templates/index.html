@@ -247,17 +247,10 @@ function resetPwd() {
 }
 
 $(function () {
-	$(".avastar").each(function() {
-		var img = $(this);
-		img.load(function () {
-			img.attr("isLoad", "true");
 
-		});
-		img.error(function() {
-			//可以选择替换图片
-			img.attr("src", "../img/profile.jpg");
-		});
-	});
+    $(".avastar").error(function() {
+        $(this).attr("src", "../img/profile.jpg");
+    });
 });
 
 </script>
