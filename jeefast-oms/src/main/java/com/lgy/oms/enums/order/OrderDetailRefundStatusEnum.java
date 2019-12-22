@@ -37,11 +37,8 @@ public enum OrderDetailRefundStatusEnum {
     /**
      * 退款成功
      */
-    SUCCESS(5, "退款成功"),
-    /**
-     * 耗材
-     */
-    CONSUMABLES(6, "耗材");
+    SUCCESS(5, "退款成功");
+    
 
     private Integer code;
     private String name;
