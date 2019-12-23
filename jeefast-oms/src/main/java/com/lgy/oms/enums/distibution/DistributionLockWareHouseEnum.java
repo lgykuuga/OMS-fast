@@ -11,8 +11,15 @@ import java.util.List;
  * @since 2019-12-21
  */
 public enum DistributionLockWareHouseEnum {
+
+    /**
+     * 未锁库
+     */
     NONE(0, "未锁库"),
 
+    /**
+     * 已锁库
+     */
     LOCKED(2, "已锁库");
 
     private Integer value;
