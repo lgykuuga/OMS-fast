@@ -23,7 +23,7 @@ public enum OrderSourceTypeEnum {
     /**
      * 手动新增
      */
-    HANDADD(3, "手动新增"),
+    HAND_ADD(3, "手动新增"),
     /**
      * 导入
      */

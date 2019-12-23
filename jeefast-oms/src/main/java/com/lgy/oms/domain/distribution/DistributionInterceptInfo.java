@@ -1,10 +1,8 @@
-package com.lgy.oms.domain.distibution;
+package com.lgy.oms.domain.distribution;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.core.domain.BaseEntity;
-import com.lgy.oms.enums.distibution.DistributionLockWareHouseEnum;
-import com.lgy.oms.enums.distibution.DistributionInterceptEnum;
+import com.lgy.oms.enums.distribution.DistributionInterceptEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

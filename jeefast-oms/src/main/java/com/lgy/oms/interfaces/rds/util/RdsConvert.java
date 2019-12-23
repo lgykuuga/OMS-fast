@@ -12,7 +12,7 @@ import java.util.List;
 
 
 /**
- * @Description 跨境翼下载对象转换成标准订单对象
+ * @Description RDS对象转换成标准订单对象
  * @Author LGy
  * @Date 2019/12/2 15:22
  **/

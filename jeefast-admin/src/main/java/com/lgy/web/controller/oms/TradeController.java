@@ -12,7 +12,7 @@ import com.lgy.oms.domain.Trade;
 import com.lgy.oms.enums.order.PlatformOrderStatusEnum;
 import com.lgy.oms.enums.order.TradeTranformStatusEnum;
 import com.lgy.oms.service.ITradeService;
-import com.lgy.oms.service.business.ITradeConvertService;
+import com.lgy.oms.business.ITradeConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

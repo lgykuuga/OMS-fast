@@ -1,4 +1,4 @@
-package com.lgy.oms.service.business.impl;
+package com.lgy.oms.business.impl;
 
 import com.lgy.base.domain.Commodity;
 import com.lgy.base.service.ICommodityService;
@@ -7,7 +7,7 @@ import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.enums.order.OrderDetailTypeEnum;
 import com.lgy.oms.enums.order.OrderSizeTypeEnum;
-import com.lgy.oms.service.business.IOrderStatisticsService;
+import com.lgy.oms.business.IOrderStatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.lgy.oms.service.business.impl;
+package com.lgy.oms.business.impl;
 
 
 import com.lgy.base.domain.Combo;
@@ -17,7 +17,7 @@ import com.lgy.oms.enums.order.OrderDetailTypeEnum;
 import com.lgy.oms.enums.order.OrderInterceptTypeEnum;
 import com.lgy.oms.enums.strategy.ConvertMatchCommodityEnum;
 import com.lgy.oms.service.IShopCommodityService;
-import com.lgy.oms.service.business.IOrderDetailProcessingService;
+import com.lgy.oms.business.IOrderDetailProcessingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

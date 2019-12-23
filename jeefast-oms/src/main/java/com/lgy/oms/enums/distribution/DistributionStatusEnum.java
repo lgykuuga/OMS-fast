@@ -1,4 +1,4 @@
-package com.lgy.oms.enums.distibution;
+package com.lgy.oms.enums.distribution;
 
 import com.lgy.system.domain.vo.Config;
 
