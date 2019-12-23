@@ -30,7 +30,7 @@ public enum DistributionInterceptEnum {
     /**
      * 取消请求拦截
      */
-    CANCLE(3, "取消请求拦截"),
+    CANCEL(3, "取消请求拦截"),
 
     /**
      * 客服标记拦截
