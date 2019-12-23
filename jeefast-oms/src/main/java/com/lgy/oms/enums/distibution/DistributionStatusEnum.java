@@ -14,23 +14,24 @@ public enum DistributionStatusEnum {
     /**
      * 等待配货
      */
-    WAITDISBUTION(0, "等待配货"),
+    WAIT_DISTRIBUTION(0, "等待配货"),
     /**
      * 取消
      */
-    CANCLE(1, "取消"),
+    CANCEL(1, "取消"),
     /**
      * 已配货
      */
-    DISTIBUTION(2, "已配货"),
+    DISTRIBUTION(2, "已配货"),
     /**
      * 待发货
+     *  delivery
      */
-    WAITDILVER(3, "待发货"),
+    WAIT_DELIVERY(3, "待发货"),
     /**
      * 已发货
      */
-    DILIVERGOODS(5, "已发货");
+    DELIVERY(5, "已发货");
 
     private Integer value;
     private String name;
