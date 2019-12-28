@@ -1,11 +1,11 @@
-package com.lgy.oms.business.impl;
+package com.lgy.oms.biz.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.interfaces.common.dto.OrderDTO;
 import com.lgy.oms.service.ITradeService;
-import com.lgy.oms.business.IAsyncExecuteOrderService;
-import com.lgy.oms.business.ICancelOrderService;
+import com.lgy.oms.biz.IAsyncExecuteOrderService;
+import com.lgy.oms.biz.ICancelOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

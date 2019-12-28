@@ -1,4 +1,4 @@
-package com.lgy.oms.business.impl;
+package com.lgy.oms.biz.impl;
 
 
 import com.lgy.base.domain.Combo;
@@ -17,7 +17,7 @@ import com.lgy.oms.enums.order.OrderDetailTypeEnum;
 import com.lgy.oms.enums.order.OrderInterceptTypeEnum;
 import com.lgy.oms.enums.strategy.ConvertMatchCommodityEnum;
 import com.lgy.oms.service.IShopCommodityService;
-import com.lgy.oms.business.IOrderDetailProcessingService;
+import com.lgy.oms.biz.IOrderDetailProcessingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -204,7 +204,7 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
             OrderInterceptInfo orderIntercept = new OrderInterceptInfo();
             orderIntercept.setOrderId(orderMain.getOrderId());
             orderIntercept.setSourceId(orderMain.getSourceId());
-            //设置匹配铺货关系异常
+            //设置匹配商品编码异常拦截
             orderIntercept.setType(OrderInterceptTypeEnum.MATCH_GOODS_CODE.getCode());
             //设置异常内容
             orderIntercept.setContent(failReason.toString());
@@ -257,8 +257,17 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
                 }
             }
 
-            if (StringUtils.isNotEmpty(addOrderDetails)) {
+            if (flag) {
+                //组合商品明细加入订单
                 orderMain.getOrderDetails().addAll(addOrderDetails);
+            } else {
+                //设置订单拦截信息
+                OrderInterceptInfo orderInterceptInfo = new OrderInterceptInfo();
+                orderInterceptInfo.setOrderId(orderMain.getOrderId());
+                orderInterceptInfo.setSourceId(orderMain.getSourceId());
+                orderInterceptInfo.setType(OrderInterceptTypeEnum.ANALYSIS_COMBO_COMMODITY.getCode());
+                orderInterceptInfo.setContent(failReason.toString());
+                orderMain.setOrderInterceptInfo(orderInterceptInfo);
             }
         }
 

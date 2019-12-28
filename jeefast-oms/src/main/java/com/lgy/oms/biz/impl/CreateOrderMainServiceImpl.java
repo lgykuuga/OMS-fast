@@ -1,4 +1,4 @@
-package com.lgy.oms.business.impl;
+package com.lgy.oms.biz.impl;
 
 
 import com.lgy.base.service.ICommodityService;
@@ -7,8 +7,8 @@ import com.lgy.oms.constants.OrderModuleConstants;
 import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.service.*;
-import com.lgy.oms.business.ICreateOrderMainService;
-import com.lgy.oms.business.IOrderDetailProcessingService;
+import com.lgy.oms.biz.ICreateOrderMainService;
+import com.lgy.oms.biz.IOrderDetailProcessingService;
 import com.lgy.system.incrementer.IDIncrementer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

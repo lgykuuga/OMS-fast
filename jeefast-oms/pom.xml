@@ -73,6 +73,13 @@
             <version>1.4.11.1</version>
         </dependency>
 
+        <!-- disruptor并发框架 -->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>${disruptor.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.jeefast</groupId>

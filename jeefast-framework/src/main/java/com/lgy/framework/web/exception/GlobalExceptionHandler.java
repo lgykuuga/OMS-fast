@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
         } else {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.addObject("errorMessage", e.getMessage());
-            modelAndView.setViewName("error/business");
+            modelAndView.setViewName("error/biz");
             return modelAndView;
         }
     }

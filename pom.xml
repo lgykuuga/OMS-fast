@@ -44,6 +44,7 @@
 		<jsoup.version>1.11.3</jsoup.version>
 		<poi.version>3.17</poi.version>
 		<velocity.version>1.7</velocity.version>
+		<disruptor.version>3.3.6</disruptor.version>
 	</properties>
 
 	<!-- 依赖声明 -->
@@ -202,6 +203,13 @@
 				<version>${jeefast.version}</version>
 			</dependency>
 
+			<!-- disruptor并发框架 -->
+			<dependency>
+				<groupId>com.lmax</groupId>
+				<artifactId>disruptor</artifactId>
+				<version>${disruptor.version}</version>
+			</dependency>
+
 			<!-- 核心模块 -->
 			<dependency>
 				<groupId>com.jeefast</groupId>
@@ -222,6 +230,7 @@
 				<artifactId>jeefast-common</artifactId>
 				<version>${jeefast.version}</version>
 			</dependency>
+
 
 		</dependencies>
 	</dependencyManagement>

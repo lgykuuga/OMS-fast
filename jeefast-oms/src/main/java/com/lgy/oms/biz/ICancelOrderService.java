@@ -1,4 +1,4 @@
-package com.lgy.oms.business;
+package com.lgy.oms.biz;
 
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.interfaces.common.dto.OrderDTO;

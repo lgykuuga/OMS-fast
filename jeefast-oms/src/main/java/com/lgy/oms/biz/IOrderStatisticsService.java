@@ -1,4 +1,4 @@
-package com.lgy.oms.business;
+package com.lgy.oms.biz;
 
 
 import com.lgy.oms.domain.order.OrderMain;

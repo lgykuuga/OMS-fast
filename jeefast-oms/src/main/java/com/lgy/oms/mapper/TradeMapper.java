@@ -2,6 +2,7 @@ package com.lgy.oms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lgy.oms.domain.Trade;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * @author lgy
  * @date 2019-10-15
  */
+@Mapper
 public interface TradeMapper extends BaseMapper<Trade> {
 
     /**

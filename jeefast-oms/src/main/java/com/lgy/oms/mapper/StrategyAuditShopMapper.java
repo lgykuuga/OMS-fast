@@ -3,6 +3,7 @@ package com.lgy.oms.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lgy.oms.domain.StrategyAudit;
 import com.lgy.oms.domain.StrategyAuditShop;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author lgy
  * @date 2019-12-17
  */
+@Mapper
 public interface StrategyAuditShopMapper extends BaseMapper<StrategyAuditShop> {
 
     /**

@@ -1,4 +1,4 @@
-package com.lgy.oms.business.impl;
+package com.lgy.oms.biz.impl;
 
 
 import com.alibaba.fastjson.JSON;
@@ -6,21 +6,23 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
+import com.lgy.framework.util.ShiroUtils;
+import com.lgy.oms.constants.OrderModuleConstants;
+import com.lgy.oms.constants.OrderOperateType;
+import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.StrategyConvert;
+import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.domain.order.*;
 import com.lgy.oms.enums.order.*;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
-import com.lgy.oms.service.IOrderMainService;
-import com.lgy.oms.service.IStrategyConvertService;
-import com.lgy.oms.service.ITradeService;
-import com.lgy.oms.service.ITradeStandardService;
-import com.lgy.oms.business.ICreateOrderMainService;
-import com.lgy.oms.business.IOrderDetailProcessingService;
-import com.lgy.oms.business.IOrderStatisticsService;
-import com.lgy.oms.business.ITradeConvertService;
+import com.lgy.oms.service.*;
+import com.lgy.oms.biz.ICreateOrderMainService;
+import com.lgy.oms.biz.IOrderDetailProcessingService;
+import com.lgy.oms.biz.IOrderStatisticsService;
+import com.lgy.oms.biz.ITradeConvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
     /** 订单统计处理 */
     @Autowired
     IOrderStatisticsService orderStatisticsService;
+    /** 订单轨迹信息 */
+    @Autowired
+    ITraceLogService traceLogService;
 
     @Override
     public CommonResponse<String> execute(String tid, Map<String, Object> map) {
@@ -104,6 +109,10 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderStatisticsService.orderStatisticsMethod(orderMain);
         //保存订单
         createOrderMainService.saveOrder(orderMain);
+        //保存轨迹服务
+        traceLogService.add(new TraceLog(OrderModuleConstants.ORDERMAIN, orderMain.getOrderId(),
+                OrderOperateType.DOWNLOAD.getValue(), TraceLevelType.STATUS.getKey(),
+                "订单新增保存", ShiroUtils.getSysUser().getUserName()));
         return null;
     }
 

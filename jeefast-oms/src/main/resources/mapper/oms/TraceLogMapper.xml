@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgy.oms.mapper.TraceLogMapper">
+
+    <insert id="add" parameterType="com.lgy.oms.domain.TraceLog">
+        insert into oms_trace_log
+            (order_id, module, type,
+            level, content, create_by, create_time)
+        values
+            (#{orderId}, #{module}, #{type},
+              #{level}, #{content}, #{createBy}, #{createTime})
+      </insert>
+
+    <insert id="batchAdd" parameterType="com.lgy.oms.domain.TraceLog">
+        insert into oms_trace_log
+            (order_id, module, type,
+            level, content, create_by, create_time)
+        values
+            (#{orderId}, #{module}, #{type},
+              #{level}, #{content}, #{createBy}, #{createTime})
+    </insert>
+
+
+    <select id="getTraceByOrderId" resultType="com.lgy.oms.domain.TraceLog">
+        select
+        <include refid="trace_log"/>
+        from oms_trace_log
+        <where>
+            <if test="orderId != null and orderId != ''">
+                AND order_id = #{orderId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTraceByOrderIdAndModule" resultType="com.lgy.oms.domain.TraceLog">
+        select
+        <include refid="trace_log"/>
+        from oms_trace_log
+        <where>
+            <if test="orderId != null and orderId != ''">
+                AND order_id = #{orderId}
+            </if>
+            <if test="module != null and module != ''">
+                AND module = #{module}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getTraceByOrderAndLevel" resultType="com.lgy.oms.domain.TraceLog">
+        select
+        <include refid="trace_log"/>
+        from oms_trace_log
+        <where>
+            <if test="orderId != null and orderId != ''">
+                AND order_id = #{orderId}
+            </if>
+            <if test="level != null and level != ''">
+                AND level = #{level}
+            </if>
+        </where>
+    </select>
+
+    <sql id="trace_log">
+        module,
+        order_id,
+        type,
+        level,
+        content,
+        create_by,
+        createTime
+    </sql>
+</mapper>
+

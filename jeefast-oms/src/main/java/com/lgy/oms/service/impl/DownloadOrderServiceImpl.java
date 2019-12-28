@@ -11,7 +11,7 @@ import com.lgy.oms.enums.strategy.DownloadOrderInterfaceEnum;
 import com.lgy.oms.mapper.DownloadOrderMapper;
 import com.lgy.oms.service.IDownloadOrderService;
 import com.lgy.oms.service.IShopInterfacesService;
-import com.lgy.oms.business.IRequestRemoteInterfaceService;
+import com.lgy.oms.biz.IRequestRemoteInterfaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

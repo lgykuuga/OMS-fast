@@ -1,4 +1,4 @@
-package com.lgy.oms.business.impl;
+package com.lgy.oms.biz.impl;
 
 
 import com.lgy.common.constant.Constants;
@@ -12,7 +12,7 @@ import com.lgy.oms.interfaces.kjy.service.IKJYService;
 import com.lgy.oms.interfaces.ods.bean.response.BaseResponse;
 import com.lgy.oms.interfaces.ods.service.IODSService;
 import com.lgy.oms.interfaces.rds.service.IJdpTbTradeService;
-import com.lgy.oms.business.IOrderGet;
+import com.lgy.oms.biz.IOrderGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

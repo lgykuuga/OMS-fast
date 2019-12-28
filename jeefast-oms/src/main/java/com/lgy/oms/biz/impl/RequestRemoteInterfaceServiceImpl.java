@@ -1,4 +1,4 @@
-package com.lgy.oms.business.impl;
+package com.lgy.oms.biz.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -16,9 +16,9 @@ import com.lgy.oms.service.IDownloadOrderService;
 import com.lgy.oms.service.IShopInterfacesService;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.ITradeStandardService;
-import com.lgy.oms.business.IAsyncExecuteOrderService;
-import com.lgy.oms.business.IOrderGet;
-import com.lgy.oms.business.IRequestRemoteInterfaceService;
+import com.lgy.oms.biz.IAsyncExecuteOrderService;
+import com.lgy.oms.biz.IOrderGet;
+import com.lgy.oms.biz.IRequestRemoteInterfaceService;
 import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
