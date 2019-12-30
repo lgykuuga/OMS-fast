@@ -25,7 +25,7 @@ public class MetaHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        SysUser userEntity = ShiroUtils.getSysUser();
+        SysUser userEntity = ShiroUtils.getUserThreadLocal();
         this.setFieldValByName("createTime", new Date(), metaObject);
         this.setFieldValByName("createBy", userEntity.getLoginName(), metaObject);
         this.setFieldValByName("updateTime", new Date(), metaObject);
@@ -39,7 +39,7 @@ public class MetaHandler implements MetaObjectHandler {
      */
     @Override
     public void updateFill(MetaObject metaObject) {
-        SysUser userEntity = ShiroUtils.getSysUser();
+        SysUser userEntity = ShiroUtils.getUserThreadLocal();
         this.setFieldValByName("updateTime", new Date(), metaObject);
         this.setFieldValByName("updateBy", userEntity.getLoginName(), metaObject);
     }

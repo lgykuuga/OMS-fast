@@ -1,6 +1,5 @@
 package com.lgy.web.controller.oms.interfaces;
 
-import com.alibaba.fastjson.JSON;
 import com.lgy.common.utils.xml.XMLUtils;
 import com.lgy.oms.interfaces.qimen.bean.QimenResponse;
 import com.lgy.oms.interfaces.qimen.contant.QimenConstants;

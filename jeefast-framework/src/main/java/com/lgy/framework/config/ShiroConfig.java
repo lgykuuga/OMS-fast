@@ -266,6 +266,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login", "anon,captchaValidate");
         //不需要拦截的访问:奇门接口
         filterChainDefinitionMap.put("/interface/qimen/http", "anon,captchaValidate");
+        //test接口
+        filterChainDefinitionMap.put("/test/**", "anon,captchaValidate");
 
         // 系统权限列表
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());

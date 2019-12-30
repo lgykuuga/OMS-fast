@@ -35,7 +35,7 @@ public interface TraceLogMapper extends BaseMapper<TraceLog> {
      * @return
      */
 
-    List<TraceLog> getTraceByOrderId(@Param("order_id") String orderId);
+    List<TraceLog> getTraceByOrderId(@Param("orderId") String orderId);
 
     /**
      * 查询单张订单操作记录
@@ -44,7 +44,7 @@ public interface TraceLogMapper extends BaseMapper<TraceLog> {
      * @param module  模块号
      * @return
      */
-    List<TraceLog> getTraceByOrderIdAndModule(@Param("order_id") String orderId,
+    List<TraceLog> getTraceByOrderIdAndModule(@Param("orderId") String orderId,
                                               @Param("module") String module);
 
     /**
@@ -54,6 +54,6 @@ public interface TraceLogMapper extends BaseMapper<TraceLog> {
      * @param level   日志等级(不传为查询所有等级)
      * @return
      */
-    List<TraceLog> getTraceByOrderAndLevel(@Param("order_id") String orderId,
+    List<TraceLog> getTraceByOrderAndLevel(@Param("orderId") String orderId,
                                            @Param("level") Integer level);
 }

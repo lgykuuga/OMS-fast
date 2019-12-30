@@ -20,7 +20,7 @@ import com.lgy.system.domain.SysUser;
  */
 public class ShiroUtils {
 
-    public static ThreadLocal<SysUser> userThreadLocal = new ThreadLocal<SysUser>();
+    public static ThreadLocal<SysUser> userThreadLocal = new ThreadLocal<>();
 
     public static void setUserThreadLocal(String userName) {
         SysUser sysUser = new SysUser();
@@ -44,14 +44,13 @@ public class ShiroUtils {
     }
 
     public static SysUser getSysUser() {
-        return  userThreadLocal.get();
-//        SysUser user = null;
-//        Object obj = getSubject().getPrincipal();
-//        if (StringUtils.isNotNull(obj)) {
-//            user = new SysUser();
-//            BeanUtils.copyBeanProp(user, obj);
-//        }
-//        return user;
+        SysUser user = null;
+        Object obj = getSubject().getPrincipal();
+        if (StringUtils.isNotNull(obj)) {
+            user = new SysUser();
+            BeanUtils.copyBeanProp(user, obj);
+        }
+        return user;
     }
 
     public static void setSysUser(SysUser user) {

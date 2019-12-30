@@ -22,7 +22,7 @@ import java.util.List;
  * @Date 2019/12/31 9:59
  **/
 @RestController
-@RequestMapping("trace")
+@RequestMapping("/test/trace")
 @Api("订单轨迹日志接口")
 public class TraceLogController {
 

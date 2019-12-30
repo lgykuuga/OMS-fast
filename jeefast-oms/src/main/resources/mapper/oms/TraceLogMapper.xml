@@ -70,7 +70,7 @@
         level,
         content,
         create_by,
-        createTime
+        create_time
     </sql>
 </mapper>
 
