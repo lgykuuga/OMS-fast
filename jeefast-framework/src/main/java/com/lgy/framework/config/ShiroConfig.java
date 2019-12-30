@@ -266,6 +266,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login", "anon,captchaValidate");
         //不需要拦截的访问:奇门接口
         filterChainDefinitionMap.put("/interface/qimen/http", "anon,captchaValidate");
+
         // 系统权限列表
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());
 
@@ -274,6 +275,8 @@ public class ShiroConfig {
         filters.put("syncOnlineSession", syncOnlineSessionFilter());
         filters.put("captchaValidate", captchaValidateFilter());
         filters.put("kickout", kickoutSessionFilter());
+
+
         // 注销成功，则跳转到指定页面
         filters.put("logout", logoutFilter());
         shiroFilterFactoryBean.setFilters(filters);

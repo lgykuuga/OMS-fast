@@ -2,7 +2,6 @@ package com.lgy.oms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lgy.oms.domain.TraceLog;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
  * @author lgy
  * @date 2019-12-26
  */
-@Mapper
 public interface TraceLogMapper extends BaseMapper<TraceLog> {
 
     /**
