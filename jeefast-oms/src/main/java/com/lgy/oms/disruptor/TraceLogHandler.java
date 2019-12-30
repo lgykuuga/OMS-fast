@@ -41,7 +41,6 @@ public class TraceLogHandler implements EventHandler<TraceLogEvent>, WorkHandler
 
     @Override
     public void onEvent(TraceLogEvent event) {
-        logger.info("开始消费订单轨迹WorkHandler[{}]", event.getTraceLog().toString());
         traceLogService.add(event.getTraceLog());
     }
 }
