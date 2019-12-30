@@ -34,6 +34,8 @@ public class TraceLogHandler implements EventHandler<TraceLogEvent>, WorkHandler
     @Override
 
     public void onEvent(TraceLogEvent event, long sequence, boolean endOfBatch) {
+        //添加threadLocal中用户信息
+        ShiroUtils.setUserThreadLocal(event.getTraceLog().getCreateBy());
         logger.info("开始消费订单轨迹EventHandler[{}]", event.getTraceLog().toString());
         onEvent(event);
     }

@@ -19,6 +19,18 @@ import com.lgy.system.domain.SysUser;
  * @author lgy
  */
 public class ShiroUtils {
+
+    public static ThreadLocal<SysUser> userThreadLocal = new ThreadLocal<SysUser>();
+
+    public static void setUserThreadLocal(String userName) {
+        SysUser sysUser = new SysUser();
+        sysUser.setUserName(userName);
+        userThreadLocal.set(sysUser);
+    }
+    public static SysUser getUserThreadLocal() {
+        return userThreadLocal.get();
+    }
+
     public static Subject getSubject() {
         return SecurityUtils.getSubject();
     }
@@ -32,16 +44,18 @@ public class ShiroUtils {
     }
 
     public static SysUser getSysUser() {
-        SysUser user = null;
-        Object obj = getSubject().getPrincipal();
-        if (StringUtils.isNotNull(obj)) {
-            user = new SysUser();
-            BeanUtils.copyBeanProp(user, obj);
-        }
-        return user;
+        return  userThreadLocal.get();
+//        SysUser user = null;
+//        Object obj = getSubject().getPrincipal();
+//        if (StringUtils.isNotNull(obj)) {
+//            user = new SysUser();
+//            BeanUtils.copyBeanProp(user, obj);
+//        }
+//        return user;
     }
 
     public static void setSysUser(SysUser user) {
+        userThreadLocal.set(user);
         Subject subject = getSubject();
         PrincipalCollection principalCollection = subject.getPrincipals();
         String realmName = principalCollection.getRealmNames().iterator().next();
