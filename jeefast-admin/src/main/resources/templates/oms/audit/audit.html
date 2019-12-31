@@ -48,12 +48,10 @@
                 <!-- btn -->
                 <div class="btn-group-sm" id="toolbar3" role="group">
                     <button type="button" class="btn btn-w-m btn-success" onclick="sortStrategy()">逻辑顺序</button>
-                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至特定信息拦截</button>
-                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至指定商品拦截</button>
-                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至特殊地址拦截</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="special()">跳转至特定信息拦截</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="commodity()">跳转至指定商品拦截</button>
                     <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至组合信息拦截</button>
                 </div>
-
 
                 <div class="row">
                     <!-- 店铺table -->
@@ -258,10 +256,10 @@
                                         <div class="form-group col-sm-6">
                                             <div class="input-daterange input-group">
                                                 <input type="text" class="input-sm form-control" id="laydate-startTime"
-                                                       placeholder="yyyy-MM-dd"/>
+                                                       placeholder="yyyy-MM-dd" autocomplete="off" />
                                                 <span class="input-group-addon">到</span>
                                                 <input type="text" class="input-sm form-control" id="laydate-endTime"
-                                                       placeholder="yyyy-MM-dd"/>
+                                                       placeholder="yyyy-MM-dd" autocomplete="off" />
                                             </div>
                                         </div>
                                     </div>
@@ -281,7 +279,7 @@
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <div class="col-sm-12">
-                                                    <input name="validDate" th:field="*{validDate}" class="form-control" type="text" placeholder="单位:天">
+                                                    <input name="validDate" th:field="*{validDate}" class="form-control" type="text" placeholder="单位:天" autocomplete="off" >
                                                 </div>
                                             </div>
                                         </div>
@@ -312,7 +310,7 @@
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <div class="col-sm-12">
-                                                    <input name="waitMinute" th:field="*{waitMinute}" class="form-control" type="text" placeholder="分钟">
+                                                    <input name="waitMinute" th:field="*{waitMinute}" class="form-control" type="text" placeholder="分钟" autocomplete="off">
                                                 </div>
                                             </div>
                                         </div>
@@ -505,6 +503,24 @@
                 return;
             }
             $.modal.openWindow("逻辑顺序", prefix + "/sortStrategy/" + gco);
+        }
+
+        /* 跳转至特定信息拦截窗口 */
+        function special() {
+            if (gco == "") {
+                $.modal.alertError('请先选择策略');
+                return;
+            }
+            $.modal.openTab("特定信息拦截", prefix + "/special/" + gco);
+        }
+
+        /* 跳转至指定商品拦截窗口 */
+        function commodity() {
+            if (gco == "") {
+                $.modal.alertError('请先选择策略');
+                return;
+            }
+            $.modal.openTab("指定商品拦截", prefix + "/commodity/" + gco);
         }
 
         function remove(id) {

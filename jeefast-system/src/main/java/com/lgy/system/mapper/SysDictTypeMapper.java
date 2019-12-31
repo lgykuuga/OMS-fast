@@ -10,7 +10,6 @@ import com.lgy.system.domain.SysDictType;
  * 
  * @author lgy
  */
-@Mapper
 public interface SysDictTypeMapper
 {
     /**

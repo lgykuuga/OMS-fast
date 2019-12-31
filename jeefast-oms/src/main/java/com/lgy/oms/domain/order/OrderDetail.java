@@ -148,6 +148,11 @@ public class OrderDetail implements Serializable {
     private String brand;
 
     /**
+     * 类别
+     */
+    private String category;
+
+    /**
      * 活动编码
      */
     private String active;

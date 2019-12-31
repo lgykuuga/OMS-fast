@@ -1,4 +1,4 @@
-package com.lgy.oms.enums.order;
+package com.lgy.oms.enums.strategy;
 
 import com.lgy.system.domain.vo.Config;
 
@@ -6,31 +6,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 订单发货级别
+ * @Description 审单策略:特定信息拦截类型
  * @Author LGy
- * @Date 2019/12/10
+ * @Date 2019/12/31
  */
-public enum OrderSendOutLevelEnum {
+public enum AuditSpecialEnum {
 
     /**
-     * 普通任务
+     * 买家ID
      */
-    GENERAL(10, "普通任务"),
+    BUYER_ID(0, "买家ID"),
 
     /**
-     * 紧急任务
+     * 买家姓名
      */
-    COMMONLY(01, "紧急任务"),
+    BUYER_NAME(1, "买家姓名"),
 
     /**
-     * 特急任务
+     * 买家电话
      */
-    SPECIAL(00, "特急任务");
+    BUYER_PHONE(2, "买家电话"),
+
+    /**
+     * 地址
+     */
+    ADDRESS(3, "地址");
 
     private Integer code;
     private String name;
 
-    OrderSendOutLevelEnum(Integer code, String name) {
+    AuditSpecialEnum(Integer code, String name) {
         this.code = code;
         this.name = name;
     }
@@ -49,8 +54,8 @@ public enum OrderSendOutLevelEnum {
 
     public final static List<Config> getList() {
         if (configs == null) {
-            configs = new ArrayList<>(OrderSendOutLevelEnum.values().length);
-            for (OrderSendOutLevelEnum typeEnum : OrderSendOutLevelEnum.values()) {
+            configs = new ArrayList<>(AuditSpecialEnum.values().length);
+            for (AuditSpecialEnum typeEnum : AuditSpecialEnum.values()) {
                 configs.add(new Config(typeEnum.getCode() + "", typeEnum.getName()));
             }
         }
