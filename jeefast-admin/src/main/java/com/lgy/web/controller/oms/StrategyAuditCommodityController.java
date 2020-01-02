@@ -39,7 +39,7 @@ public class StrategyAuditCommodityController extends BaseController {
     @GetMapping("/{gco}")
     public String commodity(@PathVariable("gco") String gco, ModelMap mmap) {
         mmap.put("strategyAuditCommodityList", AuditCommodityEnum.getList());
-        return prefix + "/commodity";
+        return prefix + "/auditCommodity";
     }
 
     /**
@@ -92,7 +92,8 @@ public class StrategyAuditCommodityController extends BaseController {
      * 新增审单策略指定商品拦截
      */
     @GetMapping("/add")
-    public String add() {
+    public String add(ModelMap mmap) {
+        mmap.put("strategyAuditCommodityList", AuditCommodityEnum.getList());
         return prefix + "/add";
     }
 
@@ -113,6 +114,7 @@ public class StrategyAuditCommodityController extends BaseController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         StrategyAuditCommodity strategyAuditCommodity = strategyAuditCommodityService.getById(id);
+        mmap.put("strategyAuditCommodityList", AuditCommodityEnum.getList());
         mmap.put("strategyAuditCommodity", strategyAuditCommodity);
         return prefix + "/edit";
     }

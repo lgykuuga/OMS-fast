@@ -22,23 +22,39 @@ import java.io.Serializable;
 public class StrategyAuditSpecial extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**
+     * $column.columnComment
+     */
     private Long id;
 
-    /** 策略编码 */
+    /**
+     * 策略编码
+     */
     @Excel(name = "策略编码")
     private String gco;
 
-    /** 信息类型 */
+    /**
+     * 信息类型
+     */
     @Excel(name = "信息类型")
     private Integer type;
 
-    /** 信息值 */
+    /**
+     * 信息值
+     */
     @Excel(name = "信息值")
     private String value;
 
-    /** 状态（0启用 1停用） */
+    /**
+     * 状态（0启用 1停用）
+     */
     @Excel(name = "状态", readConverterExp = "0=启用,1=停用")
     private String status;
+
+    /**
+     * 备注
+     */
+    @Excel(name = "备注")
+    private String remark;
 
 }

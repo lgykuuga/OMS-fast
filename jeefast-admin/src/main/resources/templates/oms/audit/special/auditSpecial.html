@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('审单策略指定商品拦截列表')" />
+    <th:block th:include="include :: header('审单策略特定信息拦截列表')" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -11,22 +11,24 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <p>商品类型：</p>
-                                <select name="type" th:with="type=${@dict.getType('')}">
-                                    <option value="">所有</option>
-                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-                                </select>
+                                <p>策略编码：</p>
+                                <input type="text" name="gco"/>
+                            </li>
+                            <li>
+                                类型：<select name="type">
+                                <option value="">所有</option>
+                                <option th:each="auditSpecial : ${strategyAuditSpecialList}" th:text="${auditSpecial.configValue}" th:value="${auditSpecial.configKey}"></option>
+                            </select>
                             </li>
                             <li>
                                 <p>信息值：</p>
                                 <input type="text" name="value"/>
                             </li>
                             <li>
-                                <p>状态：</p>
-                                <select name="status">
-                                    <option value="">所有</option>
-                                </select>
-                            </li>
+                                状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -37,16 +39,16 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:commodity:add">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:special:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:commodity:edit">
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:special:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:commodity:remove">
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:special:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:commodity:export">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:special:export">
                     <i class="fa fa-download"></i> 导出
                  </a>
             </div>
@@ -57,9 +59,9 @@
     </div>
     <th:block th:include="include :: footer" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('oms:commodity:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('oms:commodity:remove')}]];
-        var prefix = ctx + "oms/audit/commodity";
+        var editFlag = [[${@permission.hasPermi('oms:special:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:special:remove')}]];
+        var prefix = ctx + "oms/audit/special";
 
         $(function() {
             var options = {
@@ -68,7 +70,7 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "审单策略指定商品拦截",
+                modalName: "审单策略特定信息拦截",
                 columns: [{
                     checkbox: true
                 },
@@ -77,23 +79,31 @@
                     title : 'id',
                     visible: false
                 },
-                {
-                    field : 'gco', 
-                    title : '策略编码'
-                },
-                {
-                    field : 'type', 
-                    title : '商品类型'
-                },
+                    {
+                        field : 'type',
+                        title : '类型',
+                        align: 'center',
+                        formatter: function(key, row, index) {
+                            return $.table.selectValue(strategyAuditSpecialList, key);
+                        }
+                    },
                 {
                     field : 'value', 
                     title : '信息值'
                 },
                 {
-                    field : 'status', 
-                    title : '状态'
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(sys_normal_disable, value);
+                    }
                 },
-               ]
+                {
+                    field : 'remark',
+                    title : '备注'
+                },
+                ]
             };
             $.table.init(options);
         });

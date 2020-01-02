@@ -81,8 +81,12 @@
                     title : '数量'
                 },
                 {
-                    field : 'status', 
-                    title : '状态'
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(sys_normal_disable, value);
+                    }
                 },
                 {
                     field : 'remark', 

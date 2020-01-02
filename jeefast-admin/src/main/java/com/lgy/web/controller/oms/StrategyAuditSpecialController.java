@@ -40,7 +40,7 @@ public class StrategyAuditSpecialController extends BaseController {
     @GetMapping("/{gco}")
     public String special(@PathVariable("gco") String gco, ModelMap mmap) {
         mmap.put("strategyAuditSpecialList", AuditSpecialEnum.getList());
-        return prefix + "/special";
+        return prefix + "/auditSpecial";
     }
 
     /**
@@ -93,7 +93,8 @@ public class StrategyAuditSpecialController extends BaseController {
      * 新增审单策略特定信息拦截
      */
     @GetMapping("/add")
-    public String add() {
+    public String add(ModelMap mmap) {
+        mmap.put("strategyAuditSpecialList", AuditSpecialEnum.getList());
         return prefix + "/add";
     }
 
@@ -115,6 +116,7 @@ public class StrategyAuditSpecialController extends BaseController {
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         StrategyAuditSpecial strategyAuditSpecial = strategyAuditSpecialService.getById(id);
         mmap.put("strategyAuditSpecial", strategyAuditSpecial);
+        mmap.put("strategyAuditSpecialList", AuditSpecialEnum.getList());
         return prefix + "/edit";
     }
 

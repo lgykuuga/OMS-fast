@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('审单策略指定商品拦截列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>策略编码：</p>
+                                <input type="text" name="gco"/>
+                            </li>
+                            <li>
+                                类型：<select name="type">
+                                <option value="">所有</option>
+                                <option th:each="auditCommodity : ${strategyAuditCommodityList}" th:text="${auditCommodity.configValue}" th:value="${auditCommodity.configKey}"></option>
+                            </select>
+                            </li>
+                            <li>
+                                <p>信息值：</p>
+                                <input type="text" name="value"/>
+                            </li>
+                            <li>
+                                状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                            </select>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:commodity:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:commodity:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:commodity:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:commodity:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+
+         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+             <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+                 <form class="form-horizontal m" id="form-commodity-add">
+                     <div class="form-group">
+                         <label class="col-sm-3 control-label">策略编码：</label>
+                         <div class="col-sm-8">
+                             <input name="gco" class="form-control" th:field="*{gco}" type="text" readonly="true">
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <label class="col-sm-3 control-label">类型：</label>
+                         <div class="col-sm-8">
+                             <select name="type" class="form-control m-b">
+                                 <option value="">所有</option>
+                             </select>
+                             <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <label class="col-sm-3 control-label">信息值：</label>
+                         <div class="col-sm-8">
+                             <input name="value" class="form-control" type="text" required>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <label class="col-sm-3 control-label">状态：</label>
+                         <div class="col-sm-8">
+                             <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                                 <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                                 <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="form-group">
+                         <label class="col-sm-3 control-label">备注：</label>
+                         <div class="col-sm-8">
+                             <textarea id="remark" name="remark" class="form-control"></textarea>
+                         </div>
+                     </div>
+                 </form>
+             </div>
+         </div>
+    </div>
+
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('oms:commodity:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:commodity:remove')}]];
+        var prefix = ctx + "oms/audit/commodity";
+        var gco = [[${gco}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "审单策略指定商品拦截",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'id',
+                    visible: false
+                },
+
+                {
+                    field : 'type',
+                    title : '类型',
+                    align: 'center',
+                    formatter: function(key, row, index) {
+                        return $.table.selectValue(strategyAuditCommodityList, key);
+                    }
+                },
+                {
+                    field : 'value', 
+                    title : '信息值'
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(sys_normal_disable, value);
+                    }
+                },
+                {
+                    field : 'remark',
+                    title : '备注'
+                },
+               ]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>
