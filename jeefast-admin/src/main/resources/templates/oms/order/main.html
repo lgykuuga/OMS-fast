@@ -34,6 +34,14 @@
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:main:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
+                <a class="btn btn-primary multiple disabled" onclick="audit()"
+                   shiro:hasPermission="oms:interfaces:add">
+                    <i class="fa fa-edit"></i> 审核
+                </a>
+                <a class="btn btn-primary multiple disabled" onclick="distribution()"
+                   shiro:hasPermission="oms:interfaces:add">
+                    <i class="fa fa-edit"></i> 配货
+                </a>
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:main:export">
                     <i class="fa fa-download"></i> 导出
                  </a>
@@ -59,15 +67,15 @@
                 },
                 {
                     field : 'id', 
-                    title : '发货时间',
+                    title : 'id',
                     visible: false
                 },
                 {
-                    field : 'biid', 
+                    field : 'orderId',
                     title : '订单流水编号'
                 },
                 {
-                    field : 'tid', 
+                    field : 'sourceId',
                     title : '来源单号'
                 },
                 {
@@ -117,6 +125,10 @@
                 {
                     field : 'lockTime', 
                     title : '锁定时间'
+                },
+                {
+                    field : 'flag',
+                    title : '订单状态'
                 },
                 {
                     field : 'mark', 
@@ -179,6 +191,55 @@
             };
             $.table.init(options);
         });
+
+        // 审核
+        function audit() {
+            var rows = $("#bootstrap-table").bootstrapTable('getSelections');
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+
+            //订单号
+            var orderIds = "";
+            for (var i=0; i<rows.length; i++) {
+                if (rows[i].flag >= 4) {
+                    $.modal.alertWarning("所选单据[" + rows[i].tid + "]状态不能审核");
+                    return;
+                }
+                orderIds += rows[i].orderId+",";
+            }
+
+            orderIds = orderIds.substring(0,orderIds.length-1);
+
+            $.operate.post(prefix + "/audit", { "orderIds": orderIds });
+
+        }
+
+        // 配货
+        function distribution() {
+            var rows = $("#bootstrap-table").bootstrapTable('getSelections');
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+
+            //订单号
+            var orderIds = "";
+            for (var i=0; i<rows.length; i++) {
+                if (rows[i].flag != 4) {
+                    $.modal.alertWarning("所选单据[" + rows[i].tid + "]状态不能配货");
+                    return;
+                }
+                orderIds += rows[i].orderId+",";
+            }
+
+            orderIds = orderIds.substring(0,orderIds.length-1);
+
+            $.operate.post(prefix + "/audit", { "orderIds": orderIds });
+
+        }
+
     </script>
 </body>
 </html>

@@ -82,7 +82,7 @@
         $("#parent").bsSuggest({
             url: ctx + "base/combo/selectCommodityParent/" + "Y",
             hideOnSelect: true,
-            effectiveFields: ["id", "gco", "gna"],
+            effectiveFields: ["gco", "gna"],
             effectiveFieldsAlias:{gco: "商品编码", gna: "商品名称"},
             idField: "gna",
             keyField: "gco"
@@ -95,7 +95,7 @@
         $("#children").bsSuggest({
             url: ctx + "base/combo/selectCommodityParent/" + "N",
             hideOnSelect: true,
-            effectiveFields: ["id", "gco", "gna"],
+            effectiveFields: ["gco", "gna"],
             effectiveFieldsAlias:{gco: "商品编码", gna: "商品名称"},
             idField: "gna",
             keyField: "gco"

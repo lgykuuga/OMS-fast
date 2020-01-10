@@ -1,18 +1,14 @@
-package com.lgy.oms.disruptor;
+package com.lgy.oms.disruptor.tracelog;
 
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.service.ITraceLogService;
 import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.WorkHandler;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 
 /**
@@ -32,12 +28,12 @@ public class TraceLogHandler implements EventHandler<TraceLogEvent>, WorkHandler
     ITraceLogService traceLogService;
 
     @Override
-
     public void onEvent(TraceLogEvent event, long sequence, boolean endOfBatch) {
         //添加threadLocal中用户信息
-        ShiroUtils.setUserThreadLocal(event.getTraceLog().getCreateBy());
+        ShiroUtils.setUserThreadLocal(event.getSysUser());
         logger.info("开始消费订单轨迹EventHandler[{}]", event.getTraceLog().toString());
         onEvent(event);
+        ShiroUtils.removeUserThreadLocal();
     }
 
 

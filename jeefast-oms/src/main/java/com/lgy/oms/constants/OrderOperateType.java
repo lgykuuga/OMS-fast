@@ -11,6 +11,7 @@ public enum OrderOperateType {
 	 */
 	ADD("订单新增"),
 	DOWNLOAD("订单下载"),
+	CONVERT("订单转入"),
 	ACCEPT("订单接收"),
 	IMPORT("订单导入"),
 	EDIT("订单编辑"),
@@ -43,12 +44,23 @@ public enum OrderOperateType {
 	UPLOAD_INTERFACES("订单回传平台"),
 	UPLOAD_ERP("订单回传ERP"),
 	
-	AUDIT_CHECK("审核订单校验"),
+	AUDIT_CHECK("订单校验"),
+
 	AUDIT_INTERCEPT("审核订单拦截"),
+	AUDIT_SPECIAL_INTERCEPT("特定信息拦截"),
+	AUDIT_CHECK_SAME_ORDER("校验相同来源单号"),
+	BUYER_MESSAGE("买家留言拦截"),
+	SELLER_MESSAGE("卖家留言拦截"),
+	COD("货到付款拦截"),
+	SELLER_FLAG("备注旗帜拦截"),
+	AUDIT_DETAIL_INTERCEPT("订单明细拦截"),
+	REFUND("退款拦截"),
+	AMOUNT("校验金额拦截"),
+	DATE("校验日期拦截"),
+	NUMBER("校验数值拦截"),
 	MATCH_MARKETING("订单匹配活动"),
 	MATCH_SELLER_MSG("订单匹配卖家留言"),
-	AG_CANCEL("AG取消"),
-	
+
 	AUDIT("审核订单"),
 	PUSH_TO_WMS("订单推送至仓库"),
 
@@ -57,7 +69,8 @@ public enum OrderOperateType {
 	 * 订单在系统是已取消状态),记录日志.
 	 */
 	ABNORMAL("订单异常"),
-	
+	SET_ABNORMAL("设置异常"),
+
 	LOGISTICS_INFO("订单分配物流信息"),
 	DISTRIBUTION("配货"),
 	REFERENCE("关联售后单"),

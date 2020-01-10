@@ -1,4 +1,4 @@
-package com.lgy.oms.biz.impl;
+package com.lgy.oms.biz.impl.audit;
 
 
 import com.lgy.base.service.ICommodityService;

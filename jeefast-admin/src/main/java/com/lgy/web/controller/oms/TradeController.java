@@ -9,6 +9,7 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
 import com.lgy.oms.domain.Trade;
+import com.lgy.oms.domain.dto.TradeParamDTO;
 import com.lgy.oms.enums.order.PlatformOrderStatusEnum;
 import com.lgy.oms.enums.order.TradeTranformStatusEnum;
 import com.lgy.oms.service.ITradeService;
@@ -127,12 +128,9 @@ public class TradeController extends BaseController {
         //失败原因
         StringBuffer failureMessage = new StringBuffer();
 
-        String[] tidz = tids.split(",");
-        Map map = new HashMap(2);
-        map.put("auto", false);
-        map.put("refund", false);
+        String[] tidz = tids.split(Constants.COMMA);
         for (String tid : tidz) {
-            CommonResponse response = tradeConvertService.execute(tid, map);
+            CommonResponse response = tradeConvertService.execute(tid, new TradeParamDTO());
             if (!Constants.SUCCESS.equals(response.getCode())) {
                 failureMessage.append(response.getMsg());
                 flag = false;

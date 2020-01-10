@@ -1,4 +1,4 @@
-package com.lgy.oms.biz.impl;
+package com.lgy.oms.biz.impl.audit;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lgy.oms.domain.Trade;

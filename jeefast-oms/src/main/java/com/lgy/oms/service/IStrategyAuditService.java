@@ -74,4 +74,11 @@ public interface IStrategyAuditService extends IService<StrategyAudit> {
      * @return
      */
     StrategyAudit getStrategyByShop(String shop);
+
+    /**
+     * 根据店铺编码获取审单策略所有信息(包含拦截主信息、拦截订单明细)
+     * @param shop
+     * @return
+     */
+    StrategyAudit getFullInfoStrategyByShop(String shop);
 }

@@ -19,6 +19,19 @@
                                 <p>名称：</p>
                                 <input type="text" name="gna"/>
                             </li>
+                            <li class="col-sm-3 control-label">
+                                <p>店铺：</p>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="shop" id="chooseShop" autocomplete="off">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form1', 'bootstrap-table1')"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form1', 'bootstrap-table1')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -117,6 +130,8 @@
     </div>
 
      <th:block th:include="include :: footer" />
+     <th:block th:include="include :: bootstrap-suggest-js" />
+     <th:block th:include="include :: bootstrap-typeahead-js" />
     <script th:inline="javascript">
 
         var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
@@ -136,6 +151,7 @@
                 id: "bootstrap-table1",
                 toolbar: "toolbar1",
                 url: prefix + "/list",
+                queryParams: queryMain,
                 createUrl: prefix + "/add",
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
@@ -287,6 +303,12 @@
             return search;
         }
 
+        function queryMain(params) {
+            var search = $.table.queryParams(params);
+            search.shop = $("#gco").val();
+            return search;
+        }
+
         function submit2(){
             $.ajax({
                 url: prefix + "/edit",
@@ -347,6 +369,20 @@
                 }
             })
         }
+
+
+        //组合商品
+        $("#chooseShop").bsSuggest({
+            url: ctx + "base/shop/selectShop",
+            hideOnSelect: true,
+            effectiveFields: ["gco", "gna"],
+            effectiveFieldsAlias:{gco: "编码", gna: "名称"},
+            idField: "gna",
+            keyField: "gco"
+        }).on('onDataRequestSuccess', function (e, result) {
+        }).on('onSetSelectValue', function (e, keyword) {
+        }).on('onUnsetSelectValue', function (e) {
+        });
 
     </script>
 </body>

@@ -28,11 +28,6 @@ public class OrderInterceptInfo extends BaseEntity implements Serializable {
     private String orderId;
 
     /**
-     * 来源单号
-     */
-    private String sourceId;
-
-    /**
      * 订单拦截类型
      */
     private Integer type;
@@ -42,4 +37,12 @@ public class OrderInterceptInfo extends BaseEntity implements Serializable {
      */
     private String content;
 
+    public OrderInterceptInfo() {
+    }
+
+    public OrderInterceptInfo(String orderId, Integer type, String content) {
+        this.orderId = orderId;
+        this.type = type;
+        this.content = content;
+    }
 }

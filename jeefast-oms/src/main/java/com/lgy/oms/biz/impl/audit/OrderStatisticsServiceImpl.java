@@ -1,7 +1,8 @@
-package com.lgy.oms.biz.impl;
+package com.lgy.oms.biz.impl.audit;
 
 import com.lgy.base.domain.Commodity;
 import com.lgy.base.service.ICommodityService;
+import com.lgy.common.constant.Constants;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderMain;
@@ -89,7 +90,7 @@ public class OrderStatisticsServiceImpl implements IOrderStatisticsService {
             //sku种类数量
             orderMain.setSkuNum(skus.size());
             //商品编码集合
-            String skuCollection = StringUtils.join(skus, ",");
+            String skuCollection = StringUtils.join(skus, Constants.COMMA);
             orderMain.setCommodity(skuCollection);
 
             /**设置订单数量类型 */
@@ -103,6 +104,9 @@ public class OrderStatisticsServiceImpl implements IOrderStatisticsService {
                 //一单多货
                 orderMain.setSizeType(OrderSizeTypeEnum.MULTIPLE_CARGO.getCode());
             }
+            logger.debug("统计订单[{}]总件数[{}]总体积[{}]总重量[{}]sku种类数量[{}]" +
+                    "商品编码集合[{}]订单数量类型[{}]", orderMain.getOrderId(), size, volume,
+                    weight, skus.size(), skuCollection, orderMain.getSizeType());
         }
 
     }

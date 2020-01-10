@@ -190,6 +190,20 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
     /**
+     * 计算距今相差多少天,
+     * 返回单位：天
+     */
+    public static long getDatePoor(Date nowDate) {
+        long nd = 1000 * 24 * 60 * 60;
+        // long ns = 1000;
+        // 获得两个时间的毫秒时间差异
+        long diff = System.currentTimeMillis() - nowDate.getTime();
+        // 计算差多少天
+        long day = diff / nd;
+        return day;
+    }
+
+    /**
      * 时间戳转Date
      *
      * @param Timestamp 时间戳
@@ -202,5 +216,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static void main(String[] args) {
         String date = "Wed Oct 16 06:10:17 CST 2019";
         System.out.println(toStandardTime(date));
+        Date date1 = parseDate("2020-1-9 00:00:00");
+        System.out.println(getDatePoor(date1));
     }
+
+
 }

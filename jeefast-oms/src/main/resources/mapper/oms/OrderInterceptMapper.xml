@@ -4,6 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lgy.oms.mapper.OrderInterceptMapper">
 
+    <insert id="addOrUpdateOrderIntercept">
+        insert into oms_order_intercept
+            (order_id, type, content)
+        values
+            (#{orderId},#{type},#{content})
+        ON DUPLICATE KEY UPDATE
+            type = #{type},content = #{content}
+    </insert>
 
 </mapper>
 

@@ -26,7 +26,7 @@ public enum OrderFlagEnum {
     /**
      * 已审核
      */
-    CONFIRM(4, "已审核"),
+    AUDIT(4, "已审核"),
 
     /**
      * 部分配货

@@ -42,6 +42,16 @@ public class Constants {
     public static final String DISABLE = "1";
 
     /**
+     * 通用on标识
+     */
+    public static final String ON = "0";
+
+    /**
+     * 通用off标识
+     */
+    public static final String OFF = "1";
+
+    /**
      * 通用有效标识
      */
     public static final Integer VALID = 0;
@@ -100,4 +110,24 @@ public class Constants {
      * 系统操作
      */
     public static final String SYSTEM = "SYSTEM";
+
+    /**
+     * 分隔符 逗号 ','
+     */
+    public static final String COMMA = ",";
+
+    /**
+     * 分隔符 分号 ';'
+     */
+    public static final String SEMICOLON = ";";
+
+    /**
+     * 一百
+     */
+    public static final Integer ONE_HUNDRED = 100;
+
+    /**
+     * 无
+     */
+    public static final String NONE = "NONE";
 }

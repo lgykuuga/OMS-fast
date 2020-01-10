@@ -1,5 +1,6 @@
 package com.lgy.oms.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.annotation.Excel;
 import com.lgy.common.core.domain.BaseEntity;
@@ -10,6 +11,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 审单策略表 oms_strategy_audit
@@ -108,9 +110,9 @@ public class StrategyAudit extends BaseEntity implements Serializable {
     private BigDecimal amountMin;
 
     /**
-     * 金额拦截最小值
+     * 金额拦截最大值
      */
-    @Excel(name = "金额拦截最小值")
+    @Excel(name = "金额拦截最大值")
     private BigDecimal amountMax;
 
     /**
@@ -210,5 +212,13 @@ public class StrategyAudit extends BaseEntity implements Serializable {
     /** 备注 */
     @Excel(name = "备注")
     private String remark;
+
+    /** 策略对应订单信息配置 */
+    @TableField(exist = false)
+    private List<StrategyAuditSpecial> auditSpecials;
+
+    /** 策略对应订单明细配置 */
+    @TableField(exist = false)
+    private List<StrategyAuditCommodity> auditCommodities;
 
 }

@@ -1,4 +1,4 @@
-package com.lgy.oms.biz.impl;
+package com.lgy.oms.biz.impl.audit;
 
 
 import com.lgy.base.domain.Combo;
@@ -203,7 +203,6 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
             //订单拦截信息
             OrderInterceptInfo orderIntercept = new OrderInterceptInfo();
             orderIntercept.setOrderId(orderMain.getOrderId());
-            orderIntercept.setSourceId(orderMain.getSourceId());
             //设置匹配商品编码异常拦截
             orderIntercept.setType(OrderInterceptTypeEnum.MATCH_GOODS_CODE.getCode());
             //设置异常内容
@@ -264,7 +263,6 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
                 //设置订单拦截信息
                 OrderInterceptInfo orderInterceptInfo = new OrderInterceptInfo();
                 orderInterceptInfo.setOrderId(orderMain.getOrderId());
-                orderInterceptInfo.setSourceId(orderMain.getSourceId());
                 orderInterceptInfo.setType(OrderInterceptTypeEnum.ANALYSIS_COMBO_COMMODITY.getCode());
                 orderInterceptInfo.setContent(failReason.toString());
                 orderMain.setOrderInterceptInfo(orderInterceptInfo);

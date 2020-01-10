@@ -4,13 +4,11 @@ package com.lgy.web.controller.oms.test;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.disruptor.TraceLogApi;
-import com.lgy.oms.disruptor.TraceLogEvent;
+import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.service.ITraceLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,10 +69,7 @@ public class TraceLogController {
         if (StringUtils.isEmpty(traceLog.getOrderId())) {
             return new CommonResponse<String>().error(Constants.FAIL, "订单号不能为空");
         }
-
-        TraceLogEvent traceLogEvent = new TraceLogEvent();
-        traceLogEvent.setTraceLog(traceLog);
-        traceLogApi.addTraceLogAction(traceLogEvent);
+        traceLogApi.addTraceLogAction(traceLog);
 
         return new CommonResponse<String>().ok("发送成功");
     }

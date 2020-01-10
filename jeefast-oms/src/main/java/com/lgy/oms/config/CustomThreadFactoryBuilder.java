@@ -1,9 +1,5 @@
 package com.lgy.oms.config;
 
-import com.lgy.framework.util.ShiroUtils;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ThreadContext;
-
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 

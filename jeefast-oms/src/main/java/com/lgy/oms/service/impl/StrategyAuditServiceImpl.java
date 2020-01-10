@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyAudit;
+import com.lgy.oms.domain.StrategyAuditCommodity;
 import com.lgy.oms.domain.StrategyAuditShop;
+import com.lgy.oms.domain.StrategyAuditSpecial;
 import com.lgy.oms.mapper.StrategyAuditMapper;
 import com.lgy.oms.mapper.StrategyAuditShopMapper;
+import com.lgy.oms.service.IStrategyAuditCommodityService;
 import com.lgy.oms.service.IStrategyAuditService;
+import com.lgy.oms.service.IStrategyAuditSpecialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +28,11 @@ import java.util.List;
 public class StrategyAuditServiceImpl extends ServiceImpl<StrategyAuditMapper, StrategyAudit> implements IStrategyAuditService {
 
     @Autowired
-    protected StrategyAuditShopMapper shopMapper;
+    StrategyAuditShopMapper shopMapper;
+    @Autowired
+    IStrategyAuditSpecialService auditSpecialService;
+    @Autowired
+    IStrategyAuditCommodityService auditCommodityService;
 
     @Override
     public List<StrategyAuditShop> getStrategyShop(String gco) {
@@ -93,6 +101,25 @@ public class StrategyAuditServiceImpl extends ServiceImpl<StrategyAuditMapper, S
     @Override
     public StrategyAudit getStrategyByShop(String shop) {
         return shopMapper.getStrategyByShop(shop);
+    }
 
+    @Override
+    public StrategyAudit getFullInfoStrategyByShop(String shop) {
+        StrategyAudit strategy = getStrategyByShop(shop);
+        if (strategy != null) {
+            //获取对应订单信息配置
+            List<StrategyAuditSpecial> specials = auditSpecialService.getStrategyByGco(strategy.getGco());
+            if (specials != null && !specials.isEmpty()) {
+                strategy.setAuditSpecials(specials);
+            }
+            //获取对应订单明细配置
+            List<StrategyAuditCommodity> commodities = auditCommodityService.getStrategyByGco(strategy.getGco());
+            if (commodities != null && !commodities.isEmpty()) {
+                strategy.setAuditCommodities(commodities);
+            }
+
+            return strategy;
+        }
+        return null;
     }
 }

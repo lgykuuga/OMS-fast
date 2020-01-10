@@ -3,6 +3,11 @@ package com.lgy.web.controller.oms;
 import java.util.Arrays;
 import java.util.List;
 
+import com.lgy.common.constant.Constants;
+import com.lgy.common.core.domain.CommonResponse;
+import com.lgy.oms.disruptor.audit.AuditApi;
+import com.lgy.oms.domain.dto.AuditParamDTO;
+import com.lgy.oms.domain.dto.TradeParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +42,9 @@ public class OrderMainController extends BaseController {
     private String prefix = "oms/order";
 
     @Autowired
-    private IOrderMainService orderMainService;
+    IOrderMainService orderMainService;
+    @Autowired
+    AuditApi auditApi;
 
     @RequiresPermissions("oms:main:view")
     @GetMapping()
@@ -56,6 +63,40 @@ public class OrderMainController extends BaseController {
         startPage();
         return getDataTable(orderMainService.list(queryWrapper));
     }
+
+
+    /**
+     * 生成订单
+     *
+     * @param orderIds 订单号
+     * @return
+     */
+    @RequiresPermissions("oms:main:add")
+    @Log(title = "订单审核信息", businessType = BusinessType.INSERT)
+    @PostMapping("/audit")
+    @ResponseBody
+    public AjaxResult audit(String orderIds) {
+
+        //全部成功标识
+        boolean flag = true;
+        //失败原因
+        StringBuffer failureMessage = new StringBuffer();
+
+        String[] orderIdz = orderIds.split(Constants.COMMA);
+        for (String orderId : orderIdz) {
+            final CommonResponse<String> response = auditApi.addAuditAction(orderId);
+            if (!Constants.SUCCESS.equals(response.getCode())) {
+                failureMessage.append(response.getMsg());
+                flag = false;
+            }
+        }
+
+        if (flag) {
+            return AjaxResult.success("生成订单成功");
+        }
+        return AjaxResult.error(failureMessage.toString());
+    }
+
 
     /**
      * 导出订单审核信息列表
@@ -122,14 +163,5 @@ public class OrderMainController extends BaseController {
         return toAjax(orderMainService.updateById(orderMain));
     }
 
-    /**
-     * 删除订单审核信息
-     */
-    @RequiresPermissions("oms:main:remove")
-    @Log(title = "订单审核信息", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids) {
-        return toAjax(orderMainService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
-    }
+
 }

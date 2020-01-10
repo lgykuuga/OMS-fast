@@ -40,7 +40,7 @@ public class OrderStatusInfo extends BaseEntity implements Serializable {
     /**
      * 合并状态
      */
-    private Integer merge;
+    private Integer merger;
 
     /**
      * 拆分状态

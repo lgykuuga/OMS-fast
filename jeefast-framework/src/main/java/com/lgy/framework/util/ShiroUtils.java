@@ -22,13 +22,15 @@ public class ShiroUtils {
 
     public static ThreadLocal<SysUser> userThreadLocal = new ThreadLocal<>();
 
-    public static void setUserThreadLocal(String userName) {
-        SysUser sysUser = new SysUser();
-        sysUser.setUserName(userName);
+    public static void setUserThreadLocal(SysUser sysUser) {
         userThreadLocal.set(sysUser);
     }
     public static SysUser getUserThreadLocal() {
         return userThreadLocal.get();
+    }
+
+    public static void removeUserThreadLocal() {
+        userThreadLocal.remove();
     }
 
     public static Subject getSubject() {
@@ -44,6 +46,10 @@ public class ShiroUtils {
     }
 
     public static SysUser getSysUser() {
+        SysUser sysUser = userThreadLocal.get();
+        if (sysUser != null) {
+            return sysUser;
+        }
         SysUser user = null;
         Object obj = getSubject().getPrincipal();
         if (StringUtils.isNotNull(obj)) {

@@ -48,6 +48,7 @@
     </div>
     <th:block th:include="include :: footer" />
     <script th:inline="javascript">
+        var sys_normal_disable = [[${@dict.getType('sys_normal_disable')}]];
         var editFlag = [[${@permission.hasPermi('base:combo:edit')}]];
         var removeFlag = [[${@permission.hasPermi('base:combo:remove')}]];
         var prefix = ctx + "base/combo";

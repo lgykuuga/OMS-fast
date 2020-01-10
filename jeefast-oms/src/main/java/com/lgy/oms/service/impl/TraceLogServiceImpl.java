@@ -1,8 +1,10 @@
 package com.lgy.oms.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.common.utils.StringUtils;
+import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.mapper.TraceLogMapper;
 import com.lgy.oms.service.ITraceLogService;
@@ -30,20 +32,24 @@ public class TraceLogServiceImpl extends ServiceImpl<TraceLogMapper, TraceLog> i
     @Override
     public void add(TraceLog entity) {
         if (StringUtils.isEmpty(entity.getOrderId())) {
-            throw new NullPointerException("订单号不能为空!");
+            logger.error("订单号不能为空[{}]", JSON.toJSONString(entity));
+            throw new NullPointerException("订单号不能为空");
+        }
+        if (StringUtils.isEmpty(entity.getCreateBy())) {
+            entity.setCreateBy(ShiroUtils.getSysUser().getUserName());
         }
         if (entity.getCreateTime() == null) {
             entity.setCreateTime(DateUtils.getNowDate());
         }
-        //TODO Disruptor并发框架
         traceLogMapper.add(entity);
     }
 
     @Override
     public void batchAdd(List<TraceLog> list) {
-        //TODO Disruptor并发框架
         for (TraceLog traceLog : list) {
-
+            if (traceLog.getCreateTime() == null) {
+                traceLog.setCreateTime(DateUtils.getNowDate());
+            }
             traceLogMapper.add(traceLog);
         }
     }

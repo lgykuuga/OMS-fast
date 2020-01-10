@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.base.domain.Commodity;
 import com.lgy.base.mapper.CommodityMapper;
 import com.lgy.base.service.ICommodityService;
+import com.lgy.common.constant.Constants;
 import com.lgy.common.exception.BusinessException;
 import com.lgy.common.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     public Commodity getOne(String gco) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper();
         queryWrapper.eq("gco", gco);
+        queryWrapper.eq("status", Constants.VALID);
         return getOne(queryWrapper);
     }
 

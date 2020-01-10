@@ -86,15 +86,19 @@ public class StrategyAuditSpecialController extends BaseController {
         if (StringUtils.isNotEmpty(strategyAuditSpecial.getValue())) {
             queryWrapper.like("value", strategyAuditSpecial.getValue());
         }
+        if (StringUtils.isNotEmpty(strategyAuditSpecial.getStatus())) {
+            queryWrapper.eq("status", strategyAuditSpecial.getStatus());
+        }
         return queryWrapper;
     }
 
     /**
      * 新增审单策略特定信息拦截
      */
-    @GetMapping("/add")
-    public String add(ModelMap mmap) {
+    @GetMapping("/add/{gco}")
+    public String add(@PathVariable("gco") String gco, ModelMap mmap) {
         mmap.put("strategyAuditSpecialList", AuditSpecialEnum.getList());
+        mmap.put("gco", gco);
         return prefix + "/add";
     }
 

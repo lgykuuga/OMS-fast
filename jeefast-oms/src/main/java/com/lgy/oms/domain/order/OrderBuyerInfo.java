@@ -54,7 +54,7 @@ public class OrderBuyerInfo implements Serializable {
     /**
      * 买家身份证号
      */
-    private String buyerCardID;
+    private String buyerCardId;
 
     /**
      * 收件人姓名
@@ -74,7 +74,7 @@ public class OrderBuyerInfo implements Serializable {
     /**
      * 收件人身份证号
      */
-    private String consigneeCardID;
+    private String consigneeCardId;
 
     /**
      * 国家编码

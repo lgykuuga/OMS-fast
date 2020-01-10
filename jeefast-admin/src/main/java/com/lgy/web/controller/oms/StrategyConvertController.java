@@ -23,9 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * 转单策略Controller
@@ -62,12 +60,6 @@ public class StrategyConvertController extends BaseController {
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(StrategyConvert strategyConvert) {
-        QueryWrapper<StrategyConvert> queryWrapper = getStrategyConvertQueryWrapper(strategyConvert);
-        startPage();
-        return getDataTable(strategyConvertService.list(queryWrapper));
-    }
-
-    private QueryWrapper<StrategyConvert> getStrategyConvertQueryWrapper(StrategyConvert strategyConvert) {
         QueryWrapper<StrategyConvert> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(strategyConvert.getGco())) {
             queryWrapper.eq("gco", strategyConvert.getGco());
@@ -75,7 +67,16 @@ public class StrategyConvertController extends BaseController {
         if (StringUtils.isNotEmpty(strategyConvert.getGna())) {
             queryWrapper.like("gna", strategyConvert.getGna());
         }
-        return queryWrapper;
+        // 特殊查询时条件需要进行单独组装
+        Map<String, Object> params = strategyConvert.getParams();
+        if (StringUtils.isNotEmpty(params) && StringUtils.isNotEmpty((String)params.get("shop"))) {
+            //根据店铺编码查询
+            String shop = (String) params.get("shop");
+            startPage();
+            return getDataTable(Collections.singletonList(strategyConvertService.getStrategyByShop(shop)));
+        }
+        startPage();
+        return getDataTable(strategyConvertService.list(queryWrapper));
     }
 
     /**

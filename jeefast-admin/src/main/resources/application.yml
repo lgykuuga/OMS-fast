@@ -12,6 +12,10 @@ lgy:
   profile: /usr/local/oms/uploadPath
   # 获取ip地址开关
   addressEnabled: true
+  # 轨迹日志
+  traceLog:
+    # 日志等级(0:trace/1:STATUS/2:ABNORMAL)
+    level: 0
 
 # 开发环境配置
 server:

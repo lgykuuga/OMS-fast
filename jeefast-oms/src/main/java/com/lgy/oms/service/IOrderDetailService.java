@@ -11,4 +11,12 @@ import com.lgy.oms.domain.order.OrderDetail;
  */
 public interface IOrderDetailService extends IService<OrderDetail> {
 
+    /**
+     * 校验组合商品下的组合商品明细是否存在
+     *
+     * @param orderDetail 订单明细行
+     * @return 不为空, 返回true
+     */
+    boolean checkOrderCombDetailExist(OrderDetail orderDetail);
+
 }

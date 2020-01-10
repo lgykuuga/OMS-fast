@@ -12,7 +12,7 @@
                         <ul>
                             <li>
                                 <p>策略编码：</p>
-                                <input type="text" name="gco"/>
+                                <input type="text" name="gco" th:value="${gco}" readonly="true"/>
                             </li>
                             <li>
                                 类型：<select name="type">
@@ -39,7 +39,7 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:special:add">
+                <a class="btn btn-success" onclick="add()" shiro:hasPermission="oms:special:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:special:edit">
@@ -59,9 +59,10 @@
     </div>
     <th:block th:include="include :: footer" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('oms:special:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('oms:special:remove')}]];
+        var sys_normal_disable = [[${@dict.getType('sys_normal_disable')}]];
+        var strategyAuditSpecialList = [[${strategyAuditSpecialList}]];
         var prefix = ctx + "oms/audit/special";
+        var gco = [[${gco}]];
 
         $(function() {
             var options = {
@@ -89,7 +90,8 @@
                     },
                 {
                     field : 'value', 
-                    title : '信息值'
+                    title : '信息值',
+                    width: 200,
                 },
                 {
                     field: 'status',
@@ -101,12 +103,37 @@
                 },
                 {
                     field : 'remark',
-                    title : '备注'
+                    title : '备注',
+                    width: 200,
+                },
+                {
+                    field: 'createBy',
+                    title: '创建人'
+                },
+
+                {
+                    field: 'createTime',
+                    title: '创建时间'
+                },
+                {
+                    field: 'updateBy',
+                    title: '更新人'
+                },
+                {
+                    field: 'updateTime',
+                    title: '更新时间'
                 },
                 ]
             };
             $.table.init(options);
         });
+
+        // 添加信息
+        function add() {
+            table.set();
+            $.modal.open('添加' + table.options.modalName, table.options.createUrl
+                + "/" + gco);
+        }
     </script>
 </body>
 </html>

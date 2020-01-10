@@ -55,7 +55,7 @@
         select
         gco
         from
-        oms_strategy_convert_shop
+        oms_strategy_audit_shop
         <where>
             <if test="shop != null and shop != ''">
                 shop = #{shop}

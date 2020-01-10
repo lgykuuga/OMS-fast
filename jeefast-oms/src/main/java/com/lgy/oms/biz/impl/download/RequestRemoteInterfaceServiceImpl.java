@@ -1,4 +1,4 @@
-package com.lgy.oms.biz.impl;
+package com.lgy.oms.biz.impl.download;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -485,21 +485,6 @@ public class RequestRemoteInterfaceServiceImpl implements IRequestRemoteInterfac
         downloadOrderService.save(downloadorder);
         logger.debug("下载订单接口:下载店铺[{}]订单耗时:[{}]ms", shopInterfaces.getShop(), (System.currentTimeMillis() - startTime));
         return new CommonResponse<>(listResponse.getCode(), listResponse.getMsg(), null);
-    }
-
-    @Override
-    public CommonResponse<String> OrderDeliveryNotice(String shop, List<T> odhxs) {
-        return null;
-    }
-
-    @Override
-    public CommonResponse<String> getReturnNotice(String shop, String beginTime, String endTime) {
-        return null;
-    }
-
-    @Override
-    public CommonResponse<String> getAppraisal(Map<String, Object> map) {
-        return null;
     }
 
     @Override

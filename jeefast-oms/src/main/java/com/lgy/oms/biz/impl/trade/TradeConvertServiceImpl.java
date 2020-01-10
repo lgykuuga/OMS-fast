@@ -1,4 +1,4 @@
-package com.lgy.oms.biz.impl;
+package com.lgy.oms.biz.impl.trade;
 
 
 import com.alibaba.fastjson.JSON;
@@ -7,22 +7,27 @@ import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.framework.util.ShiroUtils;
-import com.lgy.oms.constants.OrderModuleConstants;
-import com.lgy.oms.constants.OrderOperateType;
-import com.lgy.oms.constants.TraceLevelType;
-import com.lgy.oms.domain.StandardOrderData;
-import com.lgy.oms.domain.StrategyConvert;
-import com.lgy.oms.domain.TraceLog;
-import com.lgy.oms.domain.Trade;
-import com.lgy.oms.domain.order.*;
-import com.lgy.oms.enums.order.*;
-import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
-import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
-import com.lgy.oms.service.*;
 import com.lgy.oms.biz.ICreateOrderMainService;
 import com.lgy.oms.biz.IOrderDetailProcessingService;
 import com.lgy.oms.biz.IOrderStatisticsService;
 import com.lgy.oms.biz.ITradeConvertService;
+import com.lgy.oms.constants.OrderModuleConstants;
+import com.lgy.oms.constants.OrderOperateType;
+import com.lgy.oms.constants.TraceLevelType;
+import com.lgy.oms.disruptor.tracelog.TraceLogApi;
+import com.lgy.oms.domain.StandardOrderData;
+import com.lgy.oms.domain.StrategyConvert;
+import com.lgy.oms.domain.TraceLog;
+import com.lgy.oms.domain.Trade;
+import com.lgy.oms.domain.dto.TradeParamDTO;
+import com.lgy.oms.domain.order.*;
+import com.lgy.oms.enums.order.*;
+import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
+import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
+import com.lgy.oms.service.IOrderMainService;
+import com.lgy.oms.service.IStrategyConvertService;
+import com.lgy.oms.service.ITradeService;
+import com.lgy.oms.service.ITradeStandardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,33 +44,49 @@ import java.util.Map;
 @Service
 public class TradeConvertServiceImpl implements ITradeConvertService {
 
-    /** 交易订单 */
+    /**
+     * 交易订单
+     */
     @Autowired
     ITradeService tradeService;
-    /** 转单策略 */
+    /**
+     * 转单策略
+     */
     @Autowired
     IStrategyConvertService strategyConvertService;
-    /** 订单主服务 */
+    /**
+     * 订单主服务
+     */
     @Autowired
     IOrderMainService orderMainService;
-    /** 创建主订单服务 */
+    /**
+     * 创建主订单服务
+     */
     @Autowired
     ICreateOrderMainService createOrderMainService;
-    /** 订单快照 */
+    /**
+     * 订单快照
+     */
     @Autowired
     ITradeStandardService tradeStandardService;
-    /** 订单明细处理 */
+    /**
+     * 订单明细处理
+     */
     @Autowired
     IOrderDetailProcessingService orderDetailProcessingService;
-    /** 订单统计处理 */
+    /**
+     * 订单统计处理
+     */
     @Autowired
     IOrderStatisticsService orderStatisticsService;
-    /** 订单轨迹信息 */
+    /**
+     * 订单轨迹信息
+     */
     @Autowired
-    ITraceLogService traceLogService;
+    TraceLogApi traceLogApi;
 
     @Override
-    public CommonResponse<String> execute(String tid, Map<String, Object> map) {
+    public CommonResponse<String> execute(String tid, TradeParamDTO param) {
         // 查询表信息
         QueryWrapper<Trade> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("tid", tid);
@@ -99,7 +120,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
 
         StandardOrder standardOrder = JSON.parseObject(latestStandardOrderData.getStandard(), StandardOrder.class);
         //转换成主订单信息
-        OrderMain orderMain = convert(standardOrder, strategy, map);
+        OrderMain orderMain = convert(standardOrder, strategy, param);
 
         //匹配商品编码
         orderDetailProcessingService.matchCommodity(orderMain, strategy);
@@ -110,10 +131,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //保存订单
         createOrderMainService.saveOrder(orderMain);
         //保存轨迹服务
-        traceLogService.add(new TraceLog(OrderModuleConstants.ORDERMAIN, orderMain.getOrderId(),
-                OrderOperateType.DOWNLOAD.getValue(), TraceLevelType.STATUS.getKey(),
-                "订单新增保存", ShiroUtils.getSysUser().getUserName()));
-        return null;
+        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, orderMain.getOrderId(),
+                OrderOperateType.CONVERT.getValue(), TraceLevelType.STATUS.getKey(), "订单新增保存"));
+        return new CommonResponse<String>().ok("");
     }
 
     /**
@@ -121,15 +141,15 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
      *
      * @param standardOrder 标准订单
      * @param strategy      转单策略
-     * @param map           其它参数
+     * @param param           其它参数
      * @return 主订单
      */
-    private OrderMain convert(StandardOrder standardOrder, StrategyConvert strategy, Map<String, Object> map) {
+    private OrderMain convert(StandardOrder standardOrder, StrategyConvert strategy, TradeParamDTO param) {
 
         //自动触发转换
-        boolean auto = map != null && map.get("auto") != null && (boolean) map.get("auto");
+        boolean auto = param != null && param.getAuto();
         //生成退款明细
-        boolean refund = map != null && map.get("refund") != null && (boolean) map.get("refund");
+        boolean refund = param != null && param.getRefund();
         //是否存在退款明细
         boolean isExistRefund = false;
 
@@ -201,7 +221,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //订单状态:新增
         orderStatusInfo.setFlag(OrderFlagEnum.NEW.getCode());
         //合并状态
-        orderStatusInfo.setMerge(OrderMergeEnum.WAIT.getCode());
+        orderStatusInfo.setMerger(OrderMergeEnum.WAIT.getCode());
         //拆分状态
         orderStatusInfo.setSplit(OrderSplitEnum.WAIT.getCode());
         //订单状态:有效
@@ -223,7 +243,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //买家邮件地址
         orderBuyer.setBuyerEmail(standardOrder.getBuyer_email());
         //买家身份证号
-        orderBuyer.setBuyerCardID(standardOrder.getBuyer_card_id());
+        orderBuyer.setBuyerCardId(standardOrder.getBuyer_card_id());
         //收件人姓名
         orderBuyer.setConsigneeName(standardOrder.getReceiver_name());
         //收件人移动电话
@@ -231,7 +251,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //收件人邮箱地址
         orderBuyer.setConsigneeEmail(standardOrder.getReceiver_email());
         //收件人身份证号
-        orderBuyer.setConsigneeCardID(standardOrder.getReceiver_card_id());
+        orderBuyer.setConsigneeCardId(standardOrder.getReceiver_card_id());
         //收件人国家编码
         orderBuyer.setNationCode("");
         //收件人国家
@@ -312,9 +332,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //出库类型:一般交易出库
         orderTypeinfo.setOutboundType(OrderOutBoundTypeEnum.JYCK.getCode());
         //货到付款
-        orderTypeinfo.setCod(Integer.valueOf(standardOrder.getCod() ? Constants.YES :  Constants.NO));
+        orderTypeinfo.setCod(Integer.valueOf(standardOrder.getCod() ? Constants.YES : Constants.NO));
         //是否存在发票申请
-        orderTypeinfo.setInvoice(Integer.valueOf(standardOrder.getInvoice() ? Constants.YES :  Constants.NO));
+        orderTypeinfo.setInvoice(Integer.valueOf(standardOrder.getInvoice() ? Constants.YES : Constants.NO));
         //发货级别:普通
         orderTypeinfo.setLevel(OrderSendOutLevelEnum.GENERAL.getCode());
         orderMain.setOrderTypeinfo(orderTypeinfo);
@@ -346,9 +366,9 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
             //快递单号
             orderDetail.setExpressNumber(standardDetail.getInvoice_no());
             //行序号
-            orderDetail.setRowNumber(rowNumber+"");
+            orderDetail.setRowNumber(rowNumber + "");
             //来源行序号
-            orderDetail.setSourceRow(rowNumber+"");
+            orderDetail.setSourceRow(rowNumber + "");
             //商品编码
             orderDetail.setCommodity("");
             //数量
@@ -396,7 +416,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         }
 
         //是否存在退款明细
-        orderMain.setRefund(isExistRefund ? Constants.YES :  Constants.NO);
+        orderMain.setRefund(isExistRefund ? Constants.YES : Constants.NO);
 
         orderMain.setOrderDetails(orderDetails);
 

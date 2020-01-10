@@ -44,12 +44,27 @@ public class ShopController extends BaseController {
      * 查询店铺档案列表
      */
     @RequiresPermissions("base:shop:list")
-    @PostMapping("/list")
     @ResponseBody
+    @PostMapping("list")
     public TableDataInfo list(Shop shop) {
         QueryWrapper<Shop> queryWrapper = getShopQueryWrapper(shop);
         startPage();
         return getDataTable(shopService.list(queryWrapper));
+    }
+
+    /**
+     * 获取店铺档案列表下拉框
+     */
+    @GetMapping("/selectShop")
+    @ResponseBody
+    public AjaxResult selectShop() {
+        AjaxResult ajax = new AjaxResult();
+        QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("gco", "gna");
+        List<Shop> shopList = shopService.list(queryWrapper);
+        ajax.put("code", 200);
+        ajax.put("value", shopList);
+        return ajax;
     }
 
     /**

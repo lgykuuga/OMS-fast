@@ -85,15 +85,19 @@ public class StrategyAuditCommodityController extends BaseController {
         if (StringUtils.isNotEmpty(strategyAuditCommodity.getValue())) {
             queryWrapper.like("value", strategyAuditCommodity.getValue());
         }
+        if (StringUtils.isNotEmpty(strategyAuditCommodity.getStatus())) {
+            queryWrapper.eq("status", strategyAuditCommodity.getStatus());
+        }
         return queryWrapper;
     }
 
     /**
      * 新增审单策略指定商品拦截
      */
-    @GetMapping("/add")
-    public String add(ModelMap mmap) {
+    @GetMapping("/add/{gco}")
+    public String add(@PathVariable("gco") String gco, ModelMap mmap) {
         mmap.put("strategyAuditCommodityList", AuditCommodityEnum.getList());
+        mmap.put("gco", gco);
         return prefix + "/add";
     }
 
