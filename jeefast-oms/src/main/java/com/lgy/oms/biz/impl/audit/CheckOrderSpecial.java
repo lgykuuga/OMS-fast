@@ -290,12 +290,17 @@ public class CheckOrderSpecial {
         //是否通过校验时间拦截
         boolean flag = true;
 
+        //开始日期
+        Date start = DateUtils.parseDate(auditStrategy.getTimeStart());
+        //结束日期
+        Date end = DateUtils.parseDate(auditStrategy.getTimeEnd());
+
         if (AuditTimeEnum.ORDER_PLACEMENT.getCode().equals(auditStrategy.getTimeRange())) {
             //订单下单时间
             String orderTime = event.getOrderMain().getOrderPayinfo().getOrderTime();
 
-            if (DateUtils.parseDate(orderTime).after(auditStrategy.getTimeStart())
-                    && (DateUtils.parseDate(orderTime).before(auditStrategy.getTimeEnd()))) {
+            if (DateUtils.parseDate(orderTime).after(start)
+                    && (DateUtils.parseDate(orderTime).before(end))) {
                 stringBuffer.append("下单时间").append(orderTime)
                         .append("在审单策略设置时间拦截范围").append(auditStrategy.getTimeStart())
                         .append("-").append(auditStrategy.getTimeEnd());
@@ -305,8 +310,8 @@ public class CheckOrderSpecial {
             //支付时间
             String payTime = event.getOrderMain().getOrderPayinfo().getPayTime();
 
-            if (DateUtils.parseDate(payTime).after(auditStrategy.getTimeStart())
-                    && (DateUtils.parseDate(payTime).before(auditStrategy.getTimeEnd()))) {
+            if (DateUtils.parseDate(payTime).after(start)
+                    && (DateUtils.parseDate(payTime).before(end))) {
                 stringBuffer.append("支付时间").append(payTime)
                         .append("在审单策略设置时间拦截范围").append(auditStrategy.getTimeStart())
                         .append("-").append(auditStrategy.getTimeEnd());
@@ -316,8 +321,8 @@ public class CheckOrderSpecial {
             //订单创建时间
             Date createTime = event.getOrderMain().getCreateTime();
 
-            if (createTime.after(auditStrategy.getTimeStart())
-                    && (createTime.before(auditStrategy.getTimeEnd()))) {
+            if (createTime.after(start)
+                    && (createTime.before(end))) {
                 stringBuffer.append("支付时间").append(DateUtils.dateTime(createTime))
                         .append("在审单策略设置时间拦截范围").append(auditStrategy.getTimeStart())
                         .append("-").append(auditStrategy.getTimeEnd());

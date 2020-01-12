@@ -32,7 +32,7 @@
                     <i class="fa fa-plus"></i> 添加
                 </a>
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:main:edit">
-                    <i class="fa fa-edit"></i> 修改
+                    <i class="fa fa-edit"></i> 编辑
                 </a>
                 <a class="btn btn-primary multiple disabled" onclick="audit()"
                    shiro:hasPermission="oms:interfaces:add">
@@ -42,9 +42,6 @@
                    shiro:hasPermission="oms:interfaces:add">
                     <i class="fa fa-edit"></i> 配货
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="oms:main:export">
-                    <i class="fa fa-download"></i> 导出
-                 </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table" data-mobile-responsive="true"></table>

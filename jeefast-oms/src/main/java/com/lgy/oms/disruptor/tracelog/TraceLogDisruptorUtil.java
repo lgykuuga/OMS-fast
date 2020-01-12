@@ -59,6 +59,8 @@ public class TraceLogDisruptorUtil implements DisposableBean, InitializingBean {
                 new YieldingWaitStrategy()
         );
 
+        //异常处理
+        disruptor.setDefaultExceptionHandler(new TraceLogExceptionHandler());
         //创建消费者组
         disruptor.handleEventsWith(traceLogHandler);
         //启动disruptor

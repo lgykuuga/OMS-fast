@@ -87,6 +87,8 @@ public class AuditSubDisruptorUtil {
                 new YieldingWaitStrategy()
         );
 
+        //异常处理
+        disruptor.setDefaultExceptionHandler(new AuditSubExceptionHandler());
         /**
          * 并行校验地址、校验拦截订单主信息、校验拦截订单明细信息
          * 后串行执行更新订单状态

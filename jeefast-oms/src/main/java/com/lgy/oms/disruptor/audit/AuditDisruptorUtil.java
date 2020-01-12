@@ -69,6 +69,8 @@ public class AuditDisruptorUtil {
                 new YieldingWaitStrategy()
         );
 
+        //异常处理
+        disruptor.setDefaultExceptionHandler(new AuditExceptionHandler());
         //创建消费者组
         disruptor.handleEventsWith(auditHandler);
         //启动disruptor

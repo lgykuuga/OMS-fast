@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <!-- 策略 -->
+                    <!-- 策略form -->
                     <div class="col-sm-9">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
@@ -199,7 +199,7 @@
                                             <label class="col-sm-8 control-label">组合信息拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="comboIntercept" th:checked="${strategyAudit.comboIntercept == '0' ? true : false}">
+                                                    <input type="checkbox" id="comboIntercept" name="comboIntercept" th:checked="${strategyAudit.comboIntercept == '0' ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -220,7 +220,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <div id="ionrange_1"></div>
+                                            <div id="ionrange_1" type="text"></div>
                                         </div>
                                     </div>
 
@@ -237,7 +237,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <div id="ionrange_2"></div>
+                                            <div id="ionrange_2" type="text"></div>
                                         </div>
                                     </div>
 
@@ -256,10 +256,12 @@
                                         <div class="form-group col-sm-6">
                                             <div class="input-daterange input-group">
                                                 <input type="text" class="input-sm form-control" id="laydate-startTime"
-                                                       placeholder="yyyy-MM-dd" autocomplete="off" />
+                                                       placeholder="yyyy-MM-dd" autocomplete="off"
+                                                       name="timeStart" th:field="*{timeStart}" />
                                                 <span class="input-group-addon">到</span>
                                                 <input type="text" class="input-sm form-control" id="laydate-endTime"
-                                                       placeholder="yyyy-MM-dd" autocomplete="off" />
+                                                       placeholder="yyyy-MM-dd" autocomplete="off"
+                                                       name="timeEnd" th:field="*{timeEnd}" />
                                             </div>
                                         </div>
                                     </div>
@@ -606,7 +608,6 @@
             })
         }
 
-
         $("#ionrange_1").ionRangeSlider({
             min: 0,
             max: 1000,
@@ -615,7 +616,28 @@
             prefix: "&yen;",
             maxPostfix: "+",
             prettify: false,
-            hasGrid: true
+            hasGrid: true,
+            onStart: function (data) {
+                console.log("onStart");
+                console.log(data)
+            },
+            onChange: function (data) {
+                console.log("onChange");
+                console.log(data);
+            },
+            onFinish: function (data) {
+                console.log("onFinish");
+                var $this = $(this),
+                    from = $this.data("fromNumber"),
+                    to = $this.data("toNumber");
+
+                console.log(from + " - " + to);
+                console.log(data);
+            },
+            onUpdate: function (data) {
+                console.log("onUpdate");
+                console.log(data)
+            }
         });
 
         $("#ionrange_2").ionRangeSlider({
@@ -624,7 +646,8 @@
             type: 'double',
             step: 1,
             prettify: false,
-            hasGrid: true
+            hasGrid: true,
+
         });
 
         <!-- laydate -->
@@ -670,6 +693,7 @@
             });
         });
 
+        //毛利率
         $(".dial").knob();
 
     </script>

@@ -124,14 +124,14 @@ public class StrategyAudit extends BaseEntity implements Serializable {
     /**
      * 时间拦截起
      */
-    @Excel(name = "时间拦截起", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date timeStart;
+    @Excel(name = "时间拦截起")
+    private String timeStart;
 
     /**
      * 时间拦截止
      */
-    @Excel(name = "时间拦截止", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date timeEnd;
+    @Excel(name = "时间拦截止")
+    private String timeEnd;
 
     /**
      * 数字拦截类型
