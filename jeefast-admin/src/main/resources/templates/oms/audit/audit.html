@@ -172,7 +172,8 @@
                                             <label class="col-sm-8 control-label">特定信息拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="orderIntercept" th:checked="${strategyAudit.orderIntercept == '0' ? true : false}">
+                                                    <input type="checkbox" id="orderIntercept"
+                                                           th:checked="${strategyAudit.orderIntercept == '0' ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -181,7 +182,8 @@
                                             <label class="col-sm-8 control-label">指定商品拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="commodityIntercept" th:checked="${strategyAudit.commodityIntercept == '0' ? true : false}">
+                                                    <input type="checkbox"
+                                                           th:checked="${strategyAudit.commodityIntercept == '0' ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -190,7 +192,8 @@
                                             <label class="col-sm-8 control-label">特殊地址拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="addressIntercept" th:checked="${strategyAudit.addressIntercept == '0' ? true : false}">
+                                                    <input type="checkbox" id="addressIntercept"
+                                                           th:checked="${strategyAudit.addressIntercept == '0' ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -199,13 +202,14 @@
                                             <label class="col-sm-8 control-label">组合信息拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="comboIntercept" name="comboIntercept" th:checked="${strategyAudit.comboIntercept == '0' ? true : false}">
+                                                    <input type="checkbox" id="comboIntercept" name="comboIntercept"
+                                                           th:checked="${strategyAudit.comboIntercept == '0' ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
-
+`
 
                                     <div class="container-fluid">
                                         <div class="form-group col-sm-6">
@@ -281,7 +285,8 @@
                                             </div>
                                             <div class="form-group col-sm-3">
                                                 <div class="col-sm-12">
-                                                    <input name="validDate" th:field="*{validDate}" class="form-control" type="text" placeholder="单位:天" autocomplete="off" >
+                                                    <input name="validDate" th:field="*{validDate}" class="form-control"
+                                                           type="text" placeholder="单位:天" autocomplete="off" >
                                                 </div>
                                             </div>
                                         </div>
@@ -546,10 +551,12 @@
             var addressValid = $("input[id='addressValid']").is(':checked') == true ? 0 : 1;
             var buyMessage = $("input[id='buyMessage']").is(':checked') == true ? 0 : 1;
             var sellerMessage = $("input[id='sellerMessage']").is(':checked') == true ? 0 : 1;
+            var comboIntercept = $("input[id='comboIntercept']").is(':checked') == true ? 0 : 1;
             data.push({"name": "source", "value": source});
             data.push({"name": "addressValid", "value": addressValid});
             data.push({"name": "buyMessage", "value": buyMessage});
             data.push({"name": "sellerMessage", "value": sellerMessage});
+            data.push({"name": "comboIntercept", "value": comboIntercept});
 
             $.ajax({
                 url: prefix + "/edit",
@@ -582,6 +589,7 @@
                 if ($oinput.attr("type") == "checkbox") {
                     if (ival !== null) {
                         var checkboxObj = $("[name=" + name + "]");
+                        ival = ival.toString();
                         var checkArray = ival.split(";");
                         for (var i = 0; i < checkboxObj.length; i++) {
                             for (var j = 0; j < checkArray.length; j++) {
