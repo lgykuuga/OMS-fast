@@ -131,7 +131,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //保存订单
         createOrderMainService.saveOrder(orderMain);
         //保存轨迹服务
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, orderMain.getOrderId(),
+        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.CONVERT.getValue(), TraceLevelType.STATUS.getKey(), "订单新增保存"));
         return new CommonResponse<String>().ok("");
     }

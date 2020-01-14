@@ -8,9 +8,12 @@ package com.lgy.oms.constants;
 public class OrderModuleConstants {
 
     /** 主订单业务模块 */
-    public static final String ORDERMAIN = "ordermain";
+    public static final String ORDER_MAIN = "orderMain";
 
     /** 配货单业务模块 */
     public static final String DISTRIBUTION = "distribution";
+
+    /** 轨迹日志业务模块 */
+    public static final String TRACE_LOG_MongoDB = "traceLogMongoDB";
 
 }

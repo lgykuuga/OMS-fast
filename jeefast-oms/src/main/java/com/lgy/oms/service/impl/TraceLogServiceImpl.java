@@ -1,10 +1,15 @@
 package com.lgy.oms.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lgy.common.annotation.MongoDB;
+import com.lgy.common.constant.Method;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.framework.util.ShiroUtils;
+import com.lgy.oms.constants.OrderModuleConstants;
+import com.lgy.oms.dao.TraceLogMongoDB;
 import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.mapper.TraceLogMapper;
 import com.lgy.oms.service.ITraceLogService;
@@ -21,8 +26,10 @@ import java.util.List;
  * @author lgy
  * @date 2019-12-26
  */
+
 @Service
-public class TraceLogServiceImpl extends ServiceImpl<TraceLogMapper, TraceLog> implements ITraceLogService {
+public class TraceLogServiceImpl extends ServiceImpl<TraceLogMapper, TraceLog>
+        implements ITraceLogService {
 
     private static Logger logger = LoggerFactory.getLogger(TraceLogServiceImpl.class);
 
@@ -30,6 +37,7 @@ public class TraceLogServiceImpl extends ServiceImpl<TraceLogMapper, TraceLog> i
     TraceLogMapper traceLogMapper;
 
     @Override
+    @MongoDB(document = OrderModuleConstants.TRACE_LOG_MongoDB)
     public void add(TraceLog entity) {
         if (StringUtils.isEmpty(entity.getOrderId())) {
             logger.error("订单号不能为空[{}]", JSON.toJSONString(entity));
@@ -55,18 +63,20 @@ public class TraceLogServiceImpl extends ServiceImpl<TraceLogMapper, TraceLog> i
     }
 
     @Override
-    public List<TraceLog> get(String orderId) {
-        return traceLogMapper.getTraceByOrderId(orderId);
-    }
+    @MongoDB(document = OrderModuleConstants.TRACE_LOG_MongoDB, method = Method.GET)
+    public List<TraceLog> get(TraceLog traceLog) {
 
-    @Override
-    public List<TraceLog> get(String orderId, String module) {
-        return traceLogMapper.getTraceByOrderIdAndModule(orderId, module);
-    }
-
-    @Override
-    public List<TraceLog> get(String orderId, Integer level) {
-        return traceLogMapper.getTraceByOrderAndLevel(orderId, level);
+        QueryWrapper<TraceLog> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(traceLog.getOrderId())) {
+            queryWrapper.eq("order_id", traceLog.getOrderId());
+        }
+        if (StringUtils.isNotEmpty(traceLog.getModule())) {
+            queryWrapper.eq("module", traceLog.getModule());
+        }
+        if (traceLog.getLevel() != null) {
+            queryWrapper.eq("level", traceLog.getLevel());
+        }
+        return this.list(queryWrapper);
     }
 
 }

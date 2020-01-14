@@ -102,7 +102,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         logger.info("开始审核订单[{}]", orderId);
 
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, orderId,
+        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderId,
                 OrderOperateType.AUDIT.getValue(), TraceLevelType.TRACE.getKey(), "开始审核订单:" + param.toString()));
 
         //订单主信息
@@ -140,7 +140,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
             orderInterceptService.addOrUpdateOrderIntercept(orderId,
                     OrderInterceptTypeEnum.VALIDITY_CHECK.getCode(), failReason.toString());
             //保存轨迹
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, orderId,
+            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderId,
                     OrderOperateType.AUDIT.getValue(), TraceLevelType.ABNORMAL.getKey(), failReason.toString()));
 
             return new CommonResponse<String>().error(Constants.FAIL, failReason.toString());
@@ -211,7 +211,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         }
 
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, orderMain.getOrderId(),
+        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.AUDIT_CHECK.getValue(), TraceLevelType.TRACE.getKey(), "通过有效性校验"));
         return new CommonResponse<String>().ok("通过有效性校验");
     }
@@ -328,7 +328,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("完成审核订单,耗时:").append(spendTime).append("ms");
                 //保存轨迹
-                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, event.getOrderMain().getOrderId(),
+                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                         OrderOperateType.AUDIT.getValue(), TraceLevelType.STATUS.getKey(), stringBuilder.toString()));
 
                 logger.info("订单[{}][{}]", event.getOrderMain().getOrderId(), stringBuilder.toString());
@@ -337,7 +337,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
                 sendOrderInfo2Distribution.execute(event);
             } else {
                 //保存轨迹
-                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, event.getOrderMain().getOrderId(),
+                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                         OrderOperateType.AUDIT.getValue(), TraceLevelType.ABNORMAL.getKey(), "更新订单状态失败,请检查日志"));
 
                 logger.error("订单[{}]审核更新订单状态失败,method:orderMainService.auditUpdateOrder(orderMain)", event.getOrderMain().getOrderId());

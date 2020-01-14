@@ -1,11 +1,11 @@
 ## 项目相关配置
 lgy:
   # 名称
-  name: OMS-fast
+  name: OMS
   # 版本
   version: 1.0
   # 版权年份
-  copyrightYear: 2019
+  copyrightYear: 2020
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/temp/lgy/uploadPath，Linux配置 /usr/local/oms/uploadPath）
@@ -14,8 +14,20 @@ lgy:
   addressEnabled: true
   # 轨迹日志
   traceLog:
-    # 日志等级(0:trace/1:STATUS/2:ABNORMAL)
+    # 保存日志等级(0:trace/1:STATUS/2:ABNORMAL)
     level: 0
+
+  #任务调度xxl_job是否开启 【on:0 / off:1】
+  job:
+    xxl: 1
+  # 项目是否启用 mongoDB
+  mongoDB: 0
+  # 项目是否启用 rabbitMQ
+  rabbitMQ: 1
+  # 项目是否启用 redis
+  redis: 1
+  # 项目是否启用 elasticSearch
+  elasticSearch: 1
 
 # 开发环境配置
 server:

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.Date;
 /**
  * 轨迹日志 oms_trace_log
  * <p>
- * 当前用MySQL,增强版用mongoDB
+ * 标准版用MySQL,增强版用mongoDB
  *
  * @author lgy
  * @date 2019-12-26
@@ -21,6 +22,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("oms_trace_log")
+@Document(collection = "oms_trace_log")
 public class TraceLog implements Serializable {
 
     private static final long serialVersionUID = 1L;

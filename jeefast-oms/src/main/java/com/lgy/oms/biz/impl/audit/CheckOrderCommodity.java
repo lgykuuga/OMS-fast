@@ -131,7 +131,7 @@ public class CheckOrderCommodity {
             }
 
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.AUDIT_SPECIAL_INTERCEPT.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
         }
 
@@ -211,7 +211,7 @@ public class CheckOrderCommodity {
                 }
 
                 //保存轨迹服务
-                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, event.getOrderMain().getOrderId(),
+                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                         OrderOperateType.AUDIT_DETAIL_INTERCEPT.getValue(), TraceLevelType.TRACE.getKey(), intercept.toString()));
             }
         }

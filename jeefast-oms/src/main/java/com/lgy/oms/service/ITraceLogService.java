@@ -29,26 +29,10 @@ public interface ITraceLogService extends IService<TraceLog> {
     void batchAdd(List<TraceLog> list);
 
     /**
-     * 查询单张订单操作记录
+     * 查询订单操作记录
      *
-     * @param orderId 订单
+     * @param traceLog 订单
      */
-    List<TraceLog> get(String orderId);
+    List<TraceLog> get(TraceLog traceLog);
 
-    /**
-     * 查询单张订单操作记录
-     *
-     * @param orderId 订单
-     * @param module  模块号
-     */
-    List<TraceLog> get(String orderId, String module);
-
-    /**
-     * 根据日志等级查询单张订单操作记录
-     *
-     * @param orderId 订单号
-     * @param level   日志等级(不传为查询所有等级)
-     * @return
-     */
-    List<TraceLog> get(String orderId, Integer level);
 }

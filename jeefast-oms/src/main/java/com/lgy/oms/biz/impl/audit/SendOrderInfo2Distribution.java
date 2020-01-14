@@ -64,7 +64,7 @@ public class SendOrderInfo2Distribution {
         if (strategyConvert == null) {
             sb.append("店铺").append(event.getOrderMain().getShop()).append("未设置转单策略,审核完成不能自动下发订单");
             //保存轨迹
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDERMAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.SET_ABNORMAL.getValue(), TraceLevelType.ABNORMAL.getKey(), sb.toString()));
 
             logger.warn("单据[{}][{}]", event.getOrderMain().getOrderId(), sb.toString());

@@ -1,5 +1,13 @@
 # 数据源配置
 spring:
+    data:
+        elasticsearch:
+            cluster-name: elasticsearch
+            cluster-nodes: 127.0.0.1:9300
+        mongodb:
+            host: 127.0.0.1
+            port: 27017
+            database: oms
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.cj.jdbc.Driver

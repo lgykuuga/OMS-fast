@@ -23,46 +23,6 @@
     </insert>
 
 
-    <select id="getTraceByOrderId" resultType="com.lgy.oms.domain.TraceLog">
-        select
-        <include refid="trace_log"/>
-        from oms_trace_log
-        <where>
-            <if test="orderId != null and orderId != ''">
-                AND order_id = #{orderId}
-            </if>
-        </where>
-    </select>
-
-    <select id="getTraceByOrderIdAndModule" resultType="com.lgy.oms.domain.TraceLog">
-        select
-        <include refid="trace_log"/>
-        from oms_trace_log
-        <where>
-            <if test="orderId != null and orderId != ''">
-                AND order_id = #{orderId}
-            </if>
-            <if test="module != null and module != ''">
-                AND module = #{module}
-            </if>
-        </where>
-    </select>
-
-
-    <select id="getTraceByOrderAndLevel" resultType="com.lgy.oms.domain.TraceLog">
-        select
-        <include refid="trace_log"/>
-        from oms_trace_log
-        <where>
-            <if test="orderId != null and orderId != ''">
-                AND order_id = #{orderId}
-            </if>
-            <if test="level != null and level != ''">
-                AND level = #{level}
-            </if>
-        </where>
-    </select>
-
     <sql id="trace_log">
         module,
         order_id,

@@ -84,7 +84,7 @@ public class CreateOrderMainServiceImpl implements ICreateOrderMainService {
 
         if (StringUtils.isEmpty(orderMain.getOrderId())) {
             //若不存在单号,则生成单据流水号
-            String orderId = idIncrementer.getNextId(OrderModuleConstants.ORDERMAIN);
+            String orderId = idIncrementer.getNextId(OrderModuleConstants.ORDER_MAIN);
             orderMain.setOrderId(orderId);
         }
 

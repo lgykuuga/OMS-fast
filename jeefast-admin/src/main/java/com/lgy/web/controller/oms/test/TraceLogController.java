@@ -36,18 +36,18 @@ public class TraceLogController {
     /**
      * 获取订单轨迹信息
      *
-     * @param orderId 订单号
+     * @param traceLog 订单
      * @return
      */
     @GetMapping("/getTraceLog")
     @ApiOperation(value = "获取订单状态信息", httpMethod = "GET")
-    public CommonResponse<List<TraceLog>> get(String orderId) {
+    public CommonResponse<List<TraceLog>> get(TraceLog traceLog) {
 
-        if (StringUtils.isEmpty(orderId)) {
+        if (StringUtils.isEmpty(traceLog.getOrderId())) {
             return new CommonResponse<List<TraceLog>>().error(Constants.FAIL, "订单号不能为空");
         }
 
-        List<TraceLog> traceLogs = traceLogService.get(orderId);
+        List<TraceLog> traceLogs = traceLogService.get(traceLog);
         if (StringUtils.isNotEmpty(traceLogs)) {
             return new CommonResponse<List<TraceLog>>().ok(traceLogs);
         }

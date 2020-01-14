@@ -28,32 +28,5 @@ public interface TraceLogMapper extends BaseMapper<TraceLog> {
      */
     void batchAdd(List<TraceLog> list);
 
-    /**
-     * 查询单张订单操作记录
-     *
-     * @param orderId 订单
-     * @return
-     */
 
-    List<TraceLog> getTraceByOrderId(@Param("orderId") String orderId);
-
-    /**
-     * 查询单张订单操作记录
-     *
-     * @param orderId 订单
-     * @param module  模块号
-     * @return
-     */
-    List<TraceLog> getTraceByOrderIdAndModule(@Param("orderId") String orderId,
-                                              @Param("module") String module);
-
-    /**
-     * 根据日志等级查询单张订单操作记录
-     *
-     * @param orderId 订单号
-     * @param level   日志等级(不传为查询所有等级)
-     * @return
-     */
-    List<TraceLog> getTraceByOrderAndLevel(@Param("orderId") String orderId,
-                                           @Param("level") Integer level);
 }

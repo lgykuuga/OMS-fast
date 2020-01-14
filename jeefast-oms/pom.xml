@@ -80,7 +80,6 @@
             <version>${disruptor.version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.jeefast</groupId>
             <artifactId>jeefast-base</artifactId>

@@ -2,7 +2,6 @@ package com.lgy.oms.disruptor.tracelog;
 
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.service.ITraceLogService;
-import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.WorkHandler;
 import org.slf4j.Logger;
