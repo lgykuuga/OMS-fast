@@ -35,7 +35,6 @@ public class TraceLogHandler implements EventHandler<TraceLogEvent>, WorkHandler
         ShiroUtils.removeUserThreadLocal();
     }
 
-
     @Override
     public void onEvent(TraceLogEvent event) {
         traceLogService.add(event.getTraceLog());

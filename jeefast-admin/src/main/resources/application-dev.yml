@@ -8,6 +8,15 @@ spring:
             host: 127.0.0.1
             port: 27017
             database: oms
+    rabbitmq:
+        host: 127.0.0.1
+        post: 5672
+        username: guest
+        password: guest
+        listener:
+            concurrency: 10
+            max-concurrency: 20
+            prefetch: 5
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.cj.jdbc.Driver

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.core.domain.BaseEntity;
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author lgy
  * @date 2019-10-22
  */
+@ToString
 @Data
 @TableName("oms_order_main")
 public class OrderMain extends BaseEntity implements Serializable {

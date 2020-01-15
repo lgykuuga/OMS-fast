@@ -43,9 +43,4 @@ public class TraceLogMongoDB extends AbstractMongoDBDao<TraceLog> {
         super.save(entity);
     }
 
-    @Override
-    public List<TraceLog> queryList(TraceLog traceLog) {
-        List<TraceLog> traceLogs = super.queryList(traceLog);
-        return traceLogs;
-    }
 }

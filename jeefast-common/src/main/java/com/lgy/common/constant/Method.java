@@ -18,4 +18,16 @@ public class Method {
 
     /** 更新 */
     public static final String UPDATE = "update";
+
+    /**
+     * 多消费者
+     */
+    public static final String MULTI = "multiListenerContainer";
+
+    /**
+     * 单一消费者
+     */
+    public static final String SINGLE = "singleListenerContainer";
+
+
 }

@@ -238,8 +238,6 @@
 				<version>${disruptor.version}</version>
 			</dependency>
 
-
-
 		</dependencies>
 	</dependencyManagement>
 
