@@ -3,24 +3,19 @@ package com.lgy.framework.aspectj;
 import com.lgy.common.annotation.MongoDB;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.constant.Method;
-import com.lgy.common.dao.AbstractMongoDBDao;
-import com.lgy.common.utils.StringUtils;
+import com.lgy.common.dao.AbstractMongoDbDao;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 
 /**
  * @Description MongoDB注解, 若开启mongoDB配置,
- *  *  * 则把数据存入mongoDB
+ * *  * 则把数据存入mongoDB
  * @Author LGy
  * @Date 2020/1/13
  */
@@ -39,10 +34,11 @@ public class MongoDBAspect {
 
     /**
      * 在方法执行之前对注解进行处理
+     *
      * @param joinPoint
      * @param mongoDB
      * @return 返回中的值
-     * */
+     */
     @Around("@annotation(com.lgy.common.annotation.MongoDB) && @annotation(mongoDB)")
     public Object dealProcess(ProceedingJoinPoint joinPoint, MongoDB mongoDB) {
         Object result = null;
@@ -50,7 +46,7 @@ public class MongoDBAspect {
         //开启mongoDB设置,用mongoDB保存,否则用DB保存
         if (Constants.ON.equals(configuration)) {
 
-            AbstractMongoDBDao mongoDBDao = (AbstractMongoDBDao) applicationContext.getBean(mongoDB.document());
+            AbstractMongoDbDao mongoDBDao = (AbstractMongoDbDao) applicationContext.getBean(mongoDB.document());
 
             Object[] args = joinPoint.getArgs();
 

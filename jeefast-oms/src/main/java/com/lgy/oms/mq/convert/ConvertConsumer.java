@@ -19,6 +19,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,7 @@ import java.util.Date;
  * @Date 2020/1/14 17:51
  **/
 @Component
+@ConditionalOnProperty(name = "lgy.rabbitMQ", havingValue = "0", matchIfMissing = true)
 public class ConvertConsumer {
 
     private static Logger logger = LoggerFactory.getLogger(ConvertConsumer.class);
@@ -76,8 +78,6 @@ public class ConvertConsumer {
             // 消息确认,否则会导致消息死循环
             channel.basicAck(deliveryTag, true);
         }
-
-
     }
 
     private CommonResponse<String> execute(String tid) {

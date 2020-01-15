@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +26,21 @@ public class RabbitMqConfig {
 
     public Logger logger = LoggerFactory.getLogger(getClass());
 
-    /** 并发消费者的初始化值 */
+    /**
+     * 并发消费者的初始化值
+     */
     @Value("${spring.rabbitmq.listener.concurrency}")
     private int concurrency;
 
-    /** 并发消费者的最大值 */
+    /**
+     * 并发消费者的最大值
+     */
     @Value("${spring.rabbitmq.listener.max-concurrency}")
     private int max_concurrency;
 
-    /** 每个消费者每次监听时可拉取处理的消息数量 */
+    /**
+     * 每个消费者每次监听时可拉取处理的消息数量
+     */
     @Value("${spring.rabbitmq.listener.prefetch}")
     private int prefetch;
 
@@ -48,10 +53,11 @@ public class RabbitMqConfig {
 
     /**
      * 单一消费者
+     *
      * @return
      */
     @Bean(name = Method.SINGLE)
-    public SimpleRabbitListenerContainerFactory listenerContainer(){
+    public SimpleRabbitListenerContainerFactory listenerContainer() {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(converter());
@@ -65,12 +71,13 @@ public class RabbitMqConfig {
 
     /**
      * 多个消费者
+     *
      * @return
      */
     @Bean(name = Method.MULTI)
-    public SimpleRabbitListenerContainerFactory multiListenerContainer(){
+    public SimpleRabbitListenerContainerFactory multiListenerContainer() {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factoryConfigurer.configure(factory,connectionFactory);
+        factoryConfigurer.configure(factory, connectionFactory);
         factory.setMessageConverter(converter());
         factory.setAcknowledgeMode(AcknowledgeMode.NONE);
         factory.setConcurrentConsumers(concurrency);
@@ -87,17 +94,18 @@ public class RabbitMqConfig {
         // 触发setReturnCallback回调必须设置mandatory=true, 否则Exchange没有找到Queue就会丢弃掉消息, 而不会触发回调
         rabbitTemplate.setMandatory(true);
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) ->
-                logger.debug("消息发送成功:correlationData({}),ack({}),cause({})",correlationData,ack,cause)
+                logger.debug("消息发送成功:correlationData({}),ack({}),cause({})", correlationData, ack, cause)
         );
         // 消息是否从Exchange路由到Queue, 注意: 这是一个失败回调, 只有消息从Exchange路由到Queue失败才会回调这个方法
         rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) ->
-                logger.error("消息丢失:exchange({}),route({}),replyCode({}),replyText({}),message:{}",exchange,routingKey,replyCode,replyText,message)
+                logger.error("消息丢失:exchange({}),route({}),replyCode({}),replyText({}),message:{}", exchange, routingKey, replyCode, replyText, message)
         );
         return rabbitTemplate;
     }
 
     /**
      * 将Message由序列化结果转化为Json数据。
+     *
      * @return
      */
     @Bean
@@ -114,6 +122,7 @@ public class RabbitMqConfig {
 
     /**
      * 声明创建一个转单队列
+     *
      * @return
      */
     @Bean
@@ -136,7 +145,6 @@ public class RabbitMqConfig {
     public Binding convertBinding() {
         return BindingBuilder.bind(convertQueue()).to(convertExchange()).with(CONVERT_ROUTING_KEY);
     }
-
 
 
 }

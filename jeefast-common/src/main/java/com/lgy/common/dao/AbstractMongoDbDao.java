@@ -3,11 +3,15 @@ package com.lgy.common.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -17,8 +21,7 @@ import java.util.List;
  * @Author LGy
  * @Date 2020/1/13 14:48
  **/
-public abstract class AbstractMongoDBDao<T> {
-
+public abstract class AbstractMongoDbDao<T> {
 
     /**
      * 反射获取泛型类型
@@ -28,7 +31,7 @@ public abstract class AbstractMongoDBDao<T> {
     protected abstract Class<T> getEntityClass();
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    MongoTemplate mongoTemplate;
 
     /***
      * 保存一个对象
