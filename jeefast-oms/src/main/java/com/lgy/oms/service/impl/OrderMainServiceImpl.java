@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.order.*;
+import com.lgy.oms.domain.vo.OrderVO;
 import com.lgy.oms.enums.order.OrderFlagEnum;
 import com.lgy.oms.mapper.OrderMainMapper;
 import com.lgy.oms.service.*;
@@ -27,6 +28,9 @@ import java.util.List;
 @Service
 public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain> implements IOrderMainService {
 
+
+    @Autowired
+    OrderMainMapper orderMainMapper;
     /**
      * 订单状态信息
      */
@@ -177,5 +181,10 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
         }
 
         return flag;
+    }
+
+    @Override
+    public List<OrderVO> queryOrderList(OrderVO orderVO) {
+        return orderMainMapper.queryOrderList(orderVO);
     }
 }

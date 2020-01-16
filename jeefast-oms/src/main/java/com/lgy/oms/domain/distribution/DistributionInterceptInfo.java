@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @since 2019-12-21
  */
 @Data
-@TableName("oms_distibution_intercept")
+@TableName("oms_distribution_intercept")
 @EqualsAndHashCode(callSuper = false)
 public class DistributionInterceptInfo extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;

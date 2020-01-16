@@ -1,13 +1,15 @@
 package com.lgy.web.controller.oms.test;
 
 
-import com.lgy.oms.domain.order.OrderBuyerInfo;
-import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.common.constant.Constants;
 import com.lgy.oms.mq.convert.ConvertProducer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Description RabbitMq接口
@@ -30,14 +32,11 @@ public class RabbitMqController {
     @CrossOrigin
     @PostMapping("/send")
     @ApiOperation(value = "发送MQ", httpMethod = "POST")
-    public void send() {
-        OrderMain orderMain = new OrderMain();
-        orderMain.setOrderId("123");
-        OrderBuyerInfo buyerInfo = new OrderBuyerInfo();
-        buyerInfo.setOrderId("123");
-        buyerInfo.setBuyerId("hahahhaha");
-        orderMain.setOrderBuyerinfo(buyerInfo);
-        convertProducer.send(orderMain);
+    public void send(String tids) {
+        String[] tidz = tids.split(Constants.COMMA);
+        for (String tid : tidz) {
+            convertProducer.send(tid);
+        }
     }
 
 }

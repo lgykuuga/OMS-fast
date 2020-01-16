@@ -2,6 +2,7 @@ package com.lgy.oms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.oms.domain.vo.OrderVO;
 
 import java.util.List;
 
@@ -56,4 +57,11 @@ public interface IOrderMainService extends IService<OrderMain> {
      * @return
      */
     boolean auditUpdateOrder(OrderMain orderMain);
+
+    /**
+     * 订单界面查询
+     * @param orderVO
+     * @return
+     */
+    List<OrderVO> queryOrderList(OrderVO orderVO);
 }

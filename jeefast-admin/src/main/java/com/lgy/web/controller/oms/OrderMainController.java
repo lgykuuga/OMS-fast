@@ -1,38 +1,30 @@
 package com.lgy.web.controller.oms;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.common.annotation.Log;
 import com.lgy.common.constant.Constants;
+import com.lgy.common.core.controller.BaseController;
+import com.lgy.common.core.domain.AjaxResult;
 import com.lgy.common.core.domain.CommonResponse;
+import com.lgy.common.core.page.TableDataInfo;
+import com.lgy.common.enums.BusinessType;
+import com.lgy.common.utils.StringUtils;
+import com.lgy.common.utils.poi.ExcelUtil;
 import com.lgy.oms.disruptor.audit.AuditApi;
-import com.lgy.oms.domain.dto.AuditParamDTO;
-import com.lgy.oms.domain.dto.TradeParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.oms.domain.vo.OrderVO;
+import com.lgy.oms.service.IOrderMainService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.web.bind.annotation.*;
 
-import com.lgy.common.annotation.Log;
-import com.lgy.common.enums.BusinessType;
-import com.lgy.oms.service.IOrderMainService;
-import com.lgy.common.core.controller.BaseController;
-import com.lgy.common.core.domain.AjaxResult;
-import com.lgy.common.utils.StringUtils;
-import com.lgy.common.utils.poi.ExcelUtil;
-import com.lgy.common.core.text.Convert;
-import com.lgy.common.core.page.TableDataInfo;
+import java.util.List;
 
 /**
  * 订单主信息Controller
- * 
+ *
  * @author lgy
  * @date 2019-11-25
  */
@@ -58,10 +50,10 @@ public class OrderMainController extends BaseController {
     @RequiresPermissions("oms:main:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(OrderMain orderMain) {
-        QueryWrapper<OrderMain> queryWrapper = getOrderMainQueryWrapper(orderMain);
+    public TableDataInfo list(OrderVO orderVO) {
         startPage();
-        return getDataTable(orderMainService.list(queryWrapper));
+        List<OrderVO> list = orderMainService.queryOrderList(orderVO);
+        return getDataTable(list);
     }
 
 
@@ -104,21 +96,21 @@ public class OrderMainController extends BaseController {
     @RequiresPermissions("oms:main:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(OrderMain orderMain) {
-        QueryWrapper<OrderMain> queryWrapper = getOrderMainQueryWrapper(orderMain);
+    public AjaxResult export(OrderVO orderVO) {
+        QueryWrapper<OrderMain> queryWrapper = getOrderMainQueryWrapper(orderVO);
         List<OrderMain> list = orderMainService.list(queryWrapper);
         ExcelUtil<OrderMain> util = new ExcelUtil<>(OrderMain.class);
         return util.exportExcel(list, "main");
     }
 
-    private QueryWrapper<OrderMain> getOrderMainQueryWrapper(OrderMain orderMain) {
+    private QueryWrapper<OrderMain> getOrderMainQueryWrapper(OrderVO orderVO) {
         QueryWrapper<OrderMain> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
-        if (StringUtils.isNotEmpty(orderMain.getOrderId())) {
-            queryWrapper.like("orderId", orderMain.getOrderId());
+        if (StringUtils.isNotEmpty(orderVO.getOrderId())) {
+            queryWrapper.like("orderId", orderVO.getOrderId());
         }
-        if (StringUtils.isNotEmpty(orderMain.getSourceId())) {
-            queryWrapper.like("sourceId", orderMain.getSourceId());
+        if (StringUtils.isNotEmpty(orderVO.getSourceId())) {
+            queryWrapper.like("sourceId", orderVO.getSourceId());
         }
         return queryWrapper;
     }

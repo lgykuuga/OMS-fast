@@ -2,7 +2,6 @@ package com.lgy.oms.mq.convert;
 
 import com.lgy.common.config.RabbitMqConfig;
 import com.lgy.framework.util.MessageHelper;
-import com.lgy.oms.domain.order.OrderMain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -22,9 +21,9 @@ public class ConvertProducer {
     @Autowired
     AmqpTemplate rabbitTemplate;
 
-    public void send(OrderMain orderMain) {
-        rabbitTemplate.convertAndSend(RabbitMqConfig.CONVERT_QUEUE_NAME, MessageHelper.objToMsg(orderMain));
-        logger.debug("消息队列rabbitMQ转单处理单据[{}]", orderMain.getOrderId());
+    public void send(String tid) {
+        rabbitTemplate.convertAndSend(RabbitMqConfig.CONVERT_QUEUE_NAME, MessageHelper.objToMsg(tid));
+        logger.debug("消息队列rabbitMQ转单处理单据[{}]", tid);
     }
 
 }

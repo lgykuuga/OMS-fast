@@ -2,6 +2,23 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('订单审核信息列表')" />
+    <style type="text/css">
+        .select-table table {
+            table-layout:fixed;
+        }
+
+        .select-table .table td {
+            /* 超出部分隐藏 */
+            overflow:hidden;
+            /* 超出部分显示省略号 */
+            text-overflow:ellipsis;
+            /*规定段落中的文本不进行换行 */
+            white-space:nowrap;
+            /* 配合宽度来使用 */
+            height:40px;
+        }
+
+    </style>
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -12,11 +29,11 @@
                         <ul>
                             <li>
                                 <p>订单编号：</p>
-                                <input type="text" name="biid"/>
+                                <input type="text" name="orderId"/>
                             </li>
                             <li>
                                 <p>来源单号：</p>
-                                <input type="text" name="tid"/>
+                                <input type="text" name="sourceId"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -46,6 +63,49 @@
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table" data-mobile-responsive="true"></table>
             </div>
+
+            <div class="row">
+                <!-- 订单详情 -->
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>订单详情</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="tabs-container">
+
+                                <div class="tabs-left">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a data-toggle="tab" href="#tab-8"> 第一个选项卡</a>
+                                        </li>
+                                        <li class=""><a data-toggle="tab" href="#tab-9"> 第二个选项卡</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content ">
+                                        <div id="tab-8" class="tab-pane active">
+                                            <div class="panel-body">
+                                                <strong>排版与链接</strong>
+
+                                                <p>Bootstrap 排版、链接样式设置了基本的全局样式。分别是： 为 body 元素设置 background-color: #fff; 使用 @font-family-base、@font-size-base 和 @line-height-base a变量作为排版的基本参数 为所有链接设置了基本颜色 @link-color ，并且当链接处于 :hover 状态时才添加下划线 这些样式都能在 scaffolding.less 文件中找到对应的源码。</p>
+                                            </div>
+                                        </div>
+                                        <div id="tab-9" class="tab-pane">
+                                            <div class="panel-body">
+                                                <strong>栅格系统</strong>
+
+                                                <p>Bootstrap 提供了一套响应式、移动设备优先的流式栅格系统，随着屏幕或视口（viewport）尺寸的增加，系统会自动分为最多12列。它包含了易于使用的预定义类，还有强大的mixin 用于生成更具语义的布局。</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <th:block th:include="include :: footer" />
@@ -69,59 +129,34 @@
                 },
                 {
                     field : 'orderId',
-                    title : '订单流水编号'
+                    title : '订单编号',
+                    width : 150,
                 },
                 {
                     field : 'sourceId',
-                    title : '来源单号'
+                    title : '来源单号',
+                    width : 180,
                 },
                 {
-                    field : 'shop', 
-                    title : '店铺编码'
+                    field : 'platformName',
+                    title : '平台',
+                    width : 80,
                 },
                 {
-                    field : 'owner', 
-                    title : '货主编码'
+                    field : 'shopName',
+                    title : '店铺',
+                    width : 120,
+                    formatter: function(value, row, index) {
+                        return $.table.tooltip(value);
+                    }
                 },
                 {
-                    field : 'frozen', 
-                    title : '订单是否冻结'
-                },
-                {
-                    field : 'active', 
-                    title : '是否参与活动'
-                },
-                {
-                    field : 'handEdit', 
-                    title : '是否人工编辑'
-                },
-                {
-                    field : 'refund', 
-                    title : '是否退款'
-                },
-                {
-                    field : 'intercept', 
-                    title : '是否拦截'
-                },
-                {
-                    field : 'aftersales', 
-                    title : '是否售后'
-                },
-                {
-                    field : 'invoice', 
-                    title : '是否发票'
-                },
-                {
-                    field : 'orderLock', 
-                    title : '是否用户锁定'
-                },
-                {
-                    field : 'lockUser', 
-                    title : '锁定人编码'
-                },
-                {
-                    field : 'lockTime', 
-                    title : '锁定时间'
+                    field : 'ownerName',
+                    title : '货主',
+                    width : 120,
+                    formatter: function(value, row, index) {
+                        return $.table.tooltip(value);
+                    }
                 },
                 {
                     field : 'flag',

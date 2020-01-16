@@ -3,43 +3,84 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lgy.oms.mapper.OrderMainMapper">
-    <!--
-    <resultMap type="OrderMain" id="OrderMainResult">
-        <result property="id"    column="id"    />
-        <result property="biid"    column="biid"    />
-        <result property="tid"    column="tid"    />
-        <result property="shop"    column="shop"    />
-        <result property="owner"    column="owner"    />
-        <result property="frozen"    column="frozen"    />
-        <result property="active"    column="active"    />
-        <result property="handEdit"    column="hand_edit"    />
-        <result property="refund"    column="refund"    />
-        <result property="intercept"    column="intercept"    />
-        <result property="aftersales"    column="aftersales"    />
-        <result property="invoice"    column="invoice"    />
-        <result property="orderLock"    column="order_lock"    />
-        <result property="lockUser"    column="lock_user"    />
-        <result property="lockTime"    column="lock_time"    />
-        <result property="mark"    column="mark"    />
-        <result property="markContent"    column="mark_content"    />
-        <result property="sellerFlag"    column="seller_flag"    />
-        <result property="sizeType"    column="size_type"    />
-        <result property="skuNum"    column="sku_num"    />
-        <result property="qty"    column="qty"    />
-        <result property="commodity"    column="commodity"    />
-        <result property="volume"    column="volume"    />
-        <result property="weight"    column="weight"    />
-        <result property="warehouse"    column="warehouse"    />
-        <result property="logistics"    column="logistics"    />
-        <result property="expressNumber"    column="express_number"    />
-        <result property="sendoutTime"    column="sendout_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
-    </resultMap>
-    -->
 
+    <select id="queryOrderList" resultType="com.lgy.oms.domain.vo.OrderVO">
+        select
+        a.order_id,a.source_id,a.shop,a.platform,a.owner,a.frozen,
+        a.active,a.hand_edit,a.refund,a.intercept,a.after_sales,
+        a.invoice,a.order_lock,a.lock_user,a.lock_time,a.mark,
+        a.mark_content,a.seller_flag,a.size_type,a.sku_num,a.qty,
+        a.commodity,a.volume,a.weight,a.warehouse,a.logistics,
+        a.express_number,a.sendout_time,a.create_by,a.create_time,a.remark,
+        b.buyer_id,b.buyer_name,b.buyer_phone,b.buyer_email,b.buyer_card_id,
+        b.consignee_name,b.consignee_mobile,b.consignee_telephone,b.consignee_email,
+        b.consignee_card_id,b.nation_code,b.nation,b.province_code,b.province,
+        b.city_code,b.city,b.district_code,b.district,b.address,b.zip_code,
+        b.buyer_message,b.seller_message,
+        c.type,c.content,
+        d.aim_id,d.source_type,d.order_type,d.delivery_type,d.outbound_type,
+        d.cod,d.level,
+        e.order_time,e.pay_time,e.currency,e.order_amount,e.pay_amount,e.received_amount,
+        e.discount,e.tax_amount,e.post,e.freight_amount,e.refund_amount,
+        f.flag,f.merger,f.split,f.status,
+        g.gna as logisticsName,
+        h.gna as ownerName,
+        i.gna as platformName,
+        j.gna as shopName,
+        k.gna as warehouseName
+        from oms_order_main a
+        left join oms_order_buyerinfo b on a.order_id = b.order_id
+        left join oms_order_intercept c on a.order_id = c.order_id
+        left join oms_order_typeinfo d on a.order_id = d.order_id
+        left join oms_order_payinfo e on a.order_id = e.order_id
+        left join oms_order_status f on a.order_id = f.order_id
+
+        left join base_logistics g on a.logistics = g.gco
+        left join base_owner h on a.owner = h.gco
+        left join base_platform i on a.platform = i.gco
+        left join base_shop j on a.shop = j.gco
+        left join base_warehouse k on a.warehouse = k.gco
+        <where>
+            <if test="order.orderId != null and order.orderId != '' ">AND a.order_id = #{order.orderId}</if>
+            <if test="order.sourceId != null and order.sourceId != '' ">AND a.source_id = #{order.sourceId}</if>
+            <if test="order.shop != null and order.shop != '' ">AND a.shop = #{order.shop}</if>
+            <if test="order.platform != null and order.platform != '' ">AND a.platform = #{order.platform}</if>
+            <if test="order.owner != null and order.owner != '' ">AND a.owner = #{order.owner}</if>
+            <if test="order.frozen != null and order.frozen != '' ">AND a.frozen = #{order.frozen}</if>
+            <if test="order.active != null and order.active != '' ">AND a.active = #{order.active}</if>
+            <if test="order.handEdit != null and order.handEdit != '' ">AND a.handEdit = #{order.handEdit}</if>
+            <if test="order.refund != null and order.refund != '' ">AND a.refund = #{order.refund}</if>
+            <if test="order.intercept != null and order.intercept != '' ">AND a.intercept = #{order.intercept}</if>
+            <if test="order.afterSales != null and order.afterSales != '' ">AND a.after_sales = #{order.afterSales}</if>
+            <if test="order.invoice != null and order.invoice != '' ">AND a.invoice = #{order.invoice}</if>
+            <if test="order.orderLock != null and order.orderLock != '' ">AND a.order_lock = #{order.orderLock}</if>
+            <if test="order.lockUser != null and order.lockUser != '' ">AND a.lock_user = #{order.lockUser}</if>
+            <if test="order.lockTime != null and order.lockTime != '' ">AND a.lock_time = #{order.lockTime}</if>
+            <if test="order.mark != null and order.mark != '' ">AND a.mark = #{order.mark}</if>
+            <if test="order.markContent != null and order.markContent != '' ">AND a.mark_content = #{order.markContent}</if>
+            <if test="order.sellerFlag != null and order.sellerFlag != '' ">AND a.seller_flag = #{order.sellerFlag}</if>
+            <if test="order.sizeType != null and order.sizeType != '' ">AND a.size_type = #{order.sizeType}</if>
+            <if test="order.skuNum != null and order.skuNum != '' ">AND a.sku_num = #{order.skuNum}</if>
+            <if test="order.qty != null and order.qty != '' ">AND a.qty = #{order.qty}</if>
+            <if test="order.commodity != null and order.commodity != '' ">AND a.commodity = #{order.commodity}</if>
+            <if test="order.volume != null and order.volume != '' ">AND a.volume = #{order.volume}</if>
+            <if test="order.weight != null and order.weight != '' ">AND a.weight = #{order.weight}</if>
+            <if test="order.warehouse != null and order.warehouse != '' ">AND a.warehouse = #{order.warehouse}</if>
+            <if test="order.logistics != null and order.logistics != '' ">AND a.logistics = #{order.logistics}</if>
+            <if test="order.expressNumber != null and order.expressNumber != '' ">AND a.expressNumber = #{order.expressNumber}</if>
+            <if test="order.sendoutTime != null and order.sendoutTime != '' ">AND a.sendout_time = #{order.sendoutTime}</if>
+            <if test="order.createBy != null and order.createBy != '' ">AND a.create_by = #{order.createBy}</if>
+            <if test="order.createTime != null and order.createTime != '' ">AND a.create_time = #{order.createTime}</if>
+            <if test="order.remark != null and order.remark != '' ">AND a.remark = #{order.remark}</if>
+            <if test="order.buyerId != null and order.buyerId != '' ">AND b.buyer_id = #{order.buyerId}</if>
+            <if test="order.buyerName != null and order.buyerName != '' ">AND b.buyer_name = #{order.buyerName}</if>
+            <if test="order.buyerPhone != null and order.buyerPhone != '' ">AND b.buyer_phone = #{order.buyerPhone}</if>
+            <if test="order.buyerEmail != null and order.buyerEmail != '' ">AND b.buyer_email = #{order.buyerEmail}</if>
+            <if test="order.buyerCardId != null and order.buyerCardId != '' ">AND b.buyer_card_id = #{order.buyerCardId}</if>
+            <if test="order.consigneeName != null and order.consigneeName != '' ">AND b.consignee_name = #{order.consigneeName}</if>
+            <if test="order.consigneeMobile != null and order.consigneeMobile != '' ">AND b.consignee_mobile = #{order.consigneeMobile}</if>
+            <!-- TODO -->
+        </where>
+    </select>
 </mapper>
 
