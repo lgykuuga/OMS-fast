@@ -2,6 +2,7 @@ package com.lgy.web.controller.oms;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lgy.common.constant.Constants;
+import com.lgy.common.constant.ResponseCode;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
 import com.lgy.common.core.domain.CommonResponse;
@@ -131,7 +132,7 @@ public class TradeController extends BaseController {
         String[] tidz = tids.split(Constants.COMMA);
         for (String tid : tidz) {
             CommonResponse response = tradeConvertService.execute(tid, new TradeParamDTO());
-            if (!Constants.SUCCESS.equals(response.getCode())) {
+            if (!ResponseCode.SUCCESS.equals(response.getCode())) {
                 failureMessage.append(response.getMsg());
                 flag = false;
             }

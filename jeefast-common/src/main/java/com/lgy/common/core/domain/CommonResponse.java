@@ -2,12 +2,13 @@ package com.lgy.common.core.domain;
 
 import com.alibaba.fastjson.JSON;
 import com.lgy.common.constant.Constants;
+import com.lgy.common.constant.ResponseCode;
 
 /**
  * @Description 通用返回消息
  * @Author LGy
  * @Date 2019/10/14 10:20
- *
+ * <p>
  * 返回码码标识
  * @see Constants
  **/
@@ -16,9 +17,10 @@ public class CommonResponse<T> {
     private String msg;
     private T data;
 
-    public CommonResponse(){}
+    public CommonResponse() {
+    }
 
-    public CommonResponse(String code, String msg, T data){
+    public CommonResponse(String code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -54,14 +56,14 @@ public class CommonResponse<T> {
     }
 
     public CommonResponse<T> ok(T data) {
-        this.code = Constants.SUCCESS;
+        this.code = ResponseCode.SUCCESS;
         this.data = data;
         return this;
     }
 
 
     public CommonResponse<T> success(String msg) {
-        this.code = Constants.SUCCESS;
+        this.code = ResponseCode.SUCCESS;
         this.msg = msg;
         return this;
     }

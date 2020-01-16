@@ -4,9 +4,9 @@ package com.lgy.oms.biz.impl.trade;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lgy.common.constant.Constants;
+import com.lgy.common.constant.ResponseCode;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.biz.ICreateOrderMainService;
 import com.lgy.oms.biz.IOrderDetailProcessingService;
 import com.lgy.oms.biz.IOrderStatisticsService;
@@ -28,13 +28,14 @@ import com.lgy.oms.service.IOrderMainService;
 import com.lgy.oms.service.IStrategyConvertService;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.ITradeStandardService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description 交易订单转换成正式订单实现
@@ -43,6 +44,8 @@ import java.util.Map;
  */
 @Service
 public class TradeConvertServiceImpl implements ITradeConvertService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 交易订单
@@ -79,6 +82,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
      */
     @Autowired
     IOrderStatisticsService orderStatisticsService;
+
     /**
      * 订单轨迹信息
      */
@@ -92,30 +96,44 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         queryWrapper.eq("tid", tid);
         Trade trade = tradeService.getOne(queryWrapper);
 
+        //失败原因
+        StringBuilder failReason = new StringBuilder();
+
         if (trade == null) {
-            return new CommonResponse<String>().error(Constants.FAIL, tid + "信息不完整;");
+            failReason.append(tid).append("单据信息不完整;");
+            logger.error(failReason.toString());
+            return new CommonResponse<String>().error(ResponseCode.ERROR, failReason.toString());
+        }
+
+        if (TradeTranformStatusEnum.WAIT_TRANFORM.getValue() != trade.getFlag()) {
+            failReason.append(tid).append("已转单;");
+            logger.error(failReason.toString());
+            return new CommonResponse<String>().error(ResponseCode.ERROR, failReason.toString());
         }
 
         //订单池存在单号
         List<String> orderList = orderMainService.getOrderIdBySourceId(tid, true);
         if (StringUtils.isNotEmpty(orderList)) {
-            return new CommonResponse<String>().error(Constants.FAIL, tid + "无需再次转单,已存在有效单据：" +
-                    StringUtils.join(orderList, ","));
-        }
-
-        if (TradeTranformStatusEnum.WAIT_TRANFORM.getValue() != trade.getFlag()) {
-            return new CommonResponse<String>().error(Constants.FAIL, tid + "已转单;");
+            //订单池存在单号
+            String orderIds = StringUtils.join(orderList, Constants.COMMA);
+            failReason.append(tid).append("无需再次转单,已存在有效单据：").append(orderIds).append(Constants.SEMICOLON);
+            logger.error(failReason.toString());
+            return new CommonResponse<String>().error(ResponseCode.ERROR, failReason.toString());
         }
 
         StrategyConvert strategy = strategyConvertService.getStrategyByShop(trade.getShop());
         if (strategy == null) {
-            return new CommonResponse<String>().error(Constants.FAIL, tid + "单据店铺没有维护转单策略");
+            failReason.append(tid).append("转单策略不存在;");
+            logger.error(failReason.toString());
+            return new CommonResponse<String>().error(ResponseCode.ERROR, failReason.toString());
         }
 
         //订单报文信息
         StandardOrderData latestStandardOrderData = tradeStandardService.getLatestStandardOrderData(tid);
         if (latestStandardOrderData == null) {
-            return new CommonResponse<String>().error(Constants.FAIL, tid + "单据找不到快照信息,请检查代码");
+            failReason.append(tid).append("单据找不到快照信息,请检查代码;");
+            logger.error(failReason.toString());
+            return new CommonResponse<String>().error(ResponseCode.ERROR, failReason.toString());
         }
 
         StandardOrder standardOrder = JSON.parseObject(latestStandardOrderData.getStandard(), StandardOrder.class);
@@ -133,7 +151,16 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //保存轨迹服务
         traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.CONVERT.getValue(), TraceLevelType.STATUS.getKey(), "订单新增保存"));
-        return new CommonResponse<String>().ok("");
+
+        //更新订单状态
+        CommonResponse<String> response = tradeService.updateTranformStatus(trade);
+        if (!ResponseCode.SUCCESS.equals(response.getCode())) {
+            //保存轨迹服务
+            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                    OrderOperateType.CONVERT.getValue(), TraceLevelType.ABNORMAL.getKey(), response.getMsg()));
+        }
+
+        return new CommonResponse<String>().ok("转单完成");
     }
 
     /**
@@ -141,7 +168,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
      *
      * @param standardOrder 标准订单
      * @param strategy      转单策略
-     * @param param           其它参数
+     * @param param         其它参数
      * @return 主订单
      */
     private OrderMain convert(StandardOrder standardOrder, StrategyConvert strategy, TradeParamDTO param) {
@@ -212,7 +239,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         //备注
         orderMain.setRemark("");
 
-        /** 订单状态信息 */
+        //订单状态信息
         OrderStatusInfo orderStatusInfo = new OrderStatusInfo();
         //订单流水编号
         orderStatusInfo.setOrderId("");
@@ -228,7 +255,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderStatusInfo.setStatus(Constants.VALID);
         orderMain.setOrderStatusinfo(orderStatusInfo);
 
-        /** 订单买家信息 */
+        //订单买家信息
         OrderBuyerInfo orderBuyer = new OrderBuyerInfo();
         //订单编码
         orderBuyer.setOrderId("");
@@ -278,7 +305,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderBuyer.setSellerMessage(standardOrder.getSeller_memo());
         orderMain.setOrderBuyerinfo(orderBuyer);
 
-        /** 订单支付信息 */
+        //订单支付信息
         OrderPayInfo orderPayinfo = new OrderPayInfo();
         //订单编码
         orderPayinfo.setOrderId("");
@@ -312,7 +339,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderPayinfo.setFreightAmount(BigDecimal.ZERO);
         orderMain.setOrderPayinfo(orderPayinfo);
 
-        /** 订单业务类型信息 */
+        //订单业务类型信息
         OrderTypeInfo orderTypeinfo = new OrderTypeInfo();
         //订单编码
         orderTypeinfo.setOrderId("");
@@ -339,7 +366,7 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderTypeinfo.setLevel(OrderSendOutLevelEnum.GENERAL.getCode());
         orderMain.setOrderTypeinfo(orderTypeinfo);
 
-        /** 订单明细信息 */
+        //订单明细信息
         List<OrderDetail> orderDetails = new ArrayList<>(standardOrder.getOrderDetails().size());
         //行序号
         int rowNumber = 1;

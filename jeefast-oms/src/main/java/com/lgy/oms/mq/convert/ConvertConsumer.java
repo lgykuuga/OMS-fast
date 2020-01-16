@@ -1,15 +1,14 @@
 package com.lgy.oms.mq.convert;
 
 import com.lgy.common.config.RabbitMqConfig;
-import com.lgy.common.constant.Constants;
 import com.lgy.common.constant.Method;
+import com.lgy.common.constant.ResponseCode;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.framework.util.MessageHelper;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.biz.ITradeConvertService;
 import com.lgy.oms.domain.MqErrorMessage;
 import com.lgy.oms.domain.dto.TradeParamDTO;
-import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.service.IMqErrorMessageService;
 import com.lgy.system.domain.SysUser;
 import com.rabbitmq.client.Channel;
@@ -66,10 +65,12 @@ public class ConvertConsumer {
 
             //执行业务代码
             CommonResponse<String> execute = execute(tid);
-            //执行异常
-            if (!Constants.SUCCESS.equals(execute.getCode())) {
+            //执行异常,记录MQ
+            if (ResponseCode.RESEND.equals(execute.getCode())) {
                 onError(execute.getMsg(), tid);
             }
+
+            ShiroUtils.removeUserThreadLocal();
 
         } catch (Exception e) {
             logger.error("转单消费异常:", e);

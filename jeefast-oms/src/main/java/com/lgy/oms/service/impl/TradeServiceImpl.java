@@ -2,13 +2,16 @@ package com.lgy.oms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
+import com.lgy.common.constant.ResponseCode;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.Trade;
+import com.lgy.oms.enums.order.TradeTranformStatusEnum;
 import com.lgy.oms.enums.strategy.DownloadOrderInterfaceEnum;
 import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
 import com.lgy.oms.interfaces.kjy.bean.KjyTrade;
@@ -136,6 +139,23 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
         }
 
         return new CommonResponse<String>().ok(tid + "生成快照成功");
+    }
+
+    @Override
+    public CommonResponse<String> updateTranformStatus(Trade trade) {
+
+        Trade updateTrade = new Trade();
+        //更新状态为已转单
+        updateTrade.setFlag(TradeTranformStatusEnum.TRANFORM.getValue());
+
+        UpdateWrapper updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("tid", trade.getTid());
+        updateWrapper.eq("flag", TradeTranformStatusEnum.WAIT_TRANFORM.getValue());
+        boolean b = this.update(updateTrade, updateWrapper);
+        if (b) {
+            return new CommonResponse<String>().ok("更新成功");
+        }
+        return new CommonResponse<String>().error(ResponseCode.ERROR, "转单状态更新失败");
     }
 
     /**

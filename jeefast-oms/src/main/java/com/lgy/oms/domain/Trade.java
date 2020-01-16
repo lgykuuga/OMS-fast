@@ -75,6 +75,7 @@ public class Trade extends BaseEntity implements Serializable {
 
     /**
      * 转单状态
+     * @see com.lgy.oms.enums.order.TradeTranformStatusEnum
      */
     @Excel(name = "转单状态")
     private Integer flag;

@@ -84,8 +84,8 @@ public class OnlineWebSessionManager extends DefaultWebSessionManager {
      */
     @Override
     public void validateSessions() {
-        if (log.isInfoEnabled()) {
-            log.info("invalidation sessions...");
+        if (log.isDebugEnabled()) {
+            log.debug("invalidation sessions...");
         }
 
         int invalidCount = 0;
@@ -123,14 +123,14 @@ public class OnlineWebSessionManager extends DefaultWebSessionManager {
             }
         }
 
-        if (log.isInfoEnabled()) {
+        if (log.isDebugEnabled()) {
             String msg = "Finished invalidation session.";
             if (invalidCount > 0) {
                 msg += " [" + invalidCount + "] sessions were stopped.";
             } else {
                 msg += " No sessions were stopped.";
             }
-            log.info(msg);
+            log.debug(msg);
         }
 
     }

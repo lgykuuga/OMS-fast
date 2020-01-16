@@ -38,4 +38,12 @@ public interface ITradeService extends IService<Trade> {
      * @return
      */
     CommonResponse<String> createSnapshot(String tid);
+
+    /**
+     * 转单完成更新订单状态
+     *
+     * @param trade 交易订单
+     * @return
+     */
+    CommonResponse<String> updateTranformStatus(Trade trade);
 }
