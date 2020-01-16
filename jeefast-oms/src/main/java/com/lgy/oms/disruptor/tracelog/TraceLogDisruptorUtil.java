@@ -5,7 +5,7 @@ import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.config.CustomThreadFactoryBuilder;
 import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.YieldingWaitStrategy;
+import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class TraceLogDisruptorUtil implements DisposableBean, InitializingBean {
 //                DaemonThreadFactory.INSTANCE,
                 threadFactory,
                 ProducerType.SINGLE,
-                new YieldingWaitStrategy()
+                new SleepingWaitStrategy()
         );
 
         //异常处理

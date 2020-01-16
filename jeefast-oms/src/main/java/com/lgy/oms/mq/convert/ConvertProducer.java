@@ -6,9 +6,8 @@ import com.lgy.oms.domain.order.OrderMain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Description 转单MQ生产者
@@ -20,7 +19,7 @@ public class ConvertProducer {
 
     private static Logger logger = LoggerFactory.getLogger(ConvertProducer.class);
 
-    @Resource
+    @Autowired
     AmqpTemplate rabbitTemplate;
 
     public void send(OrderMain orderMain) {

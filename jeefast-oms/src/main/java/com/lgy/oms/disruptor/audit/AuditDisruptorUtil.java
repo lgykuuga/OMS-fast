@@ -3,19 +3,14 @@ package com.lgy.oms.disruptor.audit;
 import com.alibaba.fastjson.JSON;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.config.CustomThreadFactoryBuilder;
-import com.lgy.oms.disruptor.tracelog.TraceLogEvent;
-import com.lgy.oms.disruptor.tracelog.TraceLogHandler;
-import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.YieldingWaitStrategy;
+import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +61,7 @@ public class AuditDisruptorUtil {
 //                DaemonThreadFactory.INSTANCE,
                 threadFactory,
                 ProducerType.SINGLE,
-                new YieldingWaitStrategy()
+                new SleepingWaitStrategy()
         );
 
         //异常处理
