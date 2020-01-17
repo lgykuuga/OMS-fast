@@ -46,7 +46,7 @@
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="base:commodity:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="base:commodity:remove">
+                <a class="btn btn-danger multiple disabled" onclick="deleteByGco()" shiro:hasPermission="base:commodity:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
                 <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:commodity:import">
@@ -133,6 +133,24 @@
             };
             $.table.init(options);
         });
+
+        //根据编码删除
+        function deleteByGco() {
+            var rows = $("#bootstrap-table").bootstrapTable('getSelections');
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+
+            //编码
+            var gcos = "";
+            for (var i=0; i<rows.length; i++) {
+                gcos += rows[i].gco+",";
+            }
+            gcos = gcos.substring(0,gcos.length-1);
+            $.operate.post(prefix + "/delete", { "gcos": gcos });
+        }
+
     </script>
 </body>
 

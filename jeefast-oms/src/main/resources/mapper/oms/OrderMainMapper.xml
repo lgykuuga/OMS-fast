@@ -81,6 +81,7 @@
             <if test="order.consigneeMobile != null and order.consigneeMobile != '' ">AND b.consignee_mobile = #{order.consigneeMobile}</if>
             <!-- TODO -->
         </where>
+        order by order_id desc
     </select>
 </mapper>
 

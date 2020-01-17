@@ -2,6 +2,7 @@ package com.lgy.base.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lgy.base.domain.Commodity;
+import com.lgy.common.service.CommonService;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author lgy
  * @date 2019-10-09
  */
-public interface ICommodityService extends IService<Commodity> {
+public interface ICommodityService extends IService<Commodity>, CommonService<Commodity> {
 
     /**
      * 导入数据

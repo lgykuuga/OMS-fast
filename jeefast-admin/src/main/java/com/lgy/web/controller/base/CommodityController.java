@@ -85,7 +85,11 @@ public class CommodityController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Commodity commodity) {
-        return toAjax(commodityService.save(commodity));
+        Commodity add = commodityService.add(commodity);
+        if (add != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -106,7 +110,12 @@ public class CommodityController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Commodity commodity) {
-        return toAjax(commodityService.updateById(commodity));
+
+        Commodity update = commodityService.update(commodity);
+        if (update != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -118,6 +127,26 @@ public class CommodityController extends BaseController {
     @ResponseBody
     public AjaxResult remove(String ids) {
         return toAjax(commodityService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
+    }
+
+    /**
+     * 根据编码删除商品档案
+     */
+    @RequiresPermissions("base:commodity:remove")
+    @Log(title = "商品档案", businessType = BusinessType.DELETE)
+    @PostMapping("/delete")
+    @ResponseBody
+    public AjaxResult delete(String gcos) {
+
+        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+
+        boolean flag = true;
+
+        for (String gco : gcoList) {
+            flag = commodityService.delete(gco);
+        }
+
+        return toAjax(flag);
     }
 
     /**

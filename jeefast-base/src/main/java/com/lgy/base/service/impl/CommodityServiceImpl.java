@@ -8,6 +8,10 @@ import com.lgy.base.service.ICommodityService;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.exception.BusinessException;
 import com.lgy.common.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +24,14 @@ import java.util.List;
  */
 @Service
 public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity> implements ICommodityService {
+
+    /**
+     * redis cache value
+     */
+    private final String CACHE_NAMES = "commodity";
+
+    @Value("${lgy.redis}")
+    private int redis;
 
     @Override
     public String importData(List<Commodity> commoditys, boolean updateSupport, String operName) {
@@ -104,5 +116,39 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
             return "商品货主不能为空";
         }
         return "";
+    }
+
+    @Override
+    @CachePut(value = CACHE_NAMES, key = "#entity.gco")
+    public Commodity add(Commodity entity) {
+        boolean b = super.save(entity);
+        if (b) {
+            return entity;
+        }
+        return null;
+    }
+
+    @Override
+    @CacheEvict(value = CACHE_NAMES, key = "#gco")
+    public boolean delete(String gco) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("gco", gco);
+        return this.remove(queryWrapper);
+    }
+
+    @Override
+    @Cacheable(cacheNames = CACHE_NAMES, key="#gco")
+    public Commodity findOne(String gco) {
+        return getOne(gco);
+    }
+
+    @Override
+    @CachePut(value = CACHE_NAMES, key = "#entity.gco")
+    public Commodity update(Commodity entity) {
+        boolean b = super.updateById(entity);
+        if (b) {
+            return entity;
+        }
+        return null;
     }
 }

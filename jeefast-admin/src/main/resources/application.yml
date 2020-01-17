@@ -20,14 +20,13 @@ lgy:
   #中间件使用开启关闭【on:0 / off:1】
 
   #任务调度xxl_job是否开启(可以不安装)
-  job:
-    xxl: 1
+  xxl: 1
   # 项目是否启用 mongoDB(可以不安装)
   mongoDB: 0
   # 项目是否启用 rabbitMQ(可以不安装)
   rabbitMQ: 0
-  # 项目是否启用 redis
-  redis: 1
+  # 项目是否启用 redis(必须安装)
+  redis: 0
   # 项目是否启用 elasticSearch
   elasticSearch: 1
 
