@@ -6,7 +6,7 @@
 
     <select id="queryOrderList" resultType="com.lgy.oms.domain.vo.OrderVO">
         select
-        a.order_id,a.source_id,a.shop,a.platform,a.owner,a.frozen,
+        a.id,a.order_id,a.source_id,a.shop,a.platform,a.owner,a.frozen,
         a.active,a.hand_edit,a.refund,a.intercept,a.after_sales,
         a.invoice,a.order_lock,a.lock_user,a.lock_time,a.mark,
         a.mark_content,a.seller_flag,a.size_type,a.sku_num,a.qty,

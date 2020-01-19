@@ -62,19 +62,20 @@ public class ShopInterfacesController extends BaseController {
 
     /**
      * 查询店铺接口参数
+     *
      * @param shopInterfaces 店铺接口参数
      * @return
      */
     private QueryWrapper<ShopInterfaces> getShopInterfacesQueryWrapper(ShopInterfaces shopInterfaces) {
         QueryWrapper<ShopInterfaces> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
-        if(StringUtils.isNotEmpty(shopInterfaces.getPlatform())) {
+        if (StringUtils.isNotEmpty(shopInterfaces.getPlatform())) {
             queryWrapper.like("platform", shopInterfaces.getPlatform());
         }
-        if(StringUtils.isNotEmpty(shopInterfaces.getAppk())) {
+        if (StringUtils.isNotEmpty(shopInterfaces.getAppk())) {
             queryWrapper.like("appk", shopInterfaces.getAppk());
         }
-        if(StringUtils.isNotEmpty(shopInterfaces.getStatus())) {
+        if (StringUtils.isNotEmpty(shopInterfaces.getStatus())) {
             queryWrapper.like("status", shopInterfaces.getStatus());
         }
         return queryWrapper;

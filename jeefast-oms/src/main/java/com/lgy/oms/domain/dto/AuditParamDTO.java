@@ -17,6 +17,11 @@ public class AuditParamDTO {
     private Boolean auto;
 
     /**
+     * 是否组装数据
+     */
+    private Boolean install;
+
+    /**
      * 是否强制审核
      */
     private Boolean enforce;
@@ -64,7 +69,8 @@ public class AuditParamDTO {
     private Long startTime;
 
     public AuditParamDTO() {
-        this.auto = false;
+        this.auto = true;
+        this.install = true;
         this.enforce = false;
         this.checkInfo = false;
         this.active = false;
@@ -194,5 +200,13 @@ public class AuditParamDTO {
                     stringBuffer.append(";备注:").append(remark);
                 }
         return stringBuffer.toString();
+    }
+
+    public Boolean getInstall() {
+        return install;
+    }
+
+    public void setInstall(Boolean install) {
+        this.install = install;
     }
 }

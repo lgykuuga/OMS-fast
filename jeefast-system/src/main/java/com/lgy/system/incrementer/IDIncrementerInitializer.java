@@ -1,6 +1,8 @@
 package com.lgy.system.incrementer;
 
+import com.lgy.common.constant.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -14,6 +16,10 @@ import java.util.Map;
  */
 @Component(value = "idIncrementerInitializer")
 public class IDIncrementerInitializer {
+
+
+    @Value("{lgy.redis}")
+    private String redis;
 
     /**
      * 每个模块一个内部对象
@@ -36,6 +42,7 @@ public class IDIncrementerInitializer {
         }
         // 初始化mode
         initIDMode();
+
         initIDbyMysql();
     }
 

@@ -7,6 +7,9 @@ import com.lgy.base.domain.Owner;
 import com.lgy.base.mapper.OwnerMapper;
 import com.lgy.base.service.IOwnerService;
 import com.lgy.system.domain.vo.Config;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +23,11 @@ import java.util.List;
  */
 @Service
 public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements IOwnerService {
+
+    /**
+     * redis cache value
+     */
+    private final String CACHE_NAMES = "owner";
 
     @Override
     public List<Config> selectOwner() {
@@ -35,4 +43,41 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
 
         return configs;
     }
+
+    @Override
+    @CachePut(value = CACHE_NAMES, key = "#entity.gco")
+    public Owner add(Owner entity) {
+        boolean b = super.save(entity);
+        if (b) {
+            return entity;
+        }
+        return null;
+    }
+
+    @Override
+    @CacheEvict(value = CACHE_NAMES, key = "#gco")
+    public boolean delete(String gco) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("gco", gco);
+        return this.remove(queryWrapper);
+    }
+
+    @Override
+    @Cacheable(cacheNames = CACHE_NAMES, key = "#gco")
+    public Owner findOne(String gco) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("gco", gco);
+        return getOne(queryWrapper);
+    }
+
+    @Override
+    @CachePut(value = CACHE_NAMES, key = "#entity.gco")
+    public Owner update(Owner entity) {
+        boolean b = super.updateById(entity);
+        if (b) {
+            return entity;
+        }
+        return null;
+    }
+
 }

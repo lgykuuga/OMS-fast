@@ -1,6 +1,7 @@
 package com.lgy.web.controller.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Owner;
 import com.lgy.base.domain.Platform;
 import com.lgy.base.service.IPlatformService;
 import com.lgy.common.annotation.Log;
@@ -102,7 +103,11 @@ public class PlatformController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Platform platform) {
-        return toAjax(platformService.save(platform));
+        Platform add = platformService.add(platform);
+        if (add != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -123,7 +128,11 @@ public class PlatformController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Platform platform) {
-        return toAjax(platformService.updateById(platform));
+        Platform update = platformService.update(platform);
+        if (update != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -136,4 +145,25 @@ public class PlatformController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(platformService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
+
+    /**
+     * 根据编码删除平台档案
+     */
+    @RequiresPermissions("base:platform:remove")
+    @Log(title = "平台档案", businessType = BusinessType.DELETE)
+    @PostMapping("/delete")
+    @ResponseBody
+    public AjaxResult delete(String gcos) {
+
+        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+
+        boolean flag = true;
+
+        for (String gco : gcoList) {
+            flag = platformService.delete(gco);
+        }
+
+        return toAjax(flag);
+    }
+
 }

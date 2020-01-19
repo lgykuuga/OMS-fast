@@ -17,8 +17,8 @@ import java.util.Map;
  * @Author LGy
  * @Date 2019/12/9
  */
-@Component(value = "idIncrementerForDB")
-public class IDIncrementerForDB {
+@Component(value = "idIncrementerForRedis")
+public class IDIncrementerForRedis {
 
     public Logger logger = LoggerFactory.getLogger(getClass());
 

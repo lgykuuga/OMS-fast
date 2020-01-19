@@ -13,6 +13,11 @@ import java.math.BigDecimal;
 public class OrderVO {
 
     /**
+     * $column.columnComment
+     */
+    private Long id;
+
+    /**
      * 订单流水编号
      */
     private String orderId;

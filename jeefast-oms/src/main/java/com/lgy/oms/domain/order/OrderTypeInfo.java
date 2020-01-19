@@ -3,6 +3,7 @@ package com.lgy.oms.domain.order;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.core.domain.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("oms_order_typeinfo")
+@EqualsAndHashCode(callSuper=false)
 public class OrderTypeInfo extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

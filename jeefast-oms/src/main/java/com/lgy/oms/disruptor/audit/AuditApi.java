@@ -1,7 +1,6 @@
 package com.lgy.oms.disruptor.audit;
 
 import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.oms.disruptor.audit.sub.AuditOrderEvent;
 import com.lgy.oms.disruptor.audit.sub.AuditSubDisruptorUtil;
 import com.lgy.oms.domain.StrategyAudit;
 import com.lgy.oms.domain.dto.AuditParamDTO;
@@ -24,17 +23,31 @@ public class AuditApi {
     @Autowired
     AuditSubDisruptorUtil auditSubDisruptorUtil;
 
-    public CommonResponse<String> addAuditAction(String orderId) {
+    /**
+     * 审核订单流程,开始审核订单流程
+     *
+     * @param orderMain
+     * @param param
+     * @return
+     */
+    public CommonResponse<String> addAuditAction(OrderMain orderMain, AuditParamDTO param) {
 
-        OrderNumberEvent event = new OrderNumberEvent();
-        event.setOrderId(orderId);
-
+        AuditOrderEvent event = new AuditOrderEvent();
+        event.setOrderMain(orderMain);
+        event.setParam(param);
         auditDisruptorUtil.getProducer().onData(event);
-
         return new CommonResponse<String>().ok("下发成功");
     }
 
-    public CommonResponse<String> addAuditSubAction (
+    /**
+     * 审核订单内部流程,用于检验地址,校验订单信息
+     *
+     * @param orderMain
+     * @param auditStrategy
+     * @param param
+     * @return
+     */
+    public CommonResponse<String> addAuditSubAction(
             OrderMain orderMain, StrategyAudit auditStrategy, AuditParamDTO param) {
 
         AuditOrderEvent event = new AuditOrderEvent();

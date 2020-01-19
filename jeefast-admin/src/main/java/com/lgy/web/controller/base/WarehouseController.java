@@ -1,29 +1,24 @@
 package com.lgy.web.controller.base;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Warehouse;
+import com.lgy.base.service.IWarehouseService;
+import com.lgy.common.annotation.Log;
+import com.lgy.common.core.controller.BaseController;
+import com.lgy.common.core.domain.AjaxResult;
+import com.lgy.common.core.page.TableDataInfo;
+import com.lgy.common.core.text.Convert;
+import com.lgy.common.enums.BusinessType;
+import com.lgy.common.utils.StringUtils;
+import com.lgy.common.utils.poi.ExcelUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.web.bind.annotation.*;
 
-import com.lgy.common.annotation.Log;
-import com.lgy.common.enums.BusinessType;
-import com.lgy.base.domain.Warehouse;
-import com.lgy.base.service.IWarehouseService;
-import com.lgy.common.core.controller.BaseController;
-import com.lgy.common.core.domain.AjaxResult;
-import com.lgy.common.utils.StringUtils;
-import com.lgy.common.utils.poi.ExcelUtil;
-import com.lgy.common.core.text.Convert;
-import com.lgy.common.core.page.TableDataInfo;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 仓库信息Controller
@@ -101,7 +96,11 @@ public class WarehouseController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Warehouse warehouse) {
-        return toAjax(warehouseService.save(warehouse));
+        Warehouse add = warehouseService.add(warehouse);
+        if (add != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -122,7 +121,11 @@ public class WarehouseController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Warehouse warehouse) {
-        return toAjax(warehouseService.updateById(warehouse));
+        Warehouse update = warehouseService.update(warehouse);
+        if (update != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -135,4 +138,25 @@ public class WarehouseController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(warehouseService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
+
+    /**
+     * 根据编码删除仓库档案
+     */
+    @RequiresPermissions("base:shop:remove")
+    @Log(title = "仓库档案", businessType = BusinessType.DELETE)
+    @PostMapping("/delete")
+    @ResponseBody
+    public AjaxResult delete(String gcos) {
+
+        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+
+        boolean flag = true;
+
+        for (String gco : gcoList) {
+            flag = warehouseService.delete(gco);
+        }
+
+        return toAjax(flag);
+    }
+
 }

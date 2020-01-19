@@ -2,10 +2,7 @@ package com.lgy.oms.disruptor.audit;
 
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.biz.IAuditOrderService;
-import com.lgy.oms.disruptor.tracelog.TraceLogEvent;
 import com.lgy.oms.domain.dto.AuditParamDTO;
-import com.lgy.oms.service.ITraceLogService;
-import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.WorkHandler;
 import org.slf4j.Logger;
@@ -20,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @Date 2019/12/27
  */
 @Component
-public class AuditHandler implements EventHandler<OrderNumberEvent>, WorkHandler<OrderNumberEvent> {
+public class AuditHandler implements EventHandler<AuditOrderEvent>, WorkHandler<AuditOrderEvent> {
 
     private static Logger logger = LoggerFactory.getLogger(AuditHandler.class);
 
@@ -31,17 +28,16 @@ public class AuditHandler implements EventHandler<OrderNumberEvent>, WorkHandler
     IAuditOrderService auditOrderService;
 
     @Override
-    public void onEvent(OrderNumberEvent event, long sequence, boolean endOfBatch) {
+    public void onEvent(AuditOrderEvent event, long sequence, boolean endOfBatch) {
         //添加threadLocal中用户信息
         ShiroUtils.setUserThreadLocal(event.getSysUser());
-        logger.debug("开始消费审单EventHandler[{}]", event.getOrderId());
+        logger.debug("开始消费审单EventHandler[{}]", event.getOrderMain().getOrderId());
         onEvent(event);
         ShiroUtils.removeUserThreadLocal();
     }
 
-
     @Override
-    public void onEvent(OrderNumberEvent event) {
-        auditOrderService.auditOrder(event.getOrderId(), new AuditParamDTO());
+    public void onEvent(AuditOrderEvent event) {
+        auditOrderService.start(event.getOrderMain(), event.getParam());
     }
 }

@@ -1,7 +1,8 @@
 package com.lgy.base.service;
 
-import com.lgy.base.domain.Logistics;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lgy.base.domain.Logistics;
+import com.lgy.common.service.CommonService;
 
 /**
  * 物流商信息 服务层
@@ -9,6 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author lgy
  * @date 2019-10-09
  */
-public interface ILogisticsService extends IService<Logistics> {
+public interface ILogisticsService extends IService<Logistics>, CommonService<Logistics> {
 
 }

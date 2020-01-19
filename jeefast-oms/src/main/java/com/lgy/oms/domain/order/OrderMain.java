@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.core.domain.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ import java.util.List;
 @ToString
 @Data
 @TableName("oms_order_main")
+@EqualsAndHashCode(callSuper=false)
 public class OrderMain extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

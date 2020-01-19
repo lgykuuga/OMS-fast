@@ -48,15 +48,16 @@
                 <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:main:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:main:edit">
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+                   shiro:hasPermission="oms:main:edit">
                     <i class="fa fa-edit"></i> 编辑
                 </a>
                 <a class="btn btn-primary multiple disabled" onclick="audit()"
-                   shiro:hasPermission="oms:interfaces:add">
+                   shiro:hasPermission="oms:main:add">
                     <i class="fa fa-edit"></i> 审核
                 </a>
                 <a class="btn btn-primary multiple disabled" onclick="distribution()"
-                   shiro:hasPermission="oms:interfaces:add">
+                   shiro:hasPermission="oms:main:add">
                     <i class="fa fa-edit"></i> 配货
                 </a>
             </div>
@@ -76,9 +77,13 @@
 
                                 <div class="tabs-left">
                                     <ul class="nav nav-tabs">
-                                        <li class="active"><a data-toggle="tab" href="#tab-8"> 第一个选项卡</a>
+                                        <li class="active"><a data-toggle="tab" href="#tab-8">订单信息</a>
                                         </li>
-                                        <li class=""><a data-toggle="tab" href="#tab-9"> 第二个选项卡</a>
+                                        <li class=""><a data-toggle="tab" href="#tab-9">买家信息</a>
+                                        </li>
+                                        <li class=""><a data-toggle="tab" href="#tab-10">订单明细</a>
+                                        </li>
+                                        <li class=""><a data-toggle="tab" href="#tab-11">配货信息</a>
                                         </li>
                                     </ul>
                                     <div class="tab-content ">
@@ -90,6 +95,20 @@
                                             </div>
                                         </div>
                                         <div id="tab-9" class="tab-pane">
+                                            <div class="panel-body">
+                                                <strong>栅格系统</strong>
+
+                                                <p>Bootstrap 提供了一套响应式、移动设备优先的流式栅格系统，随着屏幕或视口（viewport）尺寸的增加，系统会自动分为最多12列。它包含了易于使用的预定义类，还有强大的mixin 用于生成更具语义的布局。</p>
+                                            </div>
+                                        </div>
+                                        <div id="tab-10" class="tab-pane active">
+                                            <div class="panel-body">
+                                                <strong>排版与链接</strong>
+
+                                                <p>Bootstrap 排版、链接样式设置了基本的全局样式。分别是： 为 body 元素设置 background-color: #fff; 使用 @font-family-base、@font-size-base 和 @line-height-base a变量作为排版的基本参数 为所有链接设置了基本颜色 @link-color ，并且当链接处于 :hover 状态时才添加下划线 这些样式都能在 scaffolding.less 文件中找到对应的源码。</p>
+                                            </div>
+                                        </div>
+                                        <div id="tab-11" class="tab-pane">
                                             <div class="panel-body">
                                                 <strong>栅格系统</strong>
 
@@ -123,7 +142,7 @@
                     checkbox: true
                 },
                 {
-                    field : 'id', 
+                    field : 'id',
                     title : 'id',
                     visible: false
                 },
@@ -163,59 +182,59 @@
                     title : '订单状态'
                 },
                 {
-                    field : 'mark', 
+                    field : 'mark',
                     title : '订单标记'
                 },
                 {
-                    field : 'markContent', 
+                    field : 'markContent',
                     title : '标记内容'
                 },
                 {
-                    field : 'sellerFlag', 
+                    field : 'sellerFlag',
                     title : '卖家备注旗帜'
                 },
                 {
-                    field : 'sizeType', 
+                    field : 'sizeType',
                     title : '尺码类型'
                 },
                 {
-                    field : 'skuNum', 
+                    field : 'skuNum',
                     title : 'sku种类数量'
                 },
                 {
-                    field : 'qty', 
+                    field : 'qty',
                     title : '总件数'
                 },
                 {
-                    field : 'commodity', 
+                    field : 'commodity',
                     title : '商品编码集合'
                 },
                 {
-                    field : 'volume', 
+                    field : 'volume',
                     title : '总体积'
                 },
                 {
-                    field : 'weight', 
+                    field : 'weight',
                     title : '总重量'
                 },
                 {
-                    field : 'warehouse', 
+                    field : 'warehouse',
                     title : '发货仓库编码(支持多条)'
                 },
                 {
-                    field : 'logistics', 
+                    field : 'logistics',
                     title : '物流商编码(支持多条)'
                 },
                 {
-                    field : 'expressNumber', 
+                    field : 'expressNumber',
                     title : '快递单号(支持多条)'
                 },
                 {
-                    field : 'sendoutTime', 
+                    field : 'sendoutTime',
                     title : '发货时间'
                 },
                 {
-                    field : 'remark', 
+                    field : 'remark',
                     title : '备注'
                 }
 
@@ -268,7 +287,7 @@
 
             orderIds = orderIds.substring(0,orderIds.length-1);
 
-            $.operate.post(prefix + "/audit", { "orderIds": orderIds });
+            $.operate.post(prefix + "/distribution", { "orderIds": orderIds });
 
         }
 

@@ -7,10 +7,7 @@ import com.lgy.common.constant.Constants;
 import com.lgy.common.constant.ResponseCode;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.biz.ICreateOrderMainService;
-import com.lgy.oms.biz.IOrderDetailProcessingService;
-import com.lgy.oms.biz.IOrderStatisticsService;
-import com.lgy.oms.biz.ITradeConvertService;
+import com.lgy.oms.biz.*;
 import com.lgy.oms.constants.OrderModuleConstants;
 import com.lgy.oms.constants.OrderOperateType;
 import com.lgy.oms.constants.TraceLevelType;
@@ -84,6 +81,12 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
     IOrderStatisticsService orderStatisticsService;
 
     /**
+     * 事件驱动
+     */
+    @Autowired
+    IEventDrivenService eventDrivenService;
+
+    /**
      * 订单轨迹信息
      */
     @Autowired
@@ -154,8 +157,11 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
 
         //更新订单状态
         CommonResponse<String> response = tradeService.updateTranformStatus(trade);
-        if (!ResponseCode.SUCCESS.equals(response.getCode())) {
-            //保存轨迹服务
+        if (ResponseCode.SUCCESS.equals(response.getCode())) {
+            //完成转单流程,交由事件驱动判断下一步动作
+            eventDrivenService.finishConvert(orderMain, strategy);
+        } else {
+            //保存更新订单状态异常信息
             traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                     OrderOperateType.CONVERT.getValue(), TraceLevelType.ABNORMAL.getKey(), response.getMsg()));
         }

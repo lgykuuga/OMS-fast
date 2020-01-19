@@ -7,11 +7,12 @@ import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.biz.IAuditOrderService;
+import com.lgy.oms.biz.IEventDrivenService;
 import com.lgy.oms.constants.OrderModuleConstants;
 import com.lgy.oms.constants.OrderOperateType;
 import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.disruptor.audit.AuditApi;
-import com.lgy.oms.disruptor.audit.sub.AuditOrderEvent;
+import com.lgy.oms.disruptor.audit.AuditOrderEvent;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.StrategyAudit;
 import com.lgy.oms.domain.TraceLog;
@@ -81,10 +82,10 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
     IStrategyAuditService strategyAuditService;
 
     /**
-     * 下发至配货队列
+     * 事件驱动
      */
     @Autowired
-    SendOrderInfo2Distribution sendOrderInfo2Distribution;
+    IEventDrivenService eventDrivenService;
 
 
     @Override
@@ -95,19 +96,27 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
             return new CommonResponse<String>().error(Constants.FAIL, "审核订单传入编码为空");
         }
 
+        //订单主信息
+        OrderMain orderMain = new OrderMain();
+        orderMain.setOrderId(orderId);
+
+        //开始审单流程
+        return start(orderMain, param);
+    }
+
+    @Override
+    public CommonResponse<String> start(OrderMain orderMain, AuditParamDTO param) {
+
         //开始时间,用于统计耗时
         long startTime = System.currentTimeMillis();
         param.setStartTime(startTime);
 
-        logger.info("开始审核订单[{}]", orderId);
+        logger.info("开始审核订单[{}]", orderMain.getOrderId());
 
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderId,
+        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.AUDIT.getValue(), TraceLevelType.TRACE.getKey(), "开始审核订单:" + param.toString()));
 
-        //订单主信息
-        OrderMain orderMain = new OrderMain();
-        orderMain.setOrderId(orderId);
         //店铺策略
         StrategyAudit auditStrategy = new StrategyAudit();
 
@@ -117,7 +126,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         StringBuilder failReason = new StringBuilder();
 
         //1.组装数据并判断审核条件
-        CommonResponse<OrderMain> conditionAuditOrder = conditionAuditOrder(orderMain, auditStrategy);
+        CommonResponse<OrderMain> conditionAuditOrder = conditionAuditOrder(orderMain, auditStrategy, param);
 
         if (!Constants.SUCCESS.equals(conditionAuditOrder.getCode())) {
             flag = false;
@@ -132,15 +141,21 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         }
 
         if (flag) {
-            //有效性校验成功,进入下一步流程
-            auditApi.addAuditSubAction(orderMain, auditStrategy, param);
+            if (param.getAuto()) {
+                //有效性校验成功,进入下一步流程
+                auditApi.addAuditSubAction(orderMain, auditStrategy, param);
+            } else {
+                //手动流程,把流程结果返回给客户端
+                //TODO
 
+
+            }
         } else {
             //有效性校验失败,记录拦截信息
-            orderInterceptService.addOrUpdateOrderIntercept(orderId,
+            orderInterceptService.addOrUpdateOrderIntercept(orderMain.getOrderId(),
                     OrderInterceptTypeEnum.VALIDITY_CHECK.getCode(), failReason.toString());
             //保存轨迹
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderId,
+            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                     OrderOperateType.AUDIT.getValue(), TraceLevelType.ABNORMAL.getKey(), failReason.toString()));
 
             return new CommonResponse<String>().error(Constants.FAIL, failReason.toString());
@@ -223,15 +238,18 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
      * @param orderMain 订单主信息
      * @return 订单主信息
      */
-    private CommonResponse<OrderMain> conditionAuditOrder(OrderMain orderMain, StrategyAudit auditStrategy) {
+    private CommonResponse<OrderMain> conditionAuditOrder(OrderMain orderMain,
+                                                          StrategyAudit auditStrategy, AuditParamDTO param) {
 
         //组装订单信息
-        OrderMain orderFullInfo = orderMainService.getOrderFullInfoById(orderMain.getOrderId());
-        if (orderFullInfo == null) {
-            logger.error("订单[{}]信息主体不完整;", orderMain.getOrderId());
-            return new CommonResponse<OrderMain>().error(Constants.FAIL, "订单信息主体不完整;");
-        } else {
-            BeanUtils.copyProperties(orderFullInfo, orderMain);
+        if (param.getInstall()) {
+            OrderMain orderFullInfo = orderMainService.getOrderFullInfoById(orderMain.getOrderId());
+            if (orderFullInfo == null) {
+                logger.error("订单[{}]信息主体不完整;", orderMain.getOrderId());
+                return new CommonResponse<OrderMain>().error(Constants.FAIL, "订单信息主体不完整;");
+            } else {
+                BeanUtils.copyProperties(orderFullInfo, orderMain);
+            }
         }
 
         if (orderMain.getOrderStatusinfo() == null ||
@@ -333,8 +351,8 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
 
                 logger.info("订单[{}][{}]", event.getOrderMain().getOrderId(), stringBuilder.toString());
 
-                //下发至配货队列
-                sendOrderInfo2Distribution.execute(event);
+                //完成审单流程,交由事件驱动判断下一步动作
+                eventDrivenService.finishAudit(event.getOrderMain(), event.getParam());
             } else {
                 //保存轨迹
                 traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),

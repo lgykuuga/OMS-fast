@@ -28,7 +28,7 @@ public class AuditDisruptorUtil {
 
     private static Logger logger = LoggerFactory.getLogger(AuditDisruptorUtil.class);
 
-    private Disruptor<OrderNumberEvent> disruptor;
+    private Disruptor<AuditOrderEvent> disruptor;
     private static final int RING_BUFFER_SIZE = 1024 * 1024;
 
     @Autowired
@@ -56,7 +56,7 @@ public class AuditDisruptorUtil {
                 .build();
 
         disruptor = new Disruptor<>(
-                OrderNumberEvent::new,
+                AuditOrderEvent::new,
                 RING_BUFFER_SIZE,
 //                DaemonThreadFactory.INSTANCE,
                 threadFactory,
@@ -79,17 +79,17 @@ public class AuditDisruptorUtil {
     }
 
     public class Producer {
-        private RingBuffer<OrderNumberEvent> ringBuffer;
+        private RingBuffer<AuditOrderEvent> ringBuffer;
 
-        Producer(RingBuffer<OrderNumberEvent> ringBuffer) {
+        Producer(RingBuffer<AuditOrderEvent> ringBuffer) {
             this.ringBuffer = ringBuffer;
         }
 
-        public void onData(OrderNumberEvent t) {
-            logger.debug("publish auditEvent [{}]", JSON.toJSONString(t.getOrderId()));
+        public void onData(AuditOrderEvent t) {
+            logger.debug("publish auditEvent [{}]", JSON.toJSONString(t.getOrderMain().getOrderId()));
             long sequence = ringBuffer.next();
             try {
-                OrderNumberEvent t1 = ringBuffer.get(sequence);
+                AuditOrderEvent t1 = ringBuffer.get(sequence);
                 BeanUtils.copyProperties(t, t1);
                 //设置用户信息,用于线程切换
                 SysUser sysUser = ShiroUtils.getSysUser();

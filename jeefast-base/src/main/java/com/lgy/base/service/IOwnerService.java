@@ -1,7 +1,8 @@
 package com.lgy.base.service;
 
-import com.lgy.base.domain.Owner;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lgy.base.domain.Owner;
+import com.lgy.common.service.CommonService;
 import com.lgy.system.domain.vo.Config;
 
 import java.util.List;
@@ -12,10 +13,11 @@ import java.util.List;
  * @author lgy
  * @date 2019-10-11
  */
-public interface IOwnerService extends IService<Owner> {
+public interface IOwnerService extends IService<Owner>, CommonService<Owner> {
 
     /**
      * 查询有效货主
+     *
      * @return 货主列表
      */
     List<Config> selectOwner();

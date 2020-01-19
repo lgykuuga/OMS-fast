@@ -1,8 +1,9 @@
 package com.lgy.oms.biz;
 
 import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.oms.disruptor.audit.sub.AuditOrderEvent;
+import com.lgy.oms.disruptor.audit.AuditOrderEvent;
 import com.lgy.oms.domain.dto.AuditParamDTO;
+import com.lgy.oms.domain.order.OrderMain;
 
 
 /**
@@ -28,4 +29,12 @@ public interface IAuditOrderService {
      * @return
      */
     CommonResponse<String> afterAuditOrder(AuditOrderEvent event);
+
+    /**
+     * 开始审核订单
+     * @param orderMain
+     * @param param
+     * @return
+     */
+    CommonResponse<String> start(OrderMain orderMain, AuditParamDTO param);
 }

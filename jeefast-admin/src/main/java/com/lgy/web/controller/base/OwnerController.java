@@ -1,6 +1,7 @@
 package com.lgy.web.controller.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Logistics;
 import com.lgy.base.domain.Owner;
 import com.lgy.base.service.IOwnerService;
 import com.lgy.common.annotation.Log;
@@ -101,7 +102,11 @@ public class OwnerController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Owner owner) {
-        return toAjax(ownerService.save(owner));
+        Owner add = ownerService.add(owner);
+        if (add != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -122,7 +127,11 @@ public class OwnerController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Owner owner) {
-        return toAjax(ownerService.updateById(owner));
+        Owner update = ownerService.update(owner);
+        if (update != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -135,4 +144,25 @@ public class OwnerController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(ownerService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
+
+    /**
+     * 根据编码删除货主档案
+     */
+    @RequiresPermissions("base:owner:remove")
+    @Log(title = "货主档案", businessType = BusinessType.DELETE)
+    @PostMapping("/delete")
+    @ResponseBody
+    public AjaxResult delete(String gcos) {
+
+        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+
+        boolean flag = true;
+
+        for (String gco : gcoList) {
+            flag = ownerService.delete(gco);
+        }
+
+        return toAjax(flag);
+    }
+
 }

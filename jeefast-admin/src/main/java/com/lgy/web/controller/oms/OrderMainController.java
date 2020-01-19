@@ -10,7 +10,8 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
-import com.lgy.oms.disruptor.audit.AuditApi;
+import com.lgy.oms.biz.IAuditOrderService;
+import com.lgy.oms.domain.dto.AuditParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.domain.vo.OrderVO;
 import com.lgy.oms.service.IOrderMainService;
@@ -31,12 +32,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/oms/order")
 public class OrderMainController extends BaseController {
+
     private String prefix = "oms/order";
 
     @Autowired
     IOrderMainService orderMainService;
     @Autowired
-    AuditApi auditApi;
+    IAuditOrderService auditOrderService;
 
     @RequiresPermissions("oms:main:view")
     @GetMapping()
@@ -56,7 +58,6 @@ public class OrderMainController extends BaseController {
         return getDataTable(list);
     }
 
-
     /**
      * 生成订单
      *
@@ -74,9 +75,13 @@ public class OrderMainController extends BaseController {
         //失败原因
         StringBuffer failureMessage = new StringBuffer();
 
+        AuditParamDTO param = new AuditParamDTO();
+        //非自动触发
+        param.setAuto(false);
+
         String[] orderIdz = orderIds.split(Constants.COMMA);
         for (String orderId : orderIdz) {
-            final CommonResponse<String> response = auditApi.addAuditAction(orderId);
+            CommonResponse<String> response = auditOrderService.auditOrder(orderId, param);
             if (!Constants.SUCCESS.equals(response.getCode())) {
                 failureMessage.append(response.getMsg());
                 flag = false;

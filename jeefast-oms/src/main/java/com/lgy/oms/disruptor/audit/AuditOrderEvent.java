@@ -1,4 +1,4 @@
-package com.lgy.oms.disruptor.audit.sub;
+package com.lgy.oms.disruptor.audit;
 
 import com.lgy.oms.domain.StrategyAudit;
 import com.lgy.oms.domain.dto.AuditParamDTO;

@@ -1,4 +1,4 @@
-package com.lgy.oms.biz.impl.audit;
+package com.lgy.oms.biz.impl.common;
 
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.interfaces.common.dto.OrderDTO;

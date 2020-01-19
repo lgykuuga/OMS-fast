@@ -8,7 +8,6 @@ import com.lgy.base.service.ICommodityService;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.exception.BusinessException;
 import com.lgy.common.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,9 +28,6 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
      * redis cache value
      */
     private final String CACHE_NAMES = "commodity";
-
-    @Value("${lgy.redis}")
-    private int redis;
 
     @Override
     public String importData(List<Commodity> commoditys, boolean updateSupport, String operName) {
@@ -137,7 +133,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     }
 
     @Override
-    @Cacheable(cacheNames = CACHE_NAMES, key="#gco")
+    @Cacheable(cacheNames = CACHE_NAMES, key = "#gco")
     public Commodity findOne(String gco) {
         return getOne(gco);
     }

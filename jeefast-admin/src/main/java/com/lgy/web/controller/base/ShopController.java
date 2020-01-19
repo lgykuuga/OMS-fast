@@ -1,6 +1,7 @@
 package com.lgy.web.controller.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Logistics;
 import com.lgy.base.domain.Shop;
 import com.lgy.base.service.IShopService;
 import com.lgy.common.annotation.Log;
@@ -123,7 +124,11 @@ public class ShopController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Shop shop) {
-        return toAjax(shopService.save(shop));
+        Shop add = shopService.add(shop);
+        if (add != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -144,7 +149,11 @@ public class ShopController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Shop shop) {
-        return toAjax(shopService.updateById(shop));
+        Shop update = shopService.update(shop);
+        if (update != null) {
+            return toAjax(true);
+        }
+        return toAjax(false);
     }
 
     /**
@@ -157,4 +166,25 @@ public class ShopController extends BaseController {
     public AjaxResult remove(String ids) {
         return toAjax(shopService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
+
+    /**
+     * 根据编码删除店铺档案
+     */
+    @RequiresPermissions("base:shop:remove")
+    @Log(title = "店铺档案", businessType = BusinessType.DELETE)
+    @PostMapping("/delete")
+    @ResponseBody
+    public AjaxResult delete(String gcos) {
+
+        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+
+        boolean flag = true;
+
+        for (String gco : gcoList) {
+            flag = shopService.delete(gco);
+        }
+
+        return toAjax(flag);
+    }
+
 }

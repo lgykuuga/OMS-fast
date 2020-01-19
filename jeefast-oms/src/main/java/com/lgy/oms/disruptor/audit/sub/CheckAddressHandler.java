@@ -1,9 +1,8 @@
 package com.lgy.oms.disruptor.audit.sub;
 
-import com.lgy.common.constant.Constants;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.biz.impl.audit.CheckAddress;
-import com.lgy.oms.domain.StrategyAudit;
+import com.lgy.oms.disruptor.audit.AuditOrderEvent;
 import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.WorkHandler;
 import org.slf4j.Logger;
