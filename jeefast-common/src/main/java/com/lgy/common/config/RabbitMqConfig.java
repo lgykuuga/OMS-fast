@@ -146,5 +146,38 @@ public class RabbitMqConfig {
         return BindingBuilder.bind(convertQueue()).to(convertExchange()).with(CONVERT_ROUTING_KEY);
     }
 
+    /**
+     * 审单队列
+     */
+    public static final String AUDIT_QUEUE_NAME = "audit.queue";
+    public static final String AUDIT_EXCHANGE = "audit.exchange";
+    public static final String AUDIT_ROUTING_KEY = "audit.queue";
+
+    /**
+     * 声明创建一个审单队列
+     *
+     * @return
+     */
+    @Bean
+    public Queue auditQueue() {
+        return new Queue(AUDIT_QUEUE_NAME, true);
+    }
+
+    /**
+     * 声明创建一个审单交换器
+     */
+    @Bean
+    public DirectExchange auditExchange() {
+        return new DirectExchange(AUDIT_EXCHANGE, true, false);
+    }
+
+    /**
+     * 声明审单绑定
+     */
+    @Bean
+    public Binding auditBinding() {
+        return BindingBuilder.bind(convertQueue()).to(convertExchange()).with(AUDIT_ROUTING_KEY);
+    }
+
 
 }

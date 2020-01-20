@@ -141,15 +141,10 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         }
 
         if (flag) {
-            if (param.getAuto()) {
-                //有效性校验成功,进入下一步流程
-                auditApi.addAuditSubAction(orderMain, auditStrategy, param);
-            } else {
-                //手动流程,把流程结果返回给客户端
-                //TODO
 
+            //有效性校验成功,进入下一步流程
+            auditApi.addAuditSubAction(orderMain, auditStrategy, param);
 
-            }
         } else {
             //有效性校验失败,记录拦截信息
             orderInterceptService.addOrUpdateOrderIntercept(orderMain.getOrderId(),

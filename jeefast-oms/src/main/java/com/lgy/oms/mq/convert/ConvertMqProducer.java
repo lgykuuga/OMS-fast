@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
  * @Date 2020/1/14 18:08
  **/
 @Component
-public class ConvertProducer {
+public class ConvertMqProducer {
 
-    private static Logger logger = LoggerFactory.getLogger(ConvertProducer.class);
+    private static Logger logger = LoggerFactory.getLogger(ConvertMqProducer.class);
 
     @Autowired
     AmqpTemplate rabbitTemplate;

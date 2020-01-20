@@ -2,12 +2,12 @@ package com.lgy.oms.biz.impl.common;
 
 import com.lgy.common.constant.Constants;
 import com.lgy.oms.biz.IEventDrivenService;
-import com.lgy.oms.disruptor.audit.AuditApi;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.dto.AuditParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.enums.strategy.ProcessEnum;
 import com.lgy.oms.service.IStrategyConvertService;
+import com.lgy.oms.thread.audit.AuditThreadProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +25,17 @@ public class EventDrivenServiceImpl implements IEventDrivenService {
 
     private static Logger logger = LoggerFactory.getLogger(EventDrivenServiceImpl.class);
 
-    @Autowired
-    AuditApi auditApi;
-
     /**
      * 转单策略
      */
     @Autowired
     IStrategyConvertService strategyConvertService;
 
+    /**
+     * 审单线程生产者
+     */
+    @Autowired
+    AuditThreadProducer auditThreadProducer;
 
     @Value("${lgy.rabbitMQ}")
     private String rabbitMQ;
@@ -52,9 +54,9 @@ public class EventDrivenServiceImpl implements IEventDrivenService {
 
                 } else {
                     AuditParamDTO param = new AuditParamDTO();
-                    //对象已装配完成,不自动装配,加入disruptor队列
+                    //对象已装配完成,不自动装配,加入线程池
                     param.setInstall(false);
-                    auditApi.addAuditAction(orderMain, param);
+                    auditThreadProducer.executeOrder(orderMain, param);
                 }
 
             }

@@ -32,9 +32,9 @@ import java.util.Date;
  **/
 @Component
 @ConditionalOnProperty(name = "lgy.rabbitMQ", havingValue = "0", matchIfMissing = true)
-public class ConvertConsumer {
+public class ConvertMqConsumer {
 
-    private static Logger logger = LoggerFactory.getLogger(ConvertConsumer.class);
+    private static Logger logger = LoggerFactory.getLogger(ConvertMqConsumer.class);
 
     @Autowired
     ITradeConvertService tradeConvertService;
@@ -56,7 +56,7 @@ public class ConvertConsumer {
 
         try {
             String tid = MessageHelper.msgToObj(message, String.class);
-            logger.debug("转单消费者接收订单[{}]", tid);
+            logger.debug("转单消费者MQ接收订单[{}]", tid);
 
             SysUser sysUser = new SysUser();
             sysUser.setUserId(Long.valueOf(message.getMessageProperties().getUserId()));

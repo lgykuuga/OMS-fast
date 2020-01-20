@@ -2,7 +2,7 @@ package com.lgy.web.controller.oms.test;
 
 
 import com.lgy.common.constant.Constants;
-import com.lgy.oms.mq.convert.ConvertProducer;
+import com.lgy.oms.mq.convert.ConvertMqProducer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RabbitMqController {
 
     @Autowired
-    ConvertProducer convertProducer;
+    ConvertMqProducer convertMqProducer;
 
     /**
      * 发送MQ
@@ -35,7 +35,7 @@ public class RabbitMqController {
     public void send(String tids) {
         String[] tidz = tids.split(Constants.COMMA);
         for (String tid : tidz) {
-            convertProducer.send(tid);
+            convertMqProducer.send(tid);
         }
     }
 
