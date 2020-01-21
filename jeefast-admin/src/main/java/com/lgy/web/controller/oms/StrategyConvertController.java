@@ -154,13 +154,13 @@ public class StrategyConvertController extends BaseController {
     @PostMapping("/convertShop")
     @ResponseBody
     public TableDataInfo convertShop(String gco) {
-        List<StrategyConvertShop> convertShop = new ArrayList<>();
+        List<StrategyConvertShop> convertShopList = new ArrayList<>();
         if (StringUtils.isNotEmpty(gco)) {
-            convertShop = strategyConvertService.getConvertShop(gco);
+            convertShopList = strategyConvertService.getConvertShop(gco);
             startPage();
-            return getDataTable(convertShop);
+            return getDataTable(convertShopList);
         }
-        return getDataTable(convertShop);
+        return getDataTable(convertShopList);
     }
 
     /**

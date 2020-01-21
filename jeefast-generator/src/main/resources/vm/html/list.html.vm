@@ -23,7 +23,7 @@
 #if($column.htmlType == "input")
                             <li>
                                 <p>${comment}：</p>
-                                <input type="text" name="${column.javaField}"/>
+                                <input type="text" autocomplete="off" name="${column.javaField}"/>
                             </li>
 #elseif($column.htmlType == "select" || $column.htmlType == "radio" && "" != $dictType)
                             <li>

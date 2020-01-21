@@ -49,7 +49,7 @@
                 <div class="btn-group-sm" id="toolbar3" role="group">
                     <button type="button" class="btn btn-w-m btn-success" onclick="special()">跳转至特定信息拦截</button>
                     <button type="button" class="btn btn-w-m btn-success" onclick="commodity()">跳转至指定商品拦截</button>
-                    <button type="button" class="btn btn-w-m btn-success" onclick="submit2()">跳转至组合信息拦截</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="combo()">跳转至组合信息拦截</button>
                 </div>
 
                 <div class="row">
@@ -66,7 +66,7 @@
                             <div class="ibox-title">
                                 <h5>审单策略</h5>
                             </div>
-                            <div class="ibox-content">
+                            <div class="ibox-content" id="form-audit" th:fragment="form-audit">
                                 <form class="form-horizontal m" id="form-audit-edit" th:object="${strategyAudit}">
 
                                     <input name="id" th:field="*{id}" type="hidden">
@@ -93,7 +93,7 @@
                                             <label class="col-sm-8 control-label">来源单号相同拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="source" th:checked="${strategyAudit.source == '0' ? true : false}">
+                                                    <input type="checkbox" id="source" th:checked="${strategyAudit.source == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -102,7 +102,7 @@
                                             <label class="col-sm-8 control-label">地址有效性校验:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="addressValid" th:checked="${strategyAudit.addressValid == '0' ? true : false}">
+                                                    <input type="checkbox" id="addressValid" th:checked="${strategyAudit.addressValid == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -111,7 +111,7 @@
                                             <label class="col-sm-8 control-label">买家留言拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="buyMessage" th:checked="${strategyAudit.buyMessage == '0' ? true : false}">
+                                                    <input type="checkbox" id="buyMessage" th:checked="${strategyAudit.buyMessage == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -120,7 +120,7 @@
                                             <label class="col-sm-8 control-label">卖家留言拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="sellerMessage" th:checked="${strategyAudit.sellerMessage == '0' ? true : false}">
+                                                    <input type="checkbox" id="sellerMessage" th:checked="${strategyAudit.sellerMessage == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -132,7 +132,7 @@
                                             <label class="col-sm-8 control-label">货到付款拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="cod" th:checked="${strategyAudit.cod == '0' ? true : false}">
+                                                    <input type="checkbox" id="cod" th:checked="${strategyAudit.cod == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -141,7 +141,7 @@
                                             <label class="col-sm-8 control-label">退款拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="refund" th:checked="${strategyAudit.refund == '0' ? true : false}">
+                                                    <input type="checkbox" id="refund" th:checked="${strategyAudit.refund == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -150,7 +150,7 @@
                                             <label class="col-sm-8 control-label">卖家留言匹配:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="sellerMessageMatch" th:checked="${strategyAudit.sellerMessageMatch == '0' ? true : false}">
+                                                    <input type="checkbox" id="sellerMessageMatch" th:checked="${strategyAudit.sellerMessageMatch == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -159,7 +159,7 @@
                                             <label class="col-sm-8 control-label">卖家备注旗帜拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="sellerFlag" th:checked="${strategyAudit.sellerFlag == '0' ? true : false}">
+                                                    <input type="checkbox" id="sellerFlag" th:checked="${strategyAudit.sellerFlag == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -172,7 +172,7 @@
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
                                                     <input type="checkbox" id="orderIntercept"
-                                                           th:checked="${strategyAudit.orderIntercept == '0' ? true : false}">
+                                                           th:checked="${strategyAudit.orderIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -182,7 +182,7 @@
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
                                                     <input type="checkbox"
-                                                           th:checked="${strategyAudit.commodityIntercept == '0' ? true : false}">
+                                                           th:checked="${strategyAudit.commodityIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -192,7 +192,7 @@
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
                                                     <input type="checkbox" id="addressIntercept"
-                                                           th:checked="${strategyAudit.addressIntercept == '0' ? true : false}">
+                                                           th:checked="${strategyAudit.addressIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -202,7 +202,8 @@
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
                                                     <input type="checkbox" id="comboIntercept" name="comboIntercept"
-                                                           th:checked="${strategyAudit.comboIntercept == '0' ? true : false}">
+
+                                                           th:checked="${strategyAudit.comboIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -464,7 +465,6 @@
             gco = row.gco;
             //重新加载店铺表格
             $('#bootstrap-table2').bootstrapTable('refresh', gco);
-
             var config = {
                 url: prefix + "/loadStrategy/" + row.id,
                 type: "get",
@@ -472,10 +472,14 @@
                     var strategyAudit = result.data;
                     //填充表单
                     $("#form-audit-edit").setForm(strategyAudit);
+
+
                 }
             };
             $.ajax(config)
         }
+
+
 
 
         /* 店铺开启自动 */
@@ -502,15 +506,6 @@
             $.modal.openWindow("策略店铺", prefix + "/selectShop/" + gco);
         }
 
-        /* 打开逻辑顺序窗口 */
-        function sortStrategy() {
-            if (gco == "") {
-                $.modal.alertError('请先选择策略');
-                return;
-            }
-            $.modal.openWindow("逻辑顺序", prefix + "/sortStrategy/" + gco);
-        }
-
         /* 跳转至特定信息拦截窗口 */
         function special() {
             if (gco == "") {
@@ -527,6 +522,24 @@
                 return;
             }
             $.modal.openTab("指定商品拦截", prefix + "/commodity/" + gco);
+        }
+
+        function remove(id) {
+            $.modal.confirm("确定删除该条信息吗？", function () {
+                var data = {"ids": id};
+                $.operate.submit(prefix + "/remove", "post", "json", data);
+                //重新加载表格
+                location.reload();
+            });
+        }
+
+        /* 跳转至组合信息拦截拦截窗口 */
+        function combo() {
+            if (gco == "") {
+                $.modal.alertError('请先选择策略');
+                return;
+            }
+            $.modal.openTab("组合信息拦截", prefix + "/combo/" + gco);
         }
 
         function remove(id) {
@@ -593,7 +606,8 @@
                         for (var i = 0; i < checkboxObj.length; i++) {
                             for (var j = 0; j < checkArray.length; j++) {
                                 if (checkboxObj[i].value == checkArray[j]) {
-                                    checkboxObj[i].click();
+                                    // checkboxObj[i].click();
+                                    checkboxObj[i].attr("checked", 'checked');
                                 }
                             }
                         }

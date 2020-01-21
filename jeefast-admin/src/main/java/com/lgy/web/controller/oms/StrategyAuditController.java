@@ -111,17 +111,6 @@ public class StrategyAuditController extends BaseController {
     }
 
     /**
-     * 修改保存审单策略
-     */
-    @RequiresPermissions("oms:audit:edit")
-    @Log(title = "审单策略", businessType = BusinessType.UPDATE)
-    @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(StrategyAudit strategyAudit) {
-        return toAjax(strategyAuditService.updateById(strategyAudit));
-    }
-
-    /**
      * 加载策略到form表单
      */
     @GetMapping("/loadStrategy/{id}")
@@ -132,6 +121,19 @@ public class StrategyAuditController extends BaseController {
         model.addAttribute("strategyAudit", strategyAudit);
         return AjaxResult.success(strategyAudit);
     }
+
+    /**
+     * 修改保存审单策略
+     */
+    @RequiresPermissions("oms:audit:edit")
+    @Log(title = "审单策略", businessType = BusinessType.UPDATE)
+    @PostMapping("/edit")
+    @ResponseBody
+    public AjaxResult editSave(StrategyAudit strategyAudit) {
+        return toAjax(strategyAuditService.updateById(strategyAudit));
+    }
+
+
 
     /**
      * 删除转单策略
@@ -247,15 +249,6 @@ public class StrategyAuditController extends BaseController {
         List<StrategyAuditShop> strategyShops = JSON.parseArray(data, StrategyAuditShop.class);
         Integer count = strategyAuditService.saveStrategyShop(strategyShops, false);
         return toAjax(SqlHelper.retBool(count));
-    }
-
-    /**
-     * 打开逻辑顺序窗口
-     */
-    @GetMapping("/sortStrategy/{gco}")
-    public String sortStrategy(@PathVariable("gco") String gco, ModelMap mmap) {
-        mmap.put("gco", gco);
-        return prefix + "/sortStrategy";
     }
 
 }
