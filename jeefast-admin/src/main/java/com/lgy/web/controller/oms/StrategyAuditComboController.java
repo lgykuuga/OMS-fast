@@ -11,8 +11,12 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyAuditCombo;
 import com.lgy.oms.domain.StrategyAuditComboDetail;
+import com.lgy.oms.enums.order.OrderTableEnum;
+import com.lgy.oms.enums.strategy.ConditionEnum;
 import com.lgy.oms.service.IStrategyAuditComboDetailService;
 import com.lgy.oms.service.IStrategyAuditComboService;
+import com.lgy.oms.util.OrderFieldUtils;
+import com.lgy.system.domain.vo.Config;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -162,8 +166,6 @@ public class StrategyAuditComboController extends BaseController {
         return getDataTable(detailList);
     }
 
-
-
     /**
      * 新增审单明细策略
      */
@@ -172,6 +174,17 @@ public class StrategyAuditComboController extends BaseController {
                             @PathVariable("comboId") String comboId, ModelMap mmap) {
         mmap.put("gco", gco);
         mmap.put("comboId", comboId);
+
+        mmap.put("orderTableEnum", OrderTableEnum.getList());
+        mmap.put("conditionEnum", ConditionEnum.getList());
+
+        mmap.put("orderMainField", OrderFieldUtils.getOrderMainList());
+        mmap.put("buyerInfoField", OrderFieldUtils.getBuyerInfoList());
+        mmap.put("payInfoField", OrderFieldUtils.getPayInfoList());
+        mmap.put("typeInfoField", OrderFieldUtils.getTypeInfoList());
+        mmap.put("statusInfoField", OrderFieldUtils.getStatusInfoList());
+        mmap.put("interceptField", OrderFieldUtils.getInterceptList());
+        mmap.put("detailField", OrderFieldUtils.getDetailList());
         return prefix + "/addDetail";
     }
 
@@ -193,6 +206,17 @@ public class StrategyAuditComboController extends BaseController {
     public String editDetail(@PathVariable("id") Long id, ModelMap mmap) {
         StrategyAuditComboDetail detail = strategyAuditComboDetailService.getById(id);
         mmap.put("strategyAuditComboDetail", detail);
+
+        mmap.put("orderTableEnum", OrderTableEnum.getList());
+        mmap.put("conditionEnum", ConditionEnum.getList());
+
+        mmap.put("orderMainField", OrderFieldUtils.getOrderMainList());
+        mmap.put("buyerInfoField", OrderFieldUtils.getBuyerInfoList());
+        mmap.put("payInfoField", OrderFieldUtils.getPayInfoList());
+        mmap.put("typeInfoField", OrderFieldUtils.getTypeInfoList());
+        mmap.put("statusInfoField", OrderFieldUtils.getStatusInfoList());
+        mmap.put("interceptField", OrderFieldUtils.getInterceptList());
+        mmap.put("detailField", OrderFieldUtils.getDetailList());
         return prefix + "/editDetail";
     }
 
@@ -216,6 +240,18 @@ public class StrategyAuditComboController extends BaseController {
     @ResponseBody
     public AjaxResult removeDetail(String ids) {
         return toAjax(strategyAuditComboDetailService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
+    }
+
+    /**
+     * 删除审单策略组合信息拦截
+     */
+    @PostMapping("/selectField")
+    @ResponseBody
+    public AjaxResult selectField(Integer code) {
+
+        List<Config> selected = OrderTableEnum.getSelected(code);
+
+        return AjaxResult.success(selected);
     }
 
 

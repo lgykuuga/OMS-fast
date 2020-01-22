@@ -1,6 +1,7 @@
 package com.lgy.oms.domain.order;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lgy.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,31 +28,37 @@ public class OrderStatusInfo extends BaseEntity implements Serializable {
     /**
      * 订单编码
      */
+    @JsonProperty("订单编号")
     private String orderId;
 
     /**
      * 来源单号
      */
+    @JsonProperty("来源单号")
     private String sourceId;
 
     /**
      * 订单状态
      */
+    @JsonProperty("订单状态")
     private Integer flag;
 
     /**
      * 合并状态
      */
+    @JsonProperty("合并状态")
     private Integer merger;
 
     /**
      * 拆分状态
      */
+    @JsonProperty("拆分状态")
     private Integer split;
 
     /**
      * 状态(有效、无效)
      */
+    @JsonProperty("有效状态")
     private Integer status;
 
 }

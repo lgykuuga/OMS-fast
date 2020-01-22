@@ -1,83 +1,130 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('新增审单策略组合信息明细')" />
+    <th:block th:include="include :: header('新增审单策略组合信息明细')"/>
 </head>
 <body class="white-bg">
-    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-detail-add">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">属性类型</label>
-                <div class="col-sm-8">
-                    <select name="type" class="form-control m-b">
-                        <option value="">所有</option>
-                    </select>
-                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
-                </div>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-detail-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">订单类型</label>
+            <div class="col-sm-8">
+                <select name="type" class="form-control" id="type">
+                    <option th:each="orderTable : ${orderTableEnum}" th:text="${orderTable.configValue}"
+                            th:value="${orderTable.configKey}"></option>
+                </select>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">字段：</label>
-                <div class="col-sm-8">
-                    <input name="field" class="form-control" autocomplete="off" type="text" required>
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">条件:</label>
-                <div class="col-sm-8">
-                    <input name="requirement" class="form-control" autocomplete="off" type="text" required>
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">匹配值：</label>
-                <div class="col-sm-8">
-                    <textarea id="value" name="value" class="form-control" autocomplete="off"></textarea>
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">匹配值</label>
-                <div class="col-sm-8">
-                    <textarea id="valueName" name="valueName" class="form-control" readonly="true"></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">状态：</label>
-                <div class="col-sm-8">
-                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
-                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
-                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">规则描述：</label>
-                <div class="col-sm-8">
-                    <textarea id="remark" name="remark" class="form-control" autocomplete="off"></textarea>
-                </div>
-            </div>
+        </div>
 
-        </form>
-    </div>
-    <th:block th:include="include :: footer" />
-    <script type="text/javascript">
-        var prefix = ctx + "oms/audit/combo"
+        <div class="form-group">
+            <label class="col-sm-3 control-label">字段</label>
+            <div class="col-sm-8">
+                <select name="field" class="form-control" id="field">
+                    <option value="">-选择字段-</option>
+<!--                    <option th:each="orderMain : ${orderMainField}" th:text="${orderMain.configValue}" th:value="${orderMain.configKey}"></option>-->
+                </select>
+            </div>
+        </div>
 
-        //规则编码
-        var comboId = [[${comboId}]];
-        //策略编码
-        var gco = [[${gco}]];
+        <div class="form-group">
+            <label class="col-sm-3 control-label">条件</label>
+            <div class="col-sm-8">
+                <select name="requirement" class="form-control" id="requirement">
+                    <option th:each="condition : ${conditionEnum}" th:text="${condition.configValue}"
+                            th:value="${condition.configKey}"></option>
+                </select>
+            </div>
+        </div>
 
-        $("#form-detail-add").validate({
-            focusCleanup: true
-        });
+        <div class="form-group">
+            <label class="col-sm-3 control-label">匹配值：</label>
+            <div class="col-sm-8">
+                <textarea id="value" name="value" class="form-control" autocomplete="off"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">匹配值</label>
+            <div class="col-sm-8">
+                <textarea id="valueName" name="valueName" class="form-control" readonly="true"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                    <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}"
+                           th:checked="${dict.default}">
+                    <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">规则描述：</label>
+            <div class="col-sm-8">
+                <textarea id="remark" name="remark" class="form-control" autocomplete="off"></textarea>
+            </div>
+        </div>
 
-        function submitHandler() {
-            if ($.validate.form()) {
-                var data = $("#form-detail-add").serializeArray();
-                data.push({"name": "gco", "value": gco});
-                data.push({"name": "comboId", "value": comboId});
-                $.operate.save(prefix + "/addDetail", data);
-            }
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<script type="text/javascript">
+    var prefix = ctx + "oms/audit/combo"
+
+    //规则编码
+    var comboId = [[${comboId}]];
+    //策略编码
+    var gco = [[${gco}]];
+
+    $("#form-detail-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            var data = $("#form-detail-add").serializeArray();
+            data.push({"name": "gco", "value": gco});
+            data.push({"name": "comboId", "value": comboId});
+            $.operate.save(prefix + "/addDetail", data);
         }
-    </script>
+    }
+
+    // $("#type").on("change", function () {
+    //     var seled = $(this).val();
+    //     $("#inputType").val(seled);
+    //     var serviceText = $("#type").find("option:selected").text();
+    //     var serviceVal = $("#type").val();
+    //     console.info(seled);
+    //     console.info(serviceText);
+    //     console.info(serviceVal);
+    //
+    // });
+
+    $(document).ready(function(){
+        $("#type").change(function(){
+            var code = $("#type").val();
+            if(code ==''){
+                return;
+            }
+
+            $.ajax({
+                url: prefix + '/selectField',
+                async:false,
+                type:'post',
+                data:{code: code},
+                success:function(data){
+                    data = data.data;
+                    var field = $("#field").empty();
+                    for ( var i = 0; i < data.length; i++) {
+                        field.append("<option value='"+data[i].configKey+"'>"+ data[i].configValue+"</option>");
+                    }
+                }
+            })
+        });
+    })
+
+
+
+</script>
 </body>
 </html>
