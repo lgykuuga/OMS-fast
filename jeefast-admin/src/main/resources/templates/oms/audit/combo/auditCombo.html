@@ -249,6 +249,11 @@
 
         // 添加明细信息
         function addDetail() {
+            if (comboId == "") {
+                $.modal.alertError('请先选择规则');
+                return;
+            }
+
             table.set();
             $.modal.open('添加' + table.options.modalName, table.options.createUrl + "/" + gco
                 + "/" + comboId);
