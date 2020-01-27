@@ -93,6 +93,10 @@
         var comboId = "";
         // 规则名称,点击行触发事件赋值
         var gna = "";
+        // 表
+        var orderTableEnum = [[${orderTableEnum}]];
+        // 判断条件
+        var conditionEnum = [[${conditionEnum}]];
 
 
         $(function() {
@@ -190,7 +194,11 @@
                     },
                     {
                         field : 'type',
-                        title : '属性类型'
+                        title : '属性类型',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return $.table.selectValue(orderTableEnum, value);
+                        }
                     },
                     {
                         field : 'field',
@@ -198,7 +206,11 @@
                     },
                     {
                         field : 'requirement',
-                        title : '条件'
+                        title : '条件',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return $.table.selectValue(conditionEnum, value);
+                        }
                     },
                     {
                         field : 'value',

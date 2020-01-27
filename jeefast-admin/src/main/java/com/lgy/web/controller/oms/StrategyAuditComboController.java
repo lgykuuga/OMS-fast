@@ -12,6 +12,7 @@ import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyAuditCombo;
 import com.lgy.oms.domain.StrategyAuditComboDetail;
 import com.lgy.oms.enums.order.OrderTableEnum;
+import com.lgy.oms.enums.strategy.AuditAmountEnum;
 import com.lgy.oms.enums.strategy.ConditionEnum;
 import com.lgy.oms.service.IStrategyAuditComboDetailService;
 import com.lgy.oms.service.IStrategyAuditComboService;
@@ -20,6 +21,7 @@ import com.lgy.system.domain.vo.Config;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +49,11 @@ public class StrategyAuditComboController extends BaseController {
 
     @RequiresPermissions("oms:audit:view")
     @GetMapping("/{gco}")
-    public String combo(@PathVariable("gco") String gco, ModelMap mmap) {
+    public String combo(@PathVariable("gco") String gco,  ModelMap mmap) {
+        //表
+        mmap.put("orderTableEnum", OrderTableEnum.getList());
+        //判断条件
+        mmap.put("conditionEnum", ConditionEnum.getList());
         return prefix + "/auditCombo";
     }
 

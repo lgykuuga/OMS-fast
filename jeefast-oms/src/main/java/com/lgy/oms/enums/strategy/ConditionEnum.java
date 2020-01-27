@@ -56,7 +56,7 @@ public enum ConditionEnum {
     /**
      * 包含
      */
-    CONTAINS("CONTAINS", "包含(contains)"),
+    CONTAINS("CONTAINS", "包含(contains、like)"),
 
     /**
      * 在数组数据当中
