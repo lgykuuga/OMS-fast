@@ -20,5 +20,28 @@
     </resultMap>
     -->
 
+    <select id="queryList" resultType="com.lgy.oms.domain.vo.StrategyConvertVO">
+        select *
+        from
+        oms_strategy_convert
+        <where>
+            <if test="strategyConvertVO.gco != null and strategyConvertVO.gco != ''">
+                and gco = #{strategyConvertVO.gco}
+            </if>
+            <if test="strategyConvertVO.gna != null and strategyConvertVO.gna != ''">
+                and gna like  concat('%', #{strategyConvertVO.gna}, '%')
+            </if>
+            <if test="strategyConvertVO.shop != null and strategyConvertVO.shop != ''">
+                and gco = (
+                select
+                gco
+                from
+                oms_strategy_convert_shop
+                where shop = #{strategyConvertVO.shop}
+                )
+            </if>
+        </where>
+        order by create_time desc
+    </select>
 </mapper>
 

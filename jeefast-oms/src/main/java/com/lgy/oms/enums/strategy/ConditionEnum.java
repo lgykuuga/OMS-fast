@@ -13,11 +13,6 @@ import java.util.List;
  */
 public enum ConditionEnum {
 
-
-    /**
-     * 大于/小于/等于/不等于/包含/正则
-     */
-
     /**
      * 等于
      */

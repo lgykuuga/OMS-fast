@@ -12,6 +12,7 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.StrategyConvertShop;
+import com.lgy.oms.domain.vo.StrategyConvertVO;
 import com.lgy.oms.enums.strategy.ConvertMatchCommodityEnum;
 import com.lgy.oms.enums.strategy.ConvertTriggerNodeEnum;
 import com.lgy.oms.enums.strategy.ProcessEnum;
@@ -59,24 +60,10 @@ public class StrategyConvertController extends BaseController {
     @RequiresPermissions("oms:convert:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(StrategyConvert strategyConvert) {
-        QueryWrapper<StrategyConvert> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(strategyConvert.getGco())) {
-            queryWrapper.eq("gco", strategyConvert.getGco());
-        }
-        if (StringUtils.isNotEmpty(strategyConvert.getGna())) {
-            queryWrapper.like("gna", strategyConvert.getGna());
-        }
-        // 特殊查询时条件需要进行单独组装
-        Map<String, Object> params = strategyConvert.getParams();
-        if (StringUtils.isNotEmpty(params) && StringUtils.isNotEmpty((String)params.get("shop"))) {
-            //根据店铺编码查询
-            String shop = (String) params.get("shop");
-            startPage();
-            return getDataTable(Collections.singletonList(strategyConvertService.getStrategyByShop(shop)));
-        }
+    public TableDataInfo list(StrategyConvertVO strategyConvertVO) {
+        List<StrategyConvertVO> list = strategyConvertService.queryList(strategyConvertVO);
         startPage();
-        return getDataTable(strategyConvertService.list(queryWrapper));
+        return getDataTable(list);
     }
 
     /**

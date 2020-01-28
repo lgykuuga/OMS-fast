@@ -3,6 +3,7 @@ package com.lgy.oms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.StrategyConvertShop;
+import com.lgy.oms.domain.vo.StrategyConvertVO;
 
 import java.util.List;
 
@@ -71,7 +72,14 @@ public interface IStrategyConvertService extends IService<StrategyConvert> {
      * 根据店铺编码获取策略
      *
      * @param shop 店铺编码
-     * @return
+     * @return 策略
      */
     StrategyConvert getStrategyByShop(String shop);
+
+    /**
+     * 查询list
+     * @param strategyConvertVO 请求VO对象
+     * @return list
+     */
+    List<StrategyConvertVO> queryList(StrategyConvertVO strategyConvertVO);
 }

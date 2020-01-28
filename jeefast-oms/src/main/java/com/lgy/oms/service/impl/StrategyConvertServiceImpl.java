@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyConvertShop;
+import com.lgy.oms.domain.vo.StrategyConvertVO;
 import com.lgy.oms.mapper.StrategyConvertShopMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,9 @@ import java.util.List;
 public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMapper, StrategyConvert> implements IStrategyConvertService {
 
     @Autowired
-    protected StrategyConvertShopMapper shopMapper;
+    StrategyConvertShopMapper shopMapper;
+    @Autowired
+    StrategyConvertMapper convertMapper;
 
     @Override
     public List<StrategyConvertShop> getConvertShop(String gco) {
@@ -93,5 +96,10 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
     public StrategyConvert getStrategyByShop(String shop) {
         return shopMapper.getStrategyByShop(shop);
 
+    }
+
+    @Override
+    public List<StrategyConvertVO> queryList(StrategyConvertVO strategyConvertVO) {
+        return convertMapper.queryList(strategyConvertVO);
     }
 }
