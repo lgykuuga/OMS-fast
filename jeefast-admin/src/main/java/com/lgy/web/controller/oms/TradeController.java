@@ -50,7 +50,6 @@ public class TradeController extends BaseController {
     @RequiresPermissions("oms:trade:view")
     @GetMapping()
     public String trade(Model model) {
-        //下单订单接口
         model.addAttribute("orderStatusList", PlatformOrderStatusEnum.getList());
         model.addAttribute("tradeTranformStatusList", TradeTranformStatusEnum.getList());
         return prefix + "/trade";
@@ -98,6 +97,9 @@ public class TradeController extends BaseController {
         }
         if (trade.getStatus() != null) {
             queryWrapper.eq("status", trade.getStatus());
+        }
+        if (trade.getFlag() != null) {
+            queryWrapper.eq("flag", trade.getFlag());
         }
         queryWrapper.orderByDesc("create_time");
         return queryWrapper;

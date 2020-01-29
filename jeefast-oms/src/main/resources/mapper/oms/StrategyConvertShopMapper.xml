@@ -61,10 +61,9 @@
         from
         oms_strategy_convert_shop
         <where>
-            <if test="order.orderId != null and order.orderId != '' ">AND a.order_id = #{order.orderId}</if>
-        <if test="shop != null and shop != ''">
-            shop = #{shop}
-        </if>
+            <if test="shop != null and shop != ''">
+                shop = #{shop}
+            </if>
         </where>
         )
     </select>

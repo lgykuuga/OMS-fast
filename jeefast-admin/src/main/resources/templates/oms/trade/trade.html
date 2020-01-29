@@ -41,8 +41,16 @@
                                 交易状态：<select name="status">
                                 <option value="">所有</option>
                                 <option th:each="orderStatus : ${orderStatusList}" th:text="${orderStatus.configValue}" th:value="${orderStatus.configKey}"></option>
-                            </select>
+                                         </select>
                             </li>
+                            <li>
+                                转单状态：<select name="flag">
+                                <option value="">所有</option>
+                                <option th:each="tradeTranformStatus : ${tradeTranformStatusList}" th:text="${tradeTranformStatus.configValue}"
+                                        th:value="${tradeTranformStatus.configKey}"></option>
+                                        </select>
+                            </li>
+
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
