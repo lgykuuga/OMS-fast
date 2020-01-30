@@ -68,10 +68,9 @@ public class EventDrivenServiceImpl implements IEventDrivenService {
     @Override
     public void finishAudit(OrderMain orderMain, AuditParamDTO param) {
 
-        if (param.getMerge()
-                || param.getDelayDistributionTime() != null) {
-            //设置参与合并,则不直接下发至配货队列
-            //设置延迟配货,则不直接下发至配货队列
+        if (param.getMerge() || param.getDelayDistributionTime() != null) {
+            //设置参与合并,则不直接下发至配货队列,由任务调度触发
+            //设置延迟配货,则不直接下发至配货队列,由任务调出触发
             return;
         }
 
@@ -81,6 +80,16 @@ public class EventDrivenServiceImpl implements IEventDrivenService {
             logger.debug("单据[{}]审单完成且无异常拦截,店铺策略事件驱动为状态机触发/不参与合并/未设置延迟配货,开始自动配货",
                     orderMain.getOrderId());
             //TODO
+
+            if (Constants.ON.equals(rabbitMQ)) {
+                //开启rabbitMQ,则加入rabbitMQ队列
+
+            } else {
+
+                auditThreadProducer.executeOrder(orderMain, param);
+            }
+
+
         }
 
 

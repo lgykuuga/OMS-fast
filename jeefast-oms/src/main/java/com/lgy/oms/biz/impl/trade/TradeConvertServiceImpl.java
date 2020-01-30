@@ -228,6 +228,8 @@ public class TradeConvertServiceImpl implements ITradeConvertService {
         orderMain.setSkuNum(0);
         //总件数
         orderMain.setQty(0);
+        //生成配货单数量
+        orderMain.setDistributionQty(0);
         //商品编码集合
         orderMain.setCommodity("");
         //总体积

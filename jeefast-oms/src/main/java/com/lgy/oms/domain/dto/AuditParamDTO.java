@@ -183,7 +183,7 @@ public class AuditParamDTO {
                 .append(";校验信息:").append(checkInfo)
                 .append(";参与活动:").append(active)
                 .append(";参与合并订单:").append(merge)
-                .append(";参与拆分订单:").append(auto);
+                .append(";参与拆分订单:").append(split);
                 if (delayDistributionTime != null) {
                     stringBuffer.append(";延迟配货时间:").append(delayDistributionTime);
                 }
