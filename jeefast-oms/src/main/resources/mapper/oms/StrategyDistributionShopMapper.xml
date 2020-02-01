@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgy.oms.mapper.StrategyDistributionShopMapper">
+    <!--
+    <resultMap type="StrategyDistributionShop" id="StrategyDistributionShopResult">
+        <result property="id"    column="id"    />
+        <result property="gco"    column="gco"    />
+        <result property="shop"    column="shop"    />
+        <result property="auto"    column="auto"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+    -->
+
+    <update id="changeAuto">
+        update oms_strategy_distribution_shop set auto = #{auto}
+        where id = #{id}
+    </update>
+
+    <select id="getStrategyShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyDistributionShop">
+        select
+        a.id as id,
+        a.gco,
+        a.shop,
+        b.gna as shopName,
+        a.auto
+        from oms_strategy_distribution_shop a
+        left join base_shop b on b.gco = a.shop
+        <where>
+            <if test="gco != null and gco != ''">
+                AND a.gco = #{gco}
+            </if>
+        </where>
+    </select>
+
+    <select id="getNotJoThisStrategyShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyDistributionShop">
+        SELECT
+        p.gco as shop,
+        p.gna as shopName
+        FROM
+        base_shop p
+        WHERE
+        p.gco NOT IN (SELECT DISTINCT shop FROM oms_strategy_distribution_shop
+        <where>
+            <if test="gco != null and gco != ''">
+                AND gco = #{gco}
+            </if>
+        </where>
+        )
+        <if test="shopCode != null and shopCode != ''">
+            AND gco = #{shopCode}
+        </if>
+        <if test="shopName != null and shopName != ''">
+            AND gna like  concat('%', #{shopName}, '%')
+        </if>
+    </select>
+
+    <select id="getStrategyByShop" parameterType="String" resultType="com.lgy.oms.domain.StrategyDistribution">
+        select *
+        from
+        oms_strategy_distribution
+        where gco = (
+        select
+        gco
+        from
+        oms_strategy_distribution_shop
+        <where>
+            <if test="shop != null and shop != ''">
+                shop = #{shop}
+            </if>
+        </where>
+        )
+    </select>
+
+
+</mapper>
+

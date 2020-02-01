@@ -93,7 +93,7 @@ public class OrderStatisticsServiceImpl implements IOrderStatisticsService {
             String skuCollection = StringUtils.join(skus, Constants.COMMA);
             orderMain.setCommodity(skuCollection);
 
-            /**设置订单数量类型 */
+            //设置订单数量类型
             if (size == 1) {
                 //一单一货
                 orderMain.setSizeType(OrderSizeTypeEnum.SINGLE_CARGO.getCode());

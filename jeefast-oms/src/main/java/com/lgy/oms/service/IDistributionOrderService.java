@@ -12,4 +12,11 @@ import com.lgy.oms.domain.distribution.DistributionOrder;
  */
 public interface IDistributionOrderService extends IService<DistributionOrder> {
 
+    /**
+     * 保存配货单信息
+     *
+     * @param distributionOrder 配货单
+     * @return 成功标识
+     */
+    boolean saveOrder(DistributionOrder distributionOrder);
 }

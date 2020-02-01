@@ -62,6 +62,7 @@ public enum OrderOperateType {
 	MATCH_SELLER_MSG("订单匹配卖家留言"),
 
 	AUDIT("审核订单"),
+	CREATE_DISTRIBUTION("生成配货单"),
 	PUSH_TO_WMS("订单推送至仓库"),
 
 	/**

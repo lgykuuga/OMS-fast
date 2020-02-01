@@ -146,8 +146,8 @@ public class StrategyAuditController extends BaseController {
         String[] idList = Convert.toStrArray(ids);
         for (String id : idList) {
             StrategyAudit strategyAudit = strategyAuditService.getById(id);
-            //删除策略店铺
-            strategyAuditService.deleteShopByGco(strategyAudit.getGco());
+            //删除策略店铺及明细
+            strategyAuditService.deleteByGco(strategyAudit.getGco());
         }
         return toAjax(strategyAuditService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }

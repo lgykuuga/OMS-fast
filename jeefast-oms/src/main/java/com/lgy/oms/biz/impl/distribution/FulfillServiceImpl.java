@@ -4,6 +4,7 @@ import com.lgy.base.service.ICommodityService;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.biz.IEventDrivenService;
 import com.lgy.oms.biz.IFulfillService;
+import com.lgy.oms.biz.IOrderConvertService;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 /**
  * @Description 履约订单服务实现
  * @Author LGy
- * @Date 2020/1/7
+ * @Date 2020/1/31
  */
 @Service
 public class FulfillServiceImpl implements IFulfillService {
@@ -47,11 +48,13 @@ public class FulfillServiceImpl implements IFulfillService {
      */
     @Autowired
     IOrderDetailService orderDetailService;
+
     /**
      * 订单拦截信息
      */
     @Autowired
     IOrderInterceptService orderInterceptService;
+
     /**
      * 审单策略
      */
@@ -64,15 +67,32 @@ public class FulfillServiceImpl implements IFulfillService {
     @Autowired
     IEventDrivenService eventDrivenService;
 
+    /**
+     * 生成配货单Service
+     */
+    @Autowired
+    IOrderConvertService orderConvertService;
+
 
     @Override
     public CommonResponse<String> fulfillOrder(String orderId, DistributionParamDTO param) {
+
+
+
+
         return null;
     }
 
 
     @Override
     public CommonResponse<String> start(OrderMain orderMain, DistributionParamDTO param) {
+
+        //
+
+
+        //生成配货单
+        orderConvertService.execute(orderMain, param);
+
         return null;
     }
 

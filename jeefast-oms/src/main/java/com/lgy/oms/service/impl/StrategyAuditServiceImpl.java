@@ -55,6 +55,19 @@ public class StrategyAuditServiceImpl extends ServiceImpl<StrategyAuditMapper, S
     }
 
     @Override
+    public boolean deleteByGco(String gco) {
+        if (StringUtils.isNotEmpty(gco)) {
+            QueryWrapper wrapper = new QueryWrapper<>();
+            wrapper.eq("gco", gco);
+            shopMapper.delete(wrapper);
+            auditSpecialService.remove(wrapper);
+            auditCommodityService.remove(wrapper);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Integer deleteShopById(List<String> ids) {
         return shopMapper.deleteBatchIds(ids);
     }
