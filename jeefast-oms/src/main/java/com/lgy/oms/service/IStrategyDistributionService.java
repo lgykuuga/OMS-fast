@@ -33,12 +33,12 @@ public interface IStrategyDistributionService extends IService<StrategyDistribut
     boolean changeAuto(Long id, String auto);
 
     /**
-     * 根据策略编码删除策略店铺关系
+     * 根据策略编码删除策略策略明细
      *
      * @param gco 策略编码
      * @return
      */
-    Integer deleteShopByGco(String gco);
+    boolean deleteByGco(String gco);
 
     /**
      * 根据ID删除策略店铺关系

@@ -10,14 +10,10 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.domain.StrategyAudit;
-import com.lgy.oms.domain.StrategyAuditShop;
-import com.lgy.oms.domain.StrategyConvert;
-import com.lgy.oms.enums.strategy.AuditAmountEnum;
-import com.lgy.oms.enums.strategy.AuditNumberEnum;
-import com.lgy.oms.enums.strategy.AuditTimeEnum;
-import com.lgy.oms.enums.strategy.ProcessEnum;
-import com.lgy.oms.service.IStrategyAuditService;
+import com.lgy.oms.domain.StrategyDistribution;
+import com.lgy.oms.domain.StrategyDistributionShop;
+import com.lgy.oms.enums.strategy.DistributionLockModelEnum;
+import com.lgy.oms.service.IStrategyDistributionService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,59 +26,56 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 审单策略Controller
+ * 配货策略Controller
  *
  * @author lgy
  * @date 2019-12-17
  */
 @Controller
-@RequestMapping("/oms/audit")
-public class StrategyAuditController extends BaseController {
-    private String prefix = "oms/audit";
+@RequestMapping("/oms/strategy/distribution")
+public class StrategyDistributionController extends BaseController {
+
+    private String prefix = "oms/strategy/distribution";
 
     @Autowired
-    private IStrategyAuditService strategyAuditService;
+    private IStrategyDistributionService strategyDistributionService;
 
-    @RequiresPermissions("oms:audit:view")
+    @RequiresPermissions("oms:distribution:view")
     @GetMapping()
-    public String audit(Model model) {
-        //金额拦截类型
-        model.addAttribute("auditAmountList", AuditAmountEnum.getList());
-        //数值拦截类型
-        model.addAttribute("auditNumberList", AuditNumberEnum.getList());
-        //时间拦截类型
-        model.addAttribute("auditTimeList", AuditTimeEnum.getList());
+    public String distribution(Model model) {
         //表单对象
-        model.addAttribute("strategyAudit", new StrategyAudit());
-        return prefix + "/audit";
+        model.addAttribute("strategyDistribution", new StrategyDistribution());
+        //锁库方式
+        model.addAttribute("lockModelList", DistributionLockModelEnum.getList());
+        return prefix + "/distribution";
     }
 
     /**
      * 查询审单策略列表
      */
-    @RequiresPermissions("oms:audit:list")
+    @RequiresPermissions("oms:distribution:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(StrategyAudit strategyAudit) {
-        QueryWrapper<StrategyAudit> queryWrapper = getStrategyAuditQueryWrapper(strategyAudit);
+    public TableDataInfo list(StrategyDistribution strategyDistribution) {
+        QueryWrapper<StrategyDistribution> queryWrapper = getStrategyQueryWrapper(strategyDistribution);
         startPage();
-        return getDataTable(strategyAuditService.list(queryWrapper));
+        return getDataTable(strategyDistributionService.list(queryWrapper));
     }
 
-    private QueryWrapper<StrategyAudit> getStrategyAuditQueryWrapper(StrategyAudit strategyAudit) {
-        QueryWrapper<StrategyAudit> queryWrapper = new QueryWrapper<>();
+    private QueryWrapper<StrategyDistribution> getStrategyQueryWrapper(StrategyDistribution strategyDistribution) {
+        QueryWrapper<StrategyDistribution> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
-        if (StringUtils.isNotEmpty(strategyAudit.getGco())) {
-            queryWrapper.eq("gco", strategyAudit.getGco());
+        if (StringUtils.isNotEmpty(strategyDistribution.getGco())) {
+            queryWrapper.eq("gco", strategyDistribution.getGco());
         }
-        if (StringUtils.isNotEmpty(strategyAudit.getGna())) {
-            queryWrapper.like("gna", strategyAudit.getGna());
+        if (StringUtils.isNotEmpty(strategyDistribution.getGna())) {
+            queryWrapper.like("gna", strategyDistribution.getGna());
         }
         return queryWrapper;
     }
 
     /**
-     * 新增审单策略
+     * 新增策略
      */
     @GetMapping("/add")
     public String add() {
@@ -92,12 +85,12 @@ public class StrategyAuditController extends BaseController {
     /**
      * 新增保存审单策略
      */
-    @RequiresPermissions("oms:audit:add")
+    @RequiresPermissions("oms:distribution:add")
     @Log(title = "审单策略", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(StrategyAudit strategyAudit) {
-        return toAjax(strategyAuditService.save(strategyAudit));
+    public AjaxResult addSave(StrategyDistribution strategyDistribution) {
+        return toAjax(strategyDistributionService.save(strategyDistribution));
     }
 
     /**
@@ -105,8 +98,8 @@ public class StrategyAuditController extends BaseController {
      */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
-        StrategyAudit strategyAudit = strategyAuditService.getById(id);
-        mmap.put("strategyAudit", strategyAudit);
+        StrategyDistribution strategyDistribution = strategyDistributionService.getById(id);
+        mmap.put("strategyDistribution", strategyDistribution);
         return prefix + "/edit";
     }
 
@@ -116,51 +109,50 @@ public class StrategyAuditController extends BaseController {
     @GetMapping("/loadStrategy/{id}")
     @ResponseBody
     public AjaxResult loadStrategy(@PathVariable("id") Long id, Model model) {
-        StrategyAudit strategyAudit = strategyAuditService.getById(id);
+        StrategyDistribution strategyDistribution = strategyDistributionService.getById(id);
         //表单对象
-        model.addAttribute("strategyAudit", strategyAudit);
-        return AjaxResult.success(strategyAudit);
+        model.addAttribute("strategyDistribution", strategyDistribution);
+        return AjaxResult.success(strategyDistribution);
     }
 
     /**
      * 修改保存审单策略
      */
-    @RequiresPermissions("oms:audit:edit")
-    @Log(title = "审单策略", businessType = BusinessType.UPDATE)
+    @RequiresPermissions("oms:distribution:edit")
+    @Log(title = "配货策略", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(StrategyAudit strategyAudit) {
-        return toAjax(strategyAuditService.updateById(strategyAudit));
+    public AjaxResult editSave(StrategyDistribution strategyDistribution) {
+        return toAjax(strategyDistributionService.updateById(strategyDistribution));
     }
 
 
-
     /**
-     * 删除审单策略
+     * 删除配货策略
      */
-    @RequiresPermissions("oms:audit:remove")
-    @Log(title = "审单策略", businessType = BusinessType.DELETE)
+    @RequiresPermissions("oms:distribution:remove")
+    @Log(title = "配货策略", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
         String[] idList = Convert.toStrArray(ids);
         for (String id : idList) {
-            StrategyAudit strategyAudit = strategyAuditService.getById(id);
+            StrategyDistribution strategyDistribution = strategyDistributionService.getById(id);
             //删除策略店铺及明细
-            strategyAuditService.deleteByGco(strategyAudit.getGco());
+            strategyDistributionService.deleteByGco(strategyDistribution.getGco());
         }
-        return toAjax(strategyAuditService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
+        return toAjax(strategyDistributionService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
 
     /**
      * 查询策略店铺列表
      */
-    @PostMapping("/auditShop")
+    @PostMapping("/distributionShop")
     @ResponseBody
-    public TableDataInfo auditShop(String gco) {
-        List<StrategyAuditShop> shopList = new ArrayList<>();
+    public TableDataInfo distributionShop(String gco) {
+        List<StrategyDistributionShop> shopList = new ArrayList<>();
         if (StringUtils.isNotEmpty(gco)) {
-            shopList = strategyAuditService.getStrategyShop(gco);
+            shopList = strategyDistributionService.getStrategyShop(gco);
             startPage();
             return getDataTable(shopList);
         }
@@ -172,9 +164,9 @@ public class StrategyAuditController extends BaseController {
      */
     @PostMapping("/changeAuto")
     @ResponseBody
-    @Log(title = "审单策略", businessType = BusinessType.UPDATE)
+    @Log(title = "配货策略", businessType = BusinessType.UPDATE)
     public AjaxResult changeAuto(Long id, String auto) {
-        return toAjax(strategyAuditService.changeAuto(id, auto));
+        return toAjax(strategyDistributionService.changeAuto(id, auto));
     }
 
     /**
@@ -187,15 +179,15 @@ public class StrategyAuditController extends BaseController {
     }
 
     /**
-     * 删除神单策略店铺
+     * 删除转单策略店铺
      */
-    @RequiresPermissions("oms:audit:remove")
+    @RequiresPermissions("oms:distribution:remove")
     @PostMapping("/removeShop")
     @ResponseBody
     public AjaxResult removeShop(String ids) {
         List<String> idList = Arrays.asList(Convert.toStrArray(ids));
         //删除策略店铺
-        Integer integer = strategyAuditService.deleteShopById(idList);
+        Integer integer = strategyDistributionService.deleteShopById(idList);
         return toAjax(SqlHelper.retBool(integer));
     }
 
@@ -206,7 +198,7 @@ public class StrategyAuditController extends BaseController {
      * true:取不在该策略的店铺
      * false:获取未加入策略的店铺
      */
-    @RequiresPermissions("oms:audit:add")
+    @RequiresPermissions("oms:distribution:add")
     @GetMapping("/selectShop")
     public String selectShop(String gco, boolean enforce, ModelMap mmap) {
         mmap.put("gco", gco);
@@ -224,7 +216,7 @@ public class StrategyAuditController extends BaseController {
     @PostMapping("/addLoadShop")
     @ResponseBody
     public TableDataInfo addLoadShop(String shopCode, String shopName, String gco, boolean enforce) {
-        List<StrategyAuditShop> shopList = strategyAuditService.addLoadShop(shopCode, shopName, gco, enforce);
+        List<StrategyDistributionShop> shopList = strategyDistributionService.addLoadShop(shopCode, shopName, gco, enforce);
         startPage();
         return getDataTable(shopList);
     }
@@ -235,8 +227,8 @@ public class StrategyAuditController extends BaseController {
     @PostMapping("/addNotInShop")
     @ResponseBody
     public AjaxResult addNotInShop(String data) {
-        List<StrategyAuditShop> strategyShops = JSON.parseArray(data, StrategyAuditShop.class);
-        Integer count = strategyAuditService.saveStrategyShop(strategyShops, true);
+        List<StrategyDistributionShop> strategyShops = JSON.parseArray(data, StrategyDistributionShop.class);
+        Integer count = strategyDistributionService.saveStrategyShop(strategyShops, true);
         return toAjax(SqlHelper.retBool(count));
     }
 
@@ -246,8 +238,8 @@ public class StrategyAuditController extends BaseController {
     @PostMapping("/addNotJoinShop")
     @ResponseBody
     public AjaxResult addNotJoinShop(String data) {
-        List<StrategyAuditShop> strategyShops = JSON.parseArray(data, StrategyAuditShop.class);
-        Integer count = strategyAuditService.saveStrategyShop(strategyShops, false);
+        List<StrategyDistributionShop> strategyShops = JSON.parseArray(data, StrategyDistributionShop.class);
+        Integer count = strategyDistributionService.saveStrategyShop(strategyShops, false);
         return toAjax(SqlHelper.retBool(count));
     }
 

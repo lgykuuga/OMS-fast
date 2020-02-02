@@ -1,5 +1,6 @@
 package com.lgy.oms.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lgy.common.annotation.Excel;
 import com.lgy.common.core.domain.BaseEntity;
@@ -36,5 +37,12 @@ public class StrategyDistributionShop extends BaseEntity implements Serializable
     /** 开启自动(0:开启,1:关闭) */
     @Excel(name = "开启自动(0:开启,1:关闭)")
     private String auto;
+
+    /**
+     * 策略店铺名称
+     */
+    @TableField(exist = false)
+    private String shopName;
+
 
 }

@@ -51,14 +51,21 @@ public class StrategyDistributionServiceImpl extends ServiceImpl<StrategyDistrib
     }
 
     @Override
-    public Integer deleteShopByGco(String gco) {
+    public boolean deleteByGco(String gco) {
         if (StringUtils.isNotEmpty(gco)) {
             QueryWrapper wrapper = new QueryWrapper<>();
             wrapper.eq("gco", gco);
-            return shopMapper.delete(wrapper);
+            shopMapper.delete(wrapper);
+            preService.remove(wrapper);
+            specialService.remove(wrapper);
+            categoryService.remove(wrapper);
+            warehouseSkuService.remove(wrapper);
+            warehouseRuleService.remove(wrapper);
+            return true;
         }
-        return 0;
+        return false;
     }
+
 
     @Override
     public Integer deleteShopById(List<String> ids) {

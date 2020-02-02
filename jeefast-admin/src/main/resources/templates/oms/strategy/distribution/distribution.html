@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('配货策略列表')"/>
+</head>
+
+<body class="gray-bg">
+
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="form1">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>编码：</p>
+                                <input type="text" name="gco"  autocomplete="off" />
+                            </li>
+                            <li>
+                                <p>名称：</p>
+                                <input type="text" name="gna"  autocomplete="off" />
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm"
+                                   onclick="$.table.search('form1', 'bootstrap-table1')"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm"
+                                   onclick="$.form.reset('form1', 'bootstrap-table1')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <!-- btn -->
+            <div class="btn-group-sm" id="toolbar1" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="oms:distribution:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+            </div>
+
+            <div class="col-sm-12 select-table table-striped">
+                <!-- table -->
+                <table id="bootstrap-table1" data-mobile-responsive="true"></table>
+
+                <!-- btn -->
+                <div class="btn-group-sm" id="toolbar3" role="group">
+                    <button type="button" class="btn btn-w-m btn-success" onclick="special()">预分配规则</button>
+
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">拆分规则<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a onclick="special()">仓库商品拆分</a>
+                            </li>
+                            <li><a onclick="special()">特殊商品拆分</a>
+                            </li>
+                            <li><a onclick="special()">类别商品拆分</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a onclick="special()">订单重量拆分</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="btn btn-w-m btn-success" onclick="commodity()">分配仓库规则</button>
+                </div>
+
+                <div class="row">
+                    <!-- 店铺table -->
+                    <div class="col-sm-3">
+                        <div class="col-sm-12 select-table table-striped">
+                            <table id="bootstrap-table2" data-mobile-responsive="true"></table>
+                        </div>
+                    </div>
+
+                    <!-- 策略form -->
+                    <div class="col-sm-9">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>审单策略</h5>
+                            </div>
+                            <div class="ibox-content" id="form-distribution" th:fragment="form-distribution">
+                                <form class="form-horizontal m" id="form-distribution-edit" th:object="${strategyDistribution}">
+
+                                    <input name="id" th:field="*{id}" type="hidden">
+
+                                    <div class="container-fluid">
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-3 control-label">策略编码：</label>
+                                            <div class="col-sm-8">
+                                                <input name="gco" th:field="*{gco}" class="form-control" type="text"
+                                                       readonly="true">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-3 control-label">策略名称：</label>
+                                            <div class="col-sm-8">
+                                                <input name="gna" th:field="*{gna}" class="form-control" type="text"
+                                                       readonly="true">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container-fluid">
+                                        <div class="form-group col-md-3">
+                                            <label class="col-sm-8 control-label">预分配规则</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="preExecute"
+                                                           th:checked="${strategyDistribution.preExecute == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">仓库商品拆分规则</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="warehouseSkuSplit"
+                                                           th:checked="${strategyDistribution.warehouseSkuSplit == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">特殊商品拆分规则</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="specialSkuSplit"
+                                                           th:checked="${strategyDistribution.specialSkuSplit == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">类别商品拆分规则</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="categorySkuSplit"
+                                                           th:checked="${strategyDistribution.categorySkuSplit == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container-fluid">
+                                        <div class="form-group col-md-3">
+                                            <label class="col-sm-8 control-label">库存不足拆分</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="stockSplit"
+                                                           th:checked="${strategyDistribution.stockSplit == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">订单重量拆分规则</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="weightSplit"
+                                                           th:checked="${strategyDistribution.weightSplit == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">重新分配仓库</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="reWarehouse"
+                                                           th:checked="${strategyDistribution.reWarehouse == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label class="col-sm-8 control-label">重新分配物流</label>
+                                            <div class="col-sm-4">
+                                                <label class="toggle-switch switch-solid">
+                                                    <input type="checkbox" id="reLogistics"
+                                                           th:checked="${strategyDistribution.reLogistics == 0 ? true : false}">
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container-fluid">
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-4 control-label">锁库方式</label>
+                                            <div class="col-sm-4">
+                                                <select name="lockModel" class="form-control" id="lockModel">
+                                                    <option th:each="model : ${lockModelList}"
+                                                            th:text="${model.configValue}"
+                                                            th:value="${model.configKey}"
+                                                            th:selected="${strategyDistribution.lockModel == model.configKey}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-6 control-label">配货等待时间,单位:分钟</label>
+                                            <div class="m-r-md inline">
+                                                <!-- 配货等待时间值 -->
+                                                <input name="profitValue" th:field="*{waitTime}" type="text" class="dial m-r"
+                                                       data-fgColor="#ED5565" data-width="85" data-height="85" data-angleOffset=-125 data-angleArc=250 />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container-fluid">
+                                        <div class="right">
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="submit2()"><i
+                                                    class="fa fa-check"></i>更新
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:include="include :: footer"/>
+    <!-- JSKnob -->
+    <script src="../../../static/js/plugins/jsKnob/jquery.knob.js"
+            th:src="@{/js/plugins/jsKnob/jquery.knob.js}"></script>
+    <script th:inline="javascript">
+
+        var editFlag = [[${@permission.hasPermi('oms:stock:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:stock:remove')}]];
+        var prefix = ctx + "oms/strategy/distribution";
+        //货主list
+        var owners = [[${@base.selectOwner()}]];
+        //策略编码
+        var gco = "";
+
+        $("#form-distribution-edit").validate({
+            focusCleanup: true
+        });
+
+        $(function () {
+            var options = {
+                id: "bootstrap-table1",
+                toolbar: "toolbar1",
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                modalName: "审单策略",
+                singleSelect: true,
+                onClickRow: onClickRow,
+                columns: [
+                    {
+                        field: 'id',
+                        title: 'id',
+                        visible: false
+                    },
+                    {
+                        field: 'gco',
+                        title: '策略编码'
+                    },
+                    {
+                        field: 'gna',
+                        title: '策略名称'
+                    },
+                    {
+                        field: 'owner',
+                        title: '货主',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return $.table.selectValue(owners, value);
+                        }
+                    },
+                    {
+                        field: 'remark',
+                        title: '备注'
+                    },
+                    {
+                        field: 'createTime',
+                        title: '创建时间'
+                    },
+                    {
+                        field: 'updateTime',
+                        title: '更新时间'
+                    },
+                    {
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            var actions = [];
+                            actions.push('<a class="btn btn-primary btn-xs" onclick="shop(\'' + row.gco + '\')"><i class="fa fa-edit"></i>店铺</a> ');
+                            actions.push('<a class="btn btn-success btn-xs" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs" onclick="remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                            return actions.join('');
+                        }
+                    }
+                ]
+            };
+            $.table.init(options);
+        });
+
+        $(function () {
+            var options = {
+                id: "bootstrap-table2",
+                toolbar: "toolbar2",
+                url: prefix + "/distributionShop",
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                queryParams: queryParams,
+                height: 650,
+                columns: [
+                    {
+                        field: 'id',
+                        title: 'id',
+                        visible: false
+                    },
+                    {
+                        field: 'gco',
+                        title: '策略编码',
+                        visible: false
+                    },
+                    {
+                        field: 'shopName',
+                        title: '店铺'
+                    },
+                    {
+                        title: '自动',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return statusTools(row);
+                        }
+                    },
+                ]
+            };
+            $.table.init(options);
+        });
+
+        //点击行触发事件
+        function onClickRow(row, $element) {
+            gco = row.gco;
+            //重新加载店铺表格
+            $('#bootstrap-table2').bootstrapTable('refresh', gco);
+            var config = {
+                url: prefix + "/loadStrategy/" + row.id,
+                type: "get",
+                success: function (result) {
+                    var strategyDistribution = result.data;
+                    //填充表单
+                    $("#form-distribution-edit").setForm(strategyDistribution);
+
+
+                }
+            };
+            $.ajax(config)
+        }
+
+
+
+
+        /* 店铺开启自动 */
+        function statusTools(row) {
+            if (row.auto == 1) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
+            }
+        }
+
+        /* 店铺开启自动-停用 */
+        function disable(id) {
+            $.operate.post(prefix + "/changeAuto", {"id": id, "auto": 1});
+        }
+
+        /* 店铺开启自动-启用 */
+        function enable(id) {
+            $.operate.post(prefix + "/changeAuto", {"id": id, "auto": 0});
+        }
+
+        /* 打开策略店铺窗口 */
+        function shop(gco) {
+            $.modal.openWindow("策略店铺", prefix + "/selectShop/" + gco);
+        }
+
+        /* 跳转至特定信息拦截窗口 */
+        function special() {
+            if (gco == "") {
+                $.modal.alertError('请先选择策略');
+                return;
+            }
+            $.modal.openTab("特定信息拦截", prefix + "/special/" + gco);
+        }
+
+        /* 跳转至指定商品拦截窗口 */
+        function commodity() {
+            if (gco == "") {
+                $.modal.alertError('请先选择策略');
+                return;
+            }
+            $.modal.openTab("指定商品拦截", prefix + "/commodity/" + gco);
+        }
+
+        function remove(id) {
+            $.modal.confirm("确定删除该条信息吗？", function () {
+                var data = {"ids": id};
+                $.operate.submit(prefix + "/remove", "post", "json", data);
+                //重新加载表格
+                location.reload();
+            });
+        }
+
+        /* 跳转至组合信息拦截拦截窗口 */
+        function combo() {
+            if (gco == "") {
+                $.modal.alertError('请先选择策略');
+                return;
+            }
+            $.modal.openTab("组合信息拦截", prefix + "/combo/" + gco);
+        }
+
+        function remove(id) {
+            $.modal.confirm("确定删除该条信息吗？", function () {
+                var data = {"ids": id};
+                $.operate.submit(prefix + "/remove", "post", "json", data);
+                //重新加载表格
+                location.reload();
+            });
+        }
+
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.gco = gco;
+            return search;
+        }
+
+        function submit2() {
+            var data = $("#form-distribution-edit").serializeArray();
+            var source = $("input[id='source']").is(':checked') == true ? 0 : 1;
+            var addressValid = $("input[id='addressValid']").is(':checked') == true ? 0 : 1;
+            var buyMessage = $("input[id='buyMessage']").is(':checked') == true ? 0 : 1;
+            var sellerMessage = $("input[id='sellerMessage']").is(':checked') == true ? 0 : 1;
+            var comboIntercept = $("input[id='comboIntercept']").is(':checked') == true ? 0 : 1;
+            data.push({"name": "source", "value": source});
+            data.push({"name": "addressValid", "value": addressValid});
+            data.push({"name": "buyMessage", "value": buyMessage});
+            data.push({"name": "sellerMessage", "value": sellerMessage});
+            data.push({"name": "comboIntercept", "value": comboIntercept});
+
+            $.ajax({
+                url: prefix + "/edit",
+                data: data,
+                type: "post",
+                success: function (result) {
+                    if (result.code == 0) {
+                        layer.msg("更新成功,正在刷新数据请稍后……", {
+                            icon: 1,
+                            time: 500,
+                            shade: [0.1, '#8F8F8F']
+                        });
+                    } else {
+                        $.modal.alertError(result.msg);
+                    }
+                }
+            })
+        }
+
+        /**
+         * 将josn对象赋值给form
+         * @param {dom} 指定的选择器
+         * @param {obj} 需要给form赋值的json对象
+         * @method serializeJson
+         * */
+        $.fn.setForm = function (jsonValue) {
+            var obj = this;
+            $.each(jsonValue, function (name, ival) {
+                var $oinput = obj.find("input[name=" + name + "]");
+                if ($oinput.attr("type") == "checkbox") {
+                    if (ival !== null) {
+                        var checkboxObj = $("[name=" + name + "]");
+                        ival = ival.toString();
+                        var checkArray = ival.split(";");
+                        for (var i = 0; i < checkboxObj.length; i++) {
+                            for (var j = 0; j < checkArray.length; j++) {
+                                if (checkboxObj[i].value == checkArray[j]) {
+                                    // checkboxObj[i].click();
+                                    checkboxObj[i].attr("checked", 'checked');
+                                }
+                            }
+                        }
+                    }
+                } else if ($oinput.attr("type") == "radio") {
+                    $oinput.each(function () {
+                        var radioObj = $("[name=" + name + "]");
+                        for (var i = 0; i < radioObj.length; i++) {
+                            if (radioObj[i].value == ival) {
+                                radioObj[i].click();
+                            }
+                        }
+                    });
+                } else if ($oinput.attr("type") == "textarea") {
+                    obj.find("[name=" + name + "]").html(ival);
+                } else {
+                    obj.find("[name=" + name + "]").val(ival);
+                }
+            })
+        }
+
+        $(".dial").knob();
+
+    </script>
+</body>
+
+
+</html>

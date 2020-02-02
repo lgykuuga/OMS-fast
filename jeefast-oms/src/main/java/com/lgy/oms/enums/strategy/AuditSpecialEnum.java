@@ -56,7 +56,7 @@ public enum AuditSpecialEnum {
         if (configs == null) {
             configs = new ArrayList<>(AuditSpecialEnum.values().length);
             for (AuditSpecialEnum typeEnum : AuditSpecialEnum.values()) {
-                configs.add(new Config(typeEnum.getCode() + "", typeEnum.getName()));
+                configs.add(new Config(typeEnum.getCode().toString(), typeEnum.getName()));
             }
         }
         return configs;

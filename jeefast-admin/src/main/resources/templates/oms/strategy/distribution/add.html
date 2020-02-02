@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('新增审单策略')" />
+    <th:block th:include="include :: header('新增配货策略')" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-audit-add">
+        <form class="form-horizontal m" id="form-distribution-add">
             <div class="form-group">
                 <label class="col-sm-3 control-label">策略编码：</label>
                 <div class="col-sm-8">
@@ -37,14 +37,14 @@
     </div>
     <th:block th:include="include :: footer" />
     <script type="text/javascript">
-        var prefix = ctx + "oms/audit"
-        $("#form-audit-add").validate({
+        var prefix = ctx + "oms/strategy/distribution"
+        $("#form-distribution-add").validate({
             focusCleanup: true
         });
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/add", $('#form-audit-add').serialize());
+                $.operate.save(prefix + "/add", $('#form-distribution-add').serialize());
             }
         }
     </script>

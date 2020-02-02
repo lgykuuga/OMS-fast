@@ -38,9 +38,6 @@ public enum DownloadOrderInterfaceEnum {
 
     private String value;
 
-    /**
-     * 订单状态集合
-     */
     private static List<Config> configs;
 
     public String getValue() {
@@ -59,12 +56,10 @@ public enum DownloadOrderInterfaceEnum {
         return JsOrderFlag.substring(0, JsOrderFlag.length() - 1) + "]";
     }
 
-    /**
-     * 获取订单状态集合
-     */
+
     public final static List<Config> getList() {
         if (configs == null) {
-            configs = new ArrayList<>();
+            configs = new ArrayList<>(DownloadOrderInterfaceEnum.values().length);
             for (DownloadOrderInterfaceEnum strategyEnum : DownloadOrderInterfaceEnum.values()) {
                 configs.add(new Config(strategyEnum.name(), strategyEnum.getValue()));
             }

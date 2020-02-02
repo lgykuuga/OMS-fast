@@ -31,13 +31,6 @@ public interface IStrategyAuditService extends IService<StrategyAudit> {
      */
     boolean changeAuto(Long id, String auto);
 
-    /**
-     * 根据策略编码删除策略店铺关系
-     *
-     * @param gco 策略编码
-     * @return
-     */
-    Integer deleteShopByGco(String gco);
 
     /**
      * 根据策略编码删除策略策略明细
@@ -70,7 +63,7 @@ public interface IStrategyAuditService extends IService<StrategyAudit> {
      * 保存策略店铺
      *
      * @param strategyShopList
-     * @param enforce                 是否强制添加
+     * @param enforce          是否强制添加
      * @return
      */
     Integer saveStrategyShop(List<StrategyAuditShop> strategyShopList, boolean enforce);
@@ -85,6 +78,7 @@ public interface IStrategyAuditService extends IService<StrategyAudit> {
 
     /**
      * 根据店铺编码获取审单策略所有信息(包含拦截主信息、拦截订单明细)
+     *
      * @param shop
      * @return
      */

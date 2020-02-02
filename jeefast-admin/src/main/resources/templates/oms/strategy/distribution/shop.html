@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('策略店铺')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+		<div class="row">
+			<!-- btn -->
+			<div class="btn-group-sm" id="toolbar1" role="group">
+				<a class="btn btn-success" onclick="addShop(gco, false)" shiro:hasPermission="oms:audit:add">
+					<i class="fa fa-plus"></i> 添加店铺
+				</a>
+				<a class="btn btn-success" onclick="addShop(gco, true)" shiro:hasPermission="oms:audit:add">
+					<i class="fa fa-plus"></i> 强制添加
+				</a>
+				<a class="btn btn-danger multiple" onclick="$.operate.removeAll()" shiro:hasPermission="oms:audit:remove">
+					<i class="fa fa-remove"></i> 移除店铺
+				</a>
+			</div>
+
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+
+    <script th:inline="javascript">
+        var prefix = ctx + "oms/strategy/distribution";
+        //策略编码
+		var gco = [[${gco}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/distributionShop",
+				queryParams: queryParams,
+		        showSearch: false,
+		        showRefresh: false,
+		        showToggle: false,
+		        showColumns: false,
+				removeUrl: prefix + "/removeShop",
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id',
+					title : 'id',
+					visible: false
+				},
+				{
+					field : 'gco',
+					title : '策略编码',
+					visible: false
+				},
+				{
+					field : 'shop',
+					title : '店铺编码'
+				},
+				{
+					field : 'shopName',
+					title : '店铺'
+				},
+				{
+					title: '自动',
+					align: 'center',
+					formatter: function (value, row, index) {
+						return statusTools(row);
+					}
+				},
+		        ]
+            };
+            $.table.init(options);
+        });
+
+		function queryParams(params) {
+			var search = $.table.queryParams(params);
+			search.gco = gco;
+			return search;
+		}
+
+		/* 店铺开启自动 */
+		function statusTools(row) {
+			if (row.auto == 1) {
+				return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\')"></i> ';
+			} else {
+				return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\')"></i> ';
+			}
+		}
+
+		/* 店铺开启自动-停用 */
+		function disable(id) {
+			$.operate.post(prefix + "/changeAuto", { "id": id, "auto": 1 });
+		}
+
+		/* 店铺开启自动-启用 */
+		function enable(id) {
+			$.operate.post(prefix + "/changeAuto", { "id": id, "auto": 0 });
+		}
+
+		/* 添加店铺 */
+		function addShop(gco, enforce) {
+			var title = "新增店铺";
+			if (enforce) {
+				title = "强制新增店铺";
+			}
+			var url = prefix + "/selectShop/?gco=" + gco +"&&enforce=" + enforce;
+			$.modal.open(title, url);
+		}
+	</script>
+</body>
+</html>
