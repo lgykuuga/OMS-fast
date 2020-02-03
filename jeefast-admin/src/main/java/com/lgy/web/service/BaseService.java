@@ -1,12 +1,10 @@
 package com.lgy.web.service;
 
+import com.lgy.base.domain.Logistics;
 import com.lgy.base.domain.Platform;
 import com.lgy.base.domain.Shop;
 import com.lgy.base.domain.Warehouse;
-import com.lgy.base.service.IOwnerService;
-import com.lgy.base.service.IPlatformService;
-import com.lgy.base.service.IShopService;
-import com.lgy.base.service.IWarehouseService;
+import com.lgy.base.service.*;
 import com.lgy.system.domain.vo.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +27,8 @@ public class BaseService {
     IOwnerService ownerService;
     @Autowired
     IWarehouseService warehouseService;
+    @Autowired
+    ILogisticsService logisticsService;
 
     /**
      * 下来框查询货主
@@ -64,5 +64,14 @@ public class BaseService {
      */
     public List<Warehouse> selectWarehouse() {
         return warehouseService.selectWarehouse();
+    }
+
+    /**
+     * 下来框查询物流商
+     *
+     * @return 仓库列表
+     */
+    public List<Logistics> selectLogistics() {
+        return logisticsService.selectLogistics();
     }
 }

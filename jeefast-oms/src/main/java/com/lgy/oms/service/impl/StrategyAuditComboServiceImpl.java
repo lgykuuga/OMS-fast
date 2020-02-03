@@ -17,7 +17,6 @@ public class StrategyAuditComboServiceImpl extends ServiceImpl<StrategyAuditComb
 
     @Override
     public boolean updateComboPriority(Long id, int i) {
-
         StrategyAuditCombo entity = new StrategyAuditCombo();
         entity.setId(id);
         entity.setPriority(i);

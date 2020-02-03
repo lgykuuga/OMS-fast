@@ -20,4 +20,14 @@ public interface IStrategyDistributionPreService extends IService<StrategyDistri
      * @return
      */
     List<StrategyDistributionPre> getStrategyByGco(String gco);
+
+    /**
+     * 调整组合信息拦截优先级顺序
+     *
+     * @param id 组合信息id
+     * @param i  序号
+     * @return
+     */
+    boolean updatePrePriority(Long id, int i);
+
 }

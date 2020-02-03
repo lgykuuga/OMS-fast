@@ -83,6 +83,7 @@
         var datas = [[${@dict.getType('sys_normal_disable')}]];
         var shops = [[${@base.selectShop()}]];
         var platforms = [[${@base.selectPlatform()}]];
+        var strategyList = [[${strategyList}]];
 
         $(function () {
             var options = {
@@ -136,7 +137,9 @@
                         field: 'xdcl',
                         title: '下载订单策略',
                         align: 'center',
-
+                        formatter: function(value, row, index) {
+                            return $.table.selectValue(strategyList, value);
+                        }
                     },
                     {
                         field: 'scjs',

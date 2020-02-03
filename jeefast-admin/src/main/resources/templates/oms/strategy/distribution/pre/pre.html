@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('配货策略预分配列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="form1">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>策略编码：</p>
+                                <input type="text" name="gco" th:value="${gco}" readonly="true"/>
+                            </li>
+                            <li>
+                                <p>规则名称：</p>
+                                <input type="text" name="gna" autocomplete="off" />
+                            </li>
+                            <li>
+                                状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
+                                <option value="">所有</option>
+                                <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search('form1', 'bootstrap-table1')"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form1', 'bootstrap-table1')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar1" role="group">
+                <a class="btn btn-success" onclick="add()" shiro:hasPermission="oms:distribution:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="oms:distribution:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:distribution:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table1" data-use-row-attr-func="true" data-reorderable-rows="true"
+                       data-mobile-responsive="true"></table>
+
+
+
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>规则详情</h5>
+                        </div>
+                        <div class="btn-group-sm" id="toolbar2" role="group">
+                            <a class="btn btn-success" onclick="addDetail()">
+                                <i class="fa fa-plus"></i> 新增
+                            </a>
+                            <a class="btn btn-primary single disabled" onclick="editDetail()">
+                                <i class="fa fa-edit"></i> 修改
+                            </a>
+                            <a class="btn btn-danger multiple disabled" onclick="removeDetail()">
+                                <i class="fa fa-remove"></i> 删除
+                            </a>
+                        </div>
+                        <div class="col-sm-12 select-table table-striped">
+                            <table id="bootstrap-table2"></table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: bootstrap-table-reorder-js" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('oms:distribution:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:distribution:remove')}]];
+        var prefix = ctx + "oms/strategy/distribution/pre";
+        var disable = [[${@dict.getType('sys_normal_disable')}]];
+        //策略编码
+        var gco = [[${gco}]];
+        // 组合父表策略Id,点击行触发事件赋值
+        var parentId = "";
+        // 规则名称,点击行触发事件赋值
+        var gna = "";
+        // 表
+        var orderTableEnum = [[${orderTableEnum}]];
+        // 判断条件
+        var conditionEnum = [[${conditionEnum}]];
+        // 锁库方式
+        var lockModelEnum = [[${lockModelEnum}]];
+
+        var warehouses = [[${@base.selectWarehouse()}]];
+        var logistics = [[${@base.selectLogistics()}]];
+
+        $(function() {
+            var options = {
+                id: "bootstrap-table1",
+                toolbar: "toolbar1",
+                url: prefix + "/list",
+                sortName: "priority",//优先级排序
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "预分配规则",
+                onClickRow: onClickRow,
+                onReorderRow: function (data) {
+                    //当拖拽结束后，data为整个表格的数据
+                    sort(JSON.stringify(data));
+                    return false;
+                },
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'ID',
+                    visible: false
+                },
+                {
+                    field : 'gco', 
+                    title : '规则编码',
+                    visible: false
+                },
+                {
+                    field : 'priority',
+                    title : '优先级',
+                    width : 30,
+                    align: 'center',
+                },
+                {
+                    field : 'gna', 
+                    title : '规则名称'
+                },
+
+                {
+                    field: 'warehouseSkuSplit',
+                    title: '仓库商品拆分',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(disable, value);
+                    }
+                },
+                {
+                    field: 'specialSkuSplit',
+                    title: '特殊商品拆分',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(disable, value);
+                    }
+                },
+                {
+                    field: 'categorySkuSplit',
+                    title: '类别商品拆分',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(disable, value);
+                    }
+                },
+                {
+                    field: 'stockSplit',
+                    title: '库存不足拆分',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(disable, value);
+                    }
+                },
+                {
+                    field: 'weightSplit',
+                    title: '订单重量拆分',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(disable, value);
+                    }
+                },
+                {
+                    field: 'lockModel',
+                    title: '锁库方式',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectValue(lockModelEnum, value);
+                    }
+                },
+
+                {
+                    field: 'warehouse',
+                    title: '仓库',
+                    align: 'center',
+                    width: 150,
+                    formatter: function(value, row, index) {
+                        return $.table.selectGna(warehouses, value);
+                    }
+                },
+
+                {
+                    field: 'logistics',
+                    title: '物流',
+                    align: 'center',
+                    width: 150,
+                    formatter: function(value, row, index) {
+                        return $.table.selectGna(logistics, value);
+                    }
+                },
+
+                {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(disable, value);
+                    }
+                },
+                {
+                    field : 'remark', 
+                    title : '规则说明',
+                },
+                {
+                    field : 'createBy',
+                    title : '创建人'
+                },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                },
+                {
+                    field : 'updateBy',
+                    title : '修改人',
+                    visible: false
+                },
+                {
+                    field : 'updateTime',
+                    title : '修改时间',
+                    visible: false
+                },
+                ]
+            };
+            $.table.init(options);
+        });
+
+        $(function() {
+            var options = {
+                id: "bootstrap-table2",
+                toolbar: "toolbar2",
+                url: prefix + "/detailList",
+                createUrl: prefix + "/addDetail",
+                removeUrl: prefix + "/removeDetail",
+                updateUrl: prefix + "/editDetail/{id}",
+                queryParams: queryParams,
+                modalName: "规则明细",
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field : 'id',
+                        title : 'ID',
+                        visible: false
+                    },
+                    {
+                        field : 'type',
+                        title : '属性类型',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return $.table.selectValue(orderTableEnum, value);
+                        }
+                    },
+                    {
+                        field : 'field',
+                        title : '字段'
+                    },
+                    {
+                        field : 'requirement',
+                        title : '条件',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return $.table.selectValue(conditionEnum, value);
+                        }
+                    },
+                    {
+                        field : 'value',
+                        title : '匹配值'
+                    },
+                    {
+                        field : 'valueName',
+                        title : '匹配值'
+                    },
+                    {
+                        field: 'status',
+                        title: '状态',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return $.table.selectDictLabel(disable, value);
+                        }
+                    },
+                    ]
+            };
+            $.table.init(options);
+        });
+
+        // 添加信息
+        function add() {
+            table.set();
+            $.modal.open('添加' + table.options.modalName, table.options.createUrl + "/" + gco);
+        }
+
+        /* 策略排序 */
+        function sort(data) {
+            $.operate.post(prefix + "/sort", { "data": data });
+        }
+
+        //点击行触发事件
+        function onClickRow(row, $element) {
+            parentId = row.id;
+            gna = row.gna;
+            //重新加载子表格
+            $('#bootstrap-table2').bootstrapTable('refresh', parentId);
+        }
+
+        //明细查询条件
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.parentId = parentId;
+            return search;
+        }
+
+        // 添加明细信息
+        function addDetail() {
+            if (parentId == "") {
+                $.modal.alertError('请先选择规则');
+                return;
+            }
+
+            table.set();
+            $.modal.open('添加' + table.options.modalName, table.options.createUrl + "/" + gco
+                + "/" + parentId);
+        }
+        // 编辑明细信息
+        function editDetail() {
+            table.set();
+            var rows = $("#bootstrap-table2").bootstrapTable('getSelections');
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+            $.modal.open("修改" + table.options.modalName, $.operate.editUrl(rows[0].id));
+        }
+        // 删除明细信息
+        function removeDetail() {
+            table.set();
+            var rows = $("#bootstrap-table2").bootstrapTable('getSelections');
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+
+            //id
+            var ids = "";
+            for (var i=0; i<rows.length; i++) {
+                ids += rows[i].id+",";
+            }
+
+            $.modal.confirm("确认要删除选中的" + rows.length + "条数据吗?", function() {
+                var url = table.options.removeUrl;
+                var data = { "ids": ids };
+                $.operate.submit(url, "post", "json", data);
+            });
+        }
+
+    </script>
+</body>
+</html>

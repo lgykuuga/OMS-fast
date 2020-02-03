@@ -29,9 +29,9 @@ public class StrategyDistributionPreDetail extends BaseEntity implements Seriali
     @Excel(name = "策略编码")
     private String gco;
 
-    /** 对应combo表自增id */
-    @Excel(name = "对应combo表自增id")
-    private Long comboId;
+    /** 对应父表自增id */
+    @Excel(name = "对应父表自增id")
+    private Long parentId;
 
     /** 属性类型(订单主信息/订单用户信息/订单支付信息...) */
     @Excel(name = "属性类型(订单主信息/订单用户信息/订单支付信息...)")

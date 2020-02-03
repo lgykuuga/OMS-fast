@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改审单策略组合信息明细')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-detail-edit" th:object="${strategyDistributionPreDetail}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <input name="parentId" th:field="*{parentId}" type="hidden">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">属性类型</label>
+                <div class="col-sm-8">
+                    <select name="type" class="form-control m-b">
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">字段:</label>
+                <div class="col-sm-8">
+                    <input name="field" th:field="*{field}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">条件:</label>
+                <div class="col-sm-8">
+                    <input name="requirement" th:field="*{requirement}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">匹配值：</label>
+                <div class="col-sm-8">
+                    <textarea name="value" th:field="*{value}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">匹配值：</label>
+                <div class="col-sm-8">
+                    <textarea name="valueName" th:field="*{valueName}" class="form-control"
+                              type="text" readonly="true" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:field="*{status}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">规则描述：</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/strategy/distribution/pre";
+        $("#form-detail-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/editDetail", $('#form-detail-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

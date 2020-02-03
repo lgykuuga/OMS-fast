@@ -183,14 +183,6 @@ public class StrategyAuditComboController extends BaseController {
 
         mmap.put("orderTableEnum", OrderTableEnum.getList());
         mmap.put("conditionEnum", ConditionEnum.getList());
-
-        mmap.put("orderMainField", OrderFieldUtils.getOrderMainList());
-        mmap.put("buyerInfoField", OrderFieldUtils.getBuyerInfoList());
-        mmap.put("payInfoField", OrderFieldUtils.getPayInfoList());
-        mmap.put("typeInfoField", OrderFieldUtils.getTypeInfoList());
-        mmap.put("statusInfoField", OrderFieldUtils.getStatusInfoList());
-        mmap.put("interceptField", OrderFieldUtils.getInterceptList());
-        mmap.put("detailField", OrderFieldUtils.getDetailList());
         return prefix + "/addDetail";
     }
 
@@ -215,14 +207,6 @@ public class StrategyAuditComboController extends BaseController {
 
         mmap.put("orderTableEnum", OrderTableEnum.getList());
         mmap.put("conditionEnum", ConditionEnum.getList());
-
-        mmap.put("orderMainField", OrderFieldUtils.getOrderMainList());
-        mmap.put("buyerInfoField", OrderFieldUtils.getBuyerInfoList());
-        mmap.put("payInfoField", OrderFieldUtils.getPayInfoList());
-        mmap.put("typeInfoField", OrderFieldUtils.getTypeInfoList());
-        mmap.put("statusInfoField", OrderFieldUtils.getStatusInfoList());
-        mmap.put("interceptField", OrderFieldUtils.getInterceptList());
-        mmap.put("detailField", OrderFieldUtils.getDetailList());
         return prefix + "/editDetail";
     }
 
@@ -249,7 +233,7 @@ public class StrategyAuditComboController extends BaseController {
     }
 
     /**
-     * 删除审单策略组合信息拦截
+     * 选择表字段,联动事件
      */
     @PostMapping("/selectField")
     @ResponseBody

@@ -24,4 +24,18 @@ public class StrategyDistributionPreDetailServiceImpl extends ServiceImpl<Strate
         queryWrapper.eq("gco", gco);
         return this.list(queryWrapper);
     }
+
+    @Override
+    public boolean deleteByParentId(String id) {
+        QueryWrapper<StrategyDistributionPreDetail> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("parent_id", id);
+        return this.remove(queryWrapper);
+    }
+
+    @Override
+    public List<StrategyDistributionPreDetail> getDetailByParentId(Long parentId) {
+        QueryWrapper<StrategyDistributionPreDetail> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("parent_id", parentId);
+        return this.list(queryWrapper);
+    }
 }

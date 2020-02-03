@@ -35,11 +35,11 @@ public class StrategyDistributionPre extends BaseEntity implements Serializable 
 
     /** 优先级 */
     @Excel(name = "优先级")
-    private Long priority;
+    private Integer priority;
 
     /** 满足条件个数 */
     @Excel(name = "满足条件个数")
-    private Long number;
+    private Integer number;
 
     /** 参与仓库商品拆分 */
     @Excel(name = "参与仓库商品拆分")

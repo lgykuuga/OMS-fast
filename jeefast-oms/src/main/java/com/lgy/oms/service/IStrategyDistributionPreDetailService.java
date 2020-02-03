@@ -20,4 +20,17 @@ public interface IStrategyDistributionPreDetailService extends IService<Strategy
      * @return
      */
     List<StrategyDistributionPreDetail> getStrategyByGco(String gco);
+
+    /**
+     * 根据parent删除信息
+     * @param id
+     */
+    boolean deleteByParentId(String id);
+
+    /**
+     * 根据Id获取明细
+     * @param parentId
+     * @return
+     */
+    List<StrategyDistributionPreDetail> getDetailByParentId(Long parentId);
 }

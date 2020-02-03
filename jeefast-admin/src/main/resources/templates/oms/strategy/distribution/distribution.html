@@ -44,7 +44,7 @@
 
                 <!-- btn -->
                 <div class="btn-group-sm" id="toolbar3" role="group">
-                    <button type="button" class="btn btn-w-m btn-success" onclick="special()">预分配规则</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="pre()">预分配规则</button>
 
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">拆分规则<span class="caret"></span>
@@ -391,12 +391,12 @@
         }
 
         /* 跳转至特定信息拦截窗口 */
-        function special() {
+        function pre() {
             if (gco == "") {
                 $.modal.alertError('请先选择策略');
                 return;
             }
-            $.modal.openTab("特定信息拦截", prefix + "/special/" + gco);
+            $.modal.openTab("预分配规则", prefix + "/pre/" + gco);
         }
 
         /* 跳转至指定商品拦截窗口 */

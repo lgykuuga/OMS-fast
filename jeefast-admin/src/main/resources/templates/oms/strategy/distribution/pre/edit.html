@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改审单策略组合信息拦截')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-distribution-edit" th:object="${strategyDistributionPre}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">策略编码</label>
+                <div class="col-sm-8">
+                    <input name="gco" th:field="*{gco}" class="form-control" type="text" required readonly="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">规则名称</label>
+                <div class="col-sm-8">
+                    <input name="gna" th:field="*{gna}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">优先级</label>
+                <div class="col-sm-8">
+                    <input name="priority" th:field="*{priority}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">满足条件个数</label>
+                <div class="col-sm-8">
+                    <input name="number" th:field="*{number}" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">参与仓库商品拆分</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="warehouseSkuSplit" th:checked="${strategyDistributionPre.warehouseSkuSplit == 0 ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">参与特殊商品拆分</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="specialSkuSplit" th:checked="${strategyDistributionPre.specialSkuSplit == 0 ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">参与类别商品拆分</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="categorySkuSplit" th:checked="${strategyDistributionPre.categorySkuSplit == 0 ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">参与库存不足拆分</label>
+                    <div class="col-sm-8">
+                        <label class="toggle-switch switch-solid">
+                            <input type="checkbox" id="stockSplit" th:checked="${strategyDistributionPre.stockSplit == 0 ? true : false}">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">参与订单重量拆分</label>
+                <div class="col-sm-8">
+                    <label class="toggle-switch switch-solid">
+                        <input type="checkbox" id="weightSplit" th:checked="${strategyDistributionPre.weightSplit == 0 ? true : false}">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">锁库方式</label>
+                <div class="col-sm-8">
+                    <select name="lockModel" class="form-control"  th:field="*{lockModel}" >
+                        <option th:each="lockModel : ${lockModelEnum}" th:text="${lockModel.configValue}" th:value="${lockModel.configKey}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">仓库</label>
+                <div class="col-sm-8">
+                    <select name="warehouse" class="form-control" th:with="warehouseList=${@base.selectWarehouse()}">
+                        <option th:each="warehouse : ${warehouseList}" th:field="*{warehouse}"
+                                th:text="${warehouse.gna}" th:value="${warehouse.gco}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">物流</label>
+                <div class="col-sm-8">
+                    <select name="logistics" class="form-control" th:with="logisticsList=${@base.selectLogistics()}">
+                        <option th:each="logistics : ${logisticsList}" th:field="*{logistics}"
+                                th:text="${logistics.gna}" th:value="${logistics.gco}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:field="*{status}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">规则描述</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/strategy/distribution/pre";
+        $("#form-distribution-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                var data = $("#form-distribution-edit").serializeArray();
+                var warehouseSkuSplit = $("input[id='warehouseSkuSplit']").is(':checked') == true ? 0 : 1;
+                var specialSkuSplit = $("input[id='specialSkuSplit']").is(':checked') == true ? 0 : 1;
+                var categorySkuSplit = $("input[id='categorySkuSplit']").is(':checked') == true ? 0 : 1;
+                var stockSplit = $("input[id='stockSplit']").is(':checked') == true ? 0 : 1;
+                var weightSplit = $("input[id='weightSplit']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "warehouseSkuSplit", "value": warehouseSkuSplit});
+                data.push({"name": "specialSkuSplit", "value": specialSkuSplit});
+                data.push({"name": "categorySkuSplit", "value": categorySkuSplit});
+                data.push({"name": "stockSplit", "value": stockSplit});
+                data.push({"name": "weightSplit", "value": weightSplit});
+                $.operate.save(prefix + "/add", data);
+            }
+        }
+    </script>
+</body>
+</html>

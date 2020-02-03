@@ -25,4 +25,12 @@ public class StrategyDistributionPreServiceImpl extends ServiceImpl<StrategyDist
         return this.list(queryWrapper);
     }
 
+    @Override
+    public boolean updatePrePriority(Long id, int i) {
+        StrategyDistributionPre entity = new StrategyDistributionPre();
+        entity.setId(id);
+        entity.setPriority(i);
+        return this.updateById(entity);
+    }
+
 }

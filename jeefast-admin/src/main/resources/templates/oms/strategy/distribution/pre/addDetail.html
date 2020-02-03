@@ -21,7 +21,7 @@
             <div class="col-sm-8">
                 <select name="field" class="form-control" id="field">
                     <option value="">-选择字段-</option>
-<!--                    <option th:each="orderMain : ${orderMainField}" th:text="${orderMain.configValue}" th:value="${orderMain.configKey}"></option>-->
+                    <!--                    <option th:each="orderMain : ${orderMainField}" th:text="${orderMain.configValue}" th:value="${orderMain.configKey}"></option>-->
                 </select>
             </div>
         </div>
@@ -69,12 +69,13 @@
 </div>
 <th:block th:include="include :: footer"/>
 <script type="text/javascript">
-    var prefix = ctx + "oms/audit/combo"
+    var prefix = ctx + "oms/strategy/distribution/pre"
 
     //规则编码
-    var comboId = [[${comboId}]];
+    var parentId = [[${parentId}]];
     //策略编码
-    var gco = "[[${gco}]]";
+    var gco ="[[${gco}]]";
+
 
     $("#form-detail-add").validate({
         focusCleanup: true
@@ -84,47 +85,33 @@
         if ($.validate.form()) {
             var data = $("#form-detail-add").serializeArray();
             data.push({"name": "gco", "value": gco});
-            data.push({"name": "comboId", "value": comboId});
+            data.push({"name": "parentId", "value": parentId});
             $.operate.save(prefix + "/addDetail", data);
         }
     }
 
-    // $("#type").on("change", function () {
-    //     var seled = $(this).val();
-    //     $("#inputType").val(seled);
-    //     var serviceText = $("#type").find("option:selected").text();
-    //     var serviceVal = $("#type").val();
-    //     console.info(seled);
-    //     console.info(serviceText);
-    //     console.info(serviceVal);
-    //
-    // });
-
-    $(document).ready(function(){
-        $("#type").change(function(){
+    $(document).ready(function () {
+        $("#type").change(function () {
             var code = $("#type").val();
-            if(code ==''){
+            if (code == '') {
                 return;
             }
 
             $.ajax({
                 url: prefix + '/selectField',
-                async:false,
-                type:'post',
-                data:{code: code},
-                success:function(data){
+                async: false,
+                type: 'post',
+                data: {code: code},
+                success: function (data) {
                     data = data.data;
                     var field = $("#field").empty();
-                    for ( var i = 0; i < data.length; i++) {
-                        field.append("<option value='"+data[i].configKey+"'>"+ data[i].configValue+"</option>");
+                    for (var i = 0; i < data.length; i++) {
+                        field.append("<option value='" + data[i].configKey + "'>" + data[i].configValue + "</option>");
                     }
                 }
             })
         });
     })
-
-
-
 </script>
 </body>
 </html>

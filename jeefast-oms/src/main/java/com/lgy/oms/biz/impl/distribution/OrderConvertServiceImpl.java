@@ -101,7 +101,7 @@ public class OrderConvertServiceImpl implements IOrderConvertService {
      * 创建流水号ID规则
      *
      * @param orderMain 订单主信息
-     * @return ID流水号
+     * @return 配货单ID流水号
      */
     private String createIdRule(OrderMain orderMain) {
 

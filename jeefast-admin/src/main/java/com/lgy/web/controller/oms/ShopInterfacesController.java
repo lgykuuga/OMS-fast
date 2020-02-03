@@ -43,8 +43,13 @@ public class ShopInterfacesController extends BaseController {
 
     @RequiresPermissions("oms:shopInterfaces:view")
     @GetMapping()
-    public String interfaces() {
-
+    public String interfaces(Model model) {
+        //下载订单策略
+        model.addAttribute("strategyList", DownloadOrderStrategyEnum.getList());
+        //下单订单接口
+        model.addAttribute("interfaceList", DownloadOrderInterfaceEnum.getList());
+        //下单订单Json
+        model.addAttribute("interfaceJson", DownloadOrderInterfaceEnum.toJson());
         return prefix + "/shopInterfaces";
     }
 

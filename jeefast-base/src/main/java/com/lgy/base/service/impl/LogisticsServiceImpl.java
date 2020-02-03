@@ -2,6 +2,7 @@ package com.lgy.base.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lgy.base.constant.BaseConstants;
 import com.lgy.base.domain.Logistics;
 import com.lgy.base.mapper.LogisticsMapper;
 import com.lgy.base.service.ILogisticsService;
@@ -9,6 +10,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 物流商信息 服务层实现
@@ -60,4 +63,10 @@ public class LogisticsServiceImpl extends ServiceImpl<LogisticsMapper, Logistics
         return null;
     }
 
+    @Override
+    public List<Logistics> selectLogistics() {
+        QueryWrapper<Logistics> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", BaseConstants.NORMAL);
+        return baseMapper.selectList(queryWrapper);
+    }
 }
