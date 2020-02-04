@@ -84,8 +84,11 @@ public enum OrderOperateType {
 	RULE_DEL("删除策略"),
 	RULE_COPY("复制策略"),
 	RULE_OPEN("开启策略"),
-	RULE_CLOSE("关闭策略");
-	
+	RULE_CLOSE("关闭策略"),
+	RULE_INIT("初始化策略"),
+
+	;
+
 	private String value;
 
 	OrderOperateType(String value) {
