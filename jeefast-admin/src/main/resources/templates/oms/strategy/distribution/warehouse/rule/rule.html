@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('配货策略分仓规则列列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>策略编码：</p>
+                                <input type="text" name="gco" th:value="${gco}" readonly="true"/>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="initRule()" shiro:hasPermission="oms:rule:add">
+                    <i class="fa fa-plus"></i> 初始化规则
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('oms:rule:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('oms:rule:remove')}]];
+        var prefix = ctx + "oms/strategy/distribution/warehouse/rule";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                modalName: "配货策略分仓规则",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'id',
+                    visible: false
+                },
+                {
+                    field : 'gco', 
+                    title : '策略编码',
+                    visible: false
+                },
+                {
+                    field : 'ruleId', 
+                    title : '规则编码',
+                    visible: false
+                },
+                {
+                    field : 'ruleName',
+                    title : '规则名称'
+                },
+                {
+                    field : 'priority', 
+                    title : '优先级',
+                    visible: false
+                },
+                {
+                    field : 'must', 
+                    title : '是否必须满足'
+                },
+                {
+                    field : 'status', 
+                    title : '状态'
+                },
+                ]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

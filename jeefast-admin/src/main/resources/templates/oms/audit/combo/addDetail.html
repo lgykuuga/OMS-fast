@@ -37,9 +37,9 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">匹配值：</label>
+            <label class="col-sm-3 control-label">匹配值</label>
             <div class="col-sm-8">
-                <textarea id="value" name="value" class="form-control" autocomplete="off"></textarea>
+                <textarea id="valueCode" name="valueCode" class="form-control" autocomplete="off"></textarea>
             </div>
         </div>
         <div class="form-group">
@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">状态：</label>
+            <label class="col-sm-3 control-label">状态</label>
             <div class="col-sm-8">
                 <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
                     <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}"

@@ -1,6 +1,7 @@
 package com.lgy.oms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
 
 import java.util.List;
@@ -20,4 +21,12 @@ public interface IStrategyDistributionWarehouseRuleService extends IService<Stra
      * @return
      */
     List<StrategyDistributionWarehouseRule> getStrategyByGco(String gco);
+
+    /**
+     * 初始化分仓规则列表
+     *
+     * @param gco 策略编码
+     * @return
+     */
+    CommonResponse<String> initRule(String gco);
 }

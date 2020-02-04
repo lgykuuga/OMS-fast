@@ -55,7 +55,7 @@ public class StrategyAuditComboDetail extends BaseEntity implements Serializable
     /**
      * 匹配值(多条用英文逗号分隔)
      */
-    private String value;
+    private String valueCode;
 
     /**
      * 匹配值(中文含义)
