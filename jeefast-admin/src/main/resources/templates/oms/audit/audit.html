@@ -597,24 +597,20 @@
         $.fn.setForm = function (jsonValue) {
             var $this = this;
             $.each(jsonValue, function (name, ival) {
-                console.log(name + "===" + ival);
                 var that = $this.find("[name=" + name + "]")[0];
                 if(that == undefined){
                     console.log("init Form data error : " + name + " is undifined!");
                     return true;
                 }
 
-                var $oinput = $(that);
-                if($oinput.is("select")){
-                    console.log("data " + name + " is select form control!");
-                    return true;
-                }else if($oinput.is("input")){
-                    console.log(name + " is input and type is " + $oinput.attr("type"));
+                var formcontrl = $(that);
+                if(formcontrl.is("select")){
+                    $("[name='" + name +"']").val(ival);
+                }else if(formcontrl.is("input")){
                     //这里需要判断控件是否是switch
-                    if ($oinput.attr("type") == "checkbox") {
+                    if (formcontrl.attr("type") == "checkbox") {
                         if (ival !== null) {
-
-                            if($oinput.parent().hasClass("toggle-switch")){
+                            if(formcontrl.parent().hasClass("toggle-switch")){
                                 $("[name=" + name + "]").prop("checked", ival == 0 ? true : false);
                             }else{//这里是常规复选框
                                 var checkboxObj = $("[name=" + name + "]");
@@ -630,14 +626,14 @@
                                 }
                             }
                         }
-                    } else if ($oinput.attr("type") == "radio") {
-                        $oinput.each(function () {
+                    } else if (formcontrl.attr("type") == "radio") {
+                        formcontrl.each(function () {
                             var radioObj = $("[name=" + name + "]");
-                            $("input[name='" + name +"'][checked]").val();
+                            $("input[name='" + name +"'][checked]").val(ival);
                         });
-                    } else if ($oinput.attr("type") == "checkbox") {
+                    } else if (formcontrl.attr("type") == "checkbox") {
                         console.log("init checkbox input。。");
-                        $oinput.each(function () {
+                        formcontrl.each(function () {
                             var radioObj = $("[name=" + name + "]");
                             for (var i = 0; i < radioObj.length; i++) {
                                 if (radioObj[i].value == ival) {
@@ -645,11 +641,11 @@
                                 }
                             }
                         });
-                    } else if ($oinput.attr("type") == "textarea") {
-                        $this.find("[name=" + name + "]").html(ival);
-                    } else {
+                    }else {
                         $this.find("[name=" + name + "]").val(ival);
                     }
+                }else if(formcontrl.is("textarea")) {
+                    $this.find("[name=" + name + "]").html(ival);
                 }
 
 
