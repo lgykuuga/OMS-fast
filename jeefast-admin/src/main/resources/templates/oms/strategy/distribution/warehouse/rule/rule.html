@@ -25,23 +25,33 @@
                 </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+                <table id="bootstrap-table" data-use-row-attr-func="true" data-reorderable-rows="true"
+                       data-mobile-responsive="true"></table>
             </div>
         </div>
     </div>
     <th:block th:include="include :: footer" />
+     <th:block th:include="include :: bootstrap-table-reorder-js" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('oms:rule:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('oms:rule:remove')}]];
-        var prefix = ctx + "oms/strategy/distribution/warehouse/rule";
+        var prefix = ctx + "oms/strategy/distribution/warehouse";
+
+        // 规则列表
+        var rules = [[${rules}]];
+        //策略编码
+        var gco = [[${gco}]];
 
         $(function() {
             var options = {
-                url: prefix + "/list",
+                url: prefix + "/rule/list",
                 modalName: "配货策略分仓规则",
-                columns: [{
-                    checkbox: true
+                sortName: "priority",//优先级排序
+                striped: true, //显示行间隔色
+                onReorderRow: function (data) {
+                    //当拖拽结束后，data为整个表格的数据
+                    sort(JSON.stringify(data));
+                    return false;
                 },
+                columns: [
                 {
                     field : 'id', 
                     title : 'id',
@@ -53,31 +63,138 @@
                     visible: false
                 },
                 {
-                    field : 'ruleId', 
-                    title : '规则编码',
-                    visible: false
-                },
-                {
-                    field : 'ruleName',
-                    title : '规则名称'
-                },
-                {
-                    field : 'priority', 
+                    field : 'priority',
                     title : '优先级',
-                    visible: false
+                    width: 80,
+                    visible: true
                 },
                 {
-                    field : 'must', 
-                    title : '是否必须满足'
+                    field : 'ruleId', 
+                    title : '规则',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.selectValue(rules, value);
+                    }
                 },
                 {
-                    field : 'status', 
-                    title : '状态'
+                    title: '启用/禁用',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return statusTools(row);
+                    }
+                },
+                {
+                    title: '是否必须满足',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return mustTools(row);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-info btn-xs" href="javascript:void(0)" onclick="action(\'' + row.ruleId + '\')"><i class="fa fa-search"></i>配置</a> ');
+                        return actions.join('');
+                    }
+                },
+                {
+                    field : 'remark',
+                    title : '规则说明'
                 },
                 ]
             };
             $.table.init(options);
         });
+
+        /* 规则排序 */
+        function sort(data) {
+            var post = $.operate.post(prefix + "/rule/sort", { "data": data });
+        }
+
+        //初始化规则
+        function initRule() {
+            $.operate.post(prefix + "/rule/initRule", { "gco": gco });
+        }
+
+        /* 是否必须满足 开关 */
+        function mustTools(row) {
+            if (row.must == 1) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\', \'must\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\', \'must\')"></i> ';
+            }
+        }
+
+        /* 启用/禁用 开关 */
+        function statusTools(row) {
+            if (row.status == 1) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\', \'status\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\', \'status\')"></i> ';
+            }
+        }
+
+        /* 开启-停用 */
+        function disable(id, field) {
+            $.operate.post(prefix + "/rule/changeField", { "id": id, "field": field, "value": 1 });
+        }
+
+        /* 开启-启用 */
+        function enable(id, field) {
+            $.operate.post(prefix + "/rule/changeField", { "id": id, "field": field, "value": 0 });
+        }
+
+
+        //跳转至对应策略配置模块
+        function action(ruleId) {
+
+            var title = "";
+            var url = "";
+
+            switch (ruleId) {
+                case "0":
+                    title = "配货策略可用仓库";
+                    url = prefix + "/available/" + gco;
+                    break;
+                case "1":
+                    title = "特定信息分配仓库";
+                    url = prefix + "/special/" + gco;
+                    break;
+                case "2":
+                    title = "指定物流分配仓库";
+                    url = prefix + "/logistics/" + gco;
+                    break;
+                case "3":
+                    title = "覆盖区域到达仓库";
+                    url = prefix + "/area/" + gco;
+                    break;
+                case "4":
+                    title = "根据重量分配仓库";
+                    url = prefix + "/weight/" + gco;
+                    break;
+                case "5":
+                    title = "特定商品指定仓库";
+                    url = prefix + "/detail/" + gco;
+                    break;
+                case "6":
+                    title = "配货策略默认仓库";
+                    return;
+                    break;
+                case "7":
+                    title = "可用库存分配仓库";
+                    return;
+                    break;
+                default:
+                    title = "可用库存分配仓库";
+                    return;
+            }
+
+
+            $.modal.openTab(title, url);
+        }
+
     </script>
 </body>
 </html>

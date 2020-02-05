@@ -20,4 +20,23 @@ public interface IStrategyDistributionWarehouseAvailableService extends IService
      * @return
      */
     List<StrategyDistributionWarehouseAvailable> getStrategyByGco(String gco);
+
+    /**
+     * 调整可用仓库优先级顺序
+     *
+     * @param id id
+     * @param i  序号
+     * @return
+     */
+    boolean updatePrePriority(Long id, int i);
+
+    /**
+     * 更新字段值
+     *
+     * @param id
+     * @param field
+     * @param value
+     * @return
+     */
+    boolean changeField(Long id, String field, int value);
 }

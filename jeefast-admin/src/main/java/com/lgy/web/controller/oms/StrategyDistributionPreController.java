@@ -29,7 +29,7 @@ import java.util.List;
 
 
 /**
- * 审单策略组合信息拦截Controller
+ * 配货预分配规则Controller
  *
  * @author lgy
  * @date 2020-01-20
@@ -47,13 +47,15 @@ public class StrategyDistributionPreController extends BaseController {
 
     @RequiresPermissions("oms:distribution:view")
     @GetMapping("/{gco}")
-    public String combo(@PathVariable("gco") String gco, ModelMap mmap) {
+    public String pre(@PathVariable("gco") String gco, ModelMap mmap) {
         //订单表类型字段
         mmap.put("orderTableEnum", OrderTableEnum.getList());
         //判断条件
         mmap.put("conditionEnum", ConditionEnum.getList());
         //锁库方式
         mmap.put("lockModelEnum", DistributionLockModelEnum.getList());
+        //策略编码
+        mmap.put("gco", gco);
         return prefix + "/pre";
     }
 

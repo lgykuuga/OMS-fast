@@ -29,4 +29,23 @@ public interface IStrategyDistributionWarehouseRuleService extends IService<Stra
      * @return
      */
     CommonResponse<String> initRule(String gco);
+
+    /**
+     * 调整分仓规则顺序优先级顺序
+     *
+     * @param id 组合信息id
+     * @param i  序号
+     * @return
+     */
+    boolean updatePrePriority(Long id, int i);
+
+    /**
+     * 更改字段值
+     *
+     * @param id
+     * @param field 修改字段
+     * @param value 更新值
+     * @return
+     */
+    boolean changeField(Long id, String field, Integer value) throws Exception;
 }

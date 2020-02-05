@@ -79,19 +79,19 @@ var table = {
                     cache: false,                                       // 是否使用缓存
                     height: options.height,                             // 表格的高度
                     striped: options.striped,                           // 是否显示行间隔色
-                    sortable: true,                                     // 是否启用排序
-                    sortStable: true,                                   // 设置为 true 将获得稳定的排序
-                    sortName: options.sortName,                         // 排序列名称
-                    sortOrder: options.sortOrder,                       // 排序方式  asc 或者 desc
-                    pagination: options.pagination,                     // 是否显示分页（*）
-                    pageNumber: 1,                                      // 初始化加载第一页，默认第一页
-                    pageSize: options.pageSize,                         // 每页的记录行数（*） 
-                    pageList: options.pageList,                         // 可供选择的每页的行数（*）
-                    firstLoad: options.firstLoad,                       // 是否首次请求加载数据，对于数据较大可以配置false
-                    escape: options.escape,                             // 转义HTML字符串
-                    showFooter: options.showFooter,                     // 是否显示表尾
-                    iconSize: 'outline',                                // 图标大小：undefined默认的按钮尺寸 xs超小按钮sm小按钮lg大按钮
-                    toolbar: '#' + options.toolbar,                     // 指定工作栏
+					sortable: true,                                     // 是否启用排序
+					sortStable: true,                                   // 设置为 true 将获得稳定的排序
+					sortName: options.sortName,                         // 排序列名称
+					sortOrder: options.sortOrder,                       // 排序方式  asc 或者 desc
+					pagination: options.pagination,                     // 是否显示分页（*）
+					pageNumber: 1,                                      // 初始化加载第一页，默认第一页
+					pageSize: options.pageSize,                         // 每页的记录行数（*）
+					pageList: options.pageList,                         // 可供选择的每页的行数（*）
+					firstLoad: options.firstLoad,                       // 是否首次请求加载数据，对于数据较大可以配置false
+					escape: options.escape,                             // 转义HTML字符串
+					showFooter: options.showFooter,                     // 是否显示表尾
+					iconSize: 'outline',                                // 图标大小：undefined默认的按钮尺寸 xs超小按钮sm小按钮lg大按钮
+					toolbar: '#' + options.toolbar,                     // 指定工作栏
                     sidePagination: options.sidePagination,             // server启用服务端分页client客户端分页
                     search: options.search,                             // 是否显示搜索框功能
                     searchText: options.searchText,                     // 搜索框初始显示的内容，默认为空

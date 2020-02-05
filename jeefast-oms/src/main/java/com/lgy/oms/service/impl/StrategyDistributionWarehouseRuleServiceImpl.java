@@ -1,6 +1,7 @@
 package com.lgy.oms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class StrategyDistributionWarehouseRuleServiceImpl extends ServiceImpl<St
             StrategyDistributionWarehouseRule rule = new StrategyDistributionWarehouseRule();
             rule.setGco(gco);
             if (DistributionWarehouseRuleEnum.RULE_AVAILABLE.getCode() == i
-                    || DistributionWarehouseRuleEnum.RULE_LOCK_STOCK.getCode() == i ) {
+                    || DistributionWarehouseRuleEnum.RULE_LOCK_STOCK.getCode() == i) {
                 //配货策略可用仓库和根据库存选择仓库必须开启
                 rule.setMust(Integer.parseInt(Constants.YES));
             } else {
@@ -91,4 +93,41 @@ public class StrategyDistributionWarehouseRuleServiceImpl extends ServiceImpl<St
                 OrderOperateType.RULE_INIT.getValue(), TraceLevelType.ABNORMAL.getKey(), "初始化分仓策略失败"));
         return new CommonResponse<String>().error(Constants.FAIL, "初始化分仓策略失败");
     }
+
+    @Override
+    public boolean updatePrePriority(Long id, int i) {
+        StrategyDistributionWarehouseRule entity = new StrategyDistributionWarehouseRule();
+        entity.setId(id);
+        entity.setPriority(i);
+        return this.updateById(entity);
+    }
+
+    @Override
+    public boolean changeField(Long id, String field, Integer value) throws Exception {
+        StrategyDistributionWarehouseRule rule = new StrategyDistributionWarehouseRule();
+        rule.setId(id);
+        setProperty(rule, field, value);
+        return updateById(rule);
+    }
+
+    /**
+     * 修改字段值
+     * @param obj
+     * @param propertyName
+     * @param value
+     * @throws Exception
+     */
+    public  static void setProperty(Object obj, String propertyName, Object value) throws Exception{
+        Class<? extends Object> clazz = obj.getClass();
+
+        //防止字段为private时，无法修改字段值的情况
+        //暴力反射获取字段
+        Field field = clazz.getDeclaredField(propertyName);
+        //去除权限
+        field.setAccessible(true);
+
+        field.set(obj, value);
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.lgy.oms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lgy.common.utils.reflect.ReflectUtils;
 import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
 import com.lgy.oms.mapper.StrategyDistributionWarehouseAvailableMapper;
 import com.lgy.oms.service.IStrategyDistributionWarehouseAvailableService;
@@ -24,4 +25,21 @@ public class StrategyDistributionWarehouseAvailableServiceImpl extends ServiceIm
         queryWrapper.eq("gco", gco);
         return this.list(queryWrapper);
     }
+
+    @Override
+    public boolean updatePrePriority(Long id, int i) {
+        StrategyDistributionWarehouseAvailable entity = new StrategyDistributionWarehouseAvailable();
+        entity.setId(id);
+        entity.setPriority(i);
+        return this.updateById(entity);
+    }
+
+    @Override
+    public boolean changeField(Long id, String field, int value) {
+        StrategyDistributionWarehouseAvailable rule = new StrategyDistributionWarehouseAvailable();
+        rule.setId(id);
+        ReflectUtils.setFieldValue(rule, field, value);
+        return updateById(rule);
+    }
+
 }

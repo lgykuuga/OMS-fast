@@ -14,32 +14,46 @@ import java.io.Serializable;
  * @author lgy
  * @date 2020-02-01
  */
- @Data
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("oms_strategy_distribution_warehouse_rule")
 public class StrategyDistributionWarehouseRule extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**
+     * $column.columnComment
+     */
     private Long id;
 
-    /** 策略编码 */
+    /**
+     * 策略编码
+     */
     private String gco;
 
-    /** 规则编码 */
+    /**
+     * 规则编码
+     */
     private Integer ruleId;
 
-    /** 优先级 */
+    /**
+     * 优先级
+     */
     private Integer priority;
 
-    /** 是否必须满足 */
+    /**
+     * 是否必须满足
+     */
     private Integer must;
 
-    /** 状态（0启用 1停用） */
-    private String status;
+    /**
+     * 状态（0启用 1停用）
+     */
+    private Integer status;
 
-    /** 备注 */
+    /**
+     * 备注
+     */
     private String remark;
 
 }

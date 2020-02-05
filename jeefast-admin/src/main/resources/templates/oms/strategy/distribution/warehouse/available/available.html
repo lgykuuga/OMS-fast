@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('分仓规则列可用仓库列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>策略编码</p>
+                                <input type="text" name="gco" th:value="${gco}" readonly="true"/>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="add()" shiro:hasPermission="oms:available:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="oms:available:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" data-use-row-attr-func="true" data-reorderable-rows="true"
+                       data-mobile-responsive="true"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: bootstrap-table-reorder-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "oms/strategy/distribution/warehouse/available";
+
+        var warehouses = [[${@base.selectWarehouse()}]];
+
+        //策略编码
+        var gco = [[${gco}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                modalName: "分仓规则可用仓库",
+                sortName: "priority",//优先级排序
+                striped: true, //显示行间隔色
+                createUrl: prefix + "/add",
+                removeUrl: prefix + "/remove",
+                onReorderRow: function (data) {
+                    //当拖拽结束后，data为整个表格的数据
+                    sort(JSON.stringify(data));
+                    return false;
+                },
+                columns: [
+                {
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'id',
+                    visible: false
+                },
+                {
+                    field : 'gco', 
+                    title : '策略编码',
+                    visible: false
+                },
+                {
+                    field : 'priority',
+                    title : '优先级',
+                    width: 80,
+                    visible: true
+                },
+                {
+                    field : 'warehouse',
+                    title : '仓库',
+                    align: 'center',
+                    width: 150,
+                    formatter: function(value, row, index) {
+                        return $.table.selectGna(warehouses, value);
+                    }
+                },
+                {
+                    title: '启用/禁用',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return statusTools(row);
+                    }
+                },
+                {
+                    title: '自动推送',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return autoTools(row);
+                    }
+                },
+                    {
+                        field : 'createBy',
+                        title : '创建人',
+                        visible: true
+                    },
+                    {
+                        field : 'createTime',
+                        title : '创建时间',
+                        visible: true
+                    },
+                    {
+                        field : 'updateBy',
+                        title : '修改人',
+                        visible: true
+                    },
+                    {
+                        field : 'updateTime',
+                        title : '修改时间',
+                        visible: true
+                    },
+                ]
+            };
+            $.table.init(options);
+        });
+
+        /* 规则排序 */
+        function sort(data) {
+            var post = $.operate.post(prefix + "/sort", { "data": data });
+        }
+
+        /* 自动推送 开关 */
+        function autoTools(row) {
+            if (row.auto == 1) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\', \'auto\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\', \'auto\')"></i> ';
+            }
+        }
+
+        /* 启用/禁用 开关 */
+        function statusTools(row) {
+            if (row.status == 1) {
+                return '<i class=\"fa fa-toggle-off text-info fa-2x\" onclick="enable(\'' + row.id + '\', \'status\')"></i> ';
+            } else {
+                return '<i class=\"fa fa-toggle-on text-info fa-2x\" onclick="disable(\'' + row.id + '\', \'status\')"></i> ';
+            }
+        }
+
+        /* 开启-停用 */
+        function disable(id, field) {
+            $.operate.post(prefix + "/changeField", { "id": id, "field": field, "value": 1 });
+        }
+
+        /* 开启-启用 */
+        function enable(id, field) {
+            $.operate.post(prefix + "/changeField", { "id": id, "field": field, "value": 0 });
+        }
+
+        // 添加信息
+        function add() {
+            table.set();
+            $.modal.open('添加' + table.options.modalName, table.options.createUrl + "/" + gco);
+        }
+    </script>
+</body>
+</html>

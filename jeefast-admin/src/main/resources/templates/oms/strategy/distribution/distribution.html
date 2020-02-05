@@ -62,7 +62,7 @@
                         </ul>
                     </div>
 
-                    <button type="button" class="btn btn-w-m btn-success" onclick="commodity()">分配仓库规则</button>
+                    <button type="button" class="btn btn-w-m btn-success" onclick="warehouseRule()">分配仓库规则</button>
                 </div>
 
                 <div class="row">
@@ -399,13 +399,13 @@
             $.modal.openTab("预分配规则", prefix + "/pre/" + gco);
         }
 
-        /* 跳转至指定商品拦截窗口 */
-        function commodity() {
+        /* 分配仓库规则 */
+        function warehouseRule() {
             if (gco == "") {
                 $.modal.alertError('请先选择策略');
                 return;
             }
-            $.modal.openTab("指定商品拦截", prefix + "/commodity/" + gco);
+            $.modal.openTab("分配仓库规则", prefix + "/warehouse/rule/" + gco);
         }
 
         function remove(id) {

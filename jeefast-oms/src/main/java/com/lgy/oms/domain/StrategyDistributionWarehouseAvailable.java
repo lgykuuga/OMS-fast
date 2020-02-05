@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author lgy
  * @date 2020-02-01
  */
- @Data
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("oms_strategy_distribution_warehouse_available")
@@ -35,7 +35,7 @@ public class StrategyDistributionWarehouseAvailable extends BaseEntity implement
 
     /** 优先级 */
     @Excel(name = "优先级")
-    private Long priority;
+    private Integer priority;
 
     /** 自动推送 */
     @Excel(name = "自动推送")
@@ -43,7 +43,7 @@ public class StrategyDistributionWarehouseAvailable extends BaseEntity implement
 
     /** 状态（0启用 1停用） */
     @Excel(name = "状态", readConverterExp = "0=启用,1=停用")
-    private String status;
+    private Integer status;
 
     /** 备注 */
     @Excel(name = "备注")
