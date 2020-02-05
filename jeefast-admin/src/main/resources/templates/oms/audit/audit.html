@@ -93,7 +93,7 @@
                                             <label class="col-sm-8 control-label">单号相同拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="source" name="source" th:checked="${strategyAudit.source == 0 ? true : false}">
+                                                    <input type="checkbox" id="source" name="switch_source" th:checked="${strategyAudit.source == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -102,7 +102,7 @@
                                             <label class="col-sm-8 control-label">地址有效性校验:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="addressValid" name="addressValid" th:checked="${strategyAudit.addressValid == 0 ? true : false}">
+                                                    <input type="checkbox" id="addressValid" name="switch_addressValid" th:checked="${strategyAudit.addressValid == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -111,7 +111,7 @@
                                             <label class="col-sm-8 control-label">买家留言拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="buyMessage" name="buyMessage" th:checked="${strategyAudit.buyMessage == 0 ? true : false}">
+                                                    <input type="checkbox" id="buyMessage" name="switch_buyMessage" th:checked="${strategyAudit.buyMessage == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -120,7 +120,7 @@
                                             <label class="col-sm-8 control-label">卖家留言拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="sellerMessage" name="sellerMessage" th:checked="${strategyAudit.sellerMessage == 0 ? true : false}">
+                                                    <input type="checkbox" id="sellerMessage" name="switch_sellerMessage" th:checked="${strategyAudit.sellerMessage == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -132,7 +132,7 @@
                                             <label class="col-sm-8 control-label">货到付款拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="cod" name="cod" th:checked="${strategyAudit.cod == 0 ? true : false}">
+                                                    <input type="checkbox" id="cod" name="switch_cod" th:checked="${strategyAudit.cod == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -141,7 +141,7 @@
                                             <label class="col-sm-8 control-label">退款拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="refund" name="refund" th:checked="${strategyAudit.refund == 0 ? true : false}">
+                                                    <input type="checkbox" id="refund" name="switch_refund" th:checked="${strategyAudit.refund == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -150,7 +150,7 @@
                                             <label class="col-sm-8 control-label">卖家留言匹配:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="sellerMessageMatch" name="sellerMessageMatch" th:checked="${strategyAudit.sellerMessageMatch == 0 ? true : false}">
+                                                    <input type="checkbox" id="sellerMessageMatch" name="switch_sellerMessageMatch" th:checked="${strategyAudit.sellerMessageMatch == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -159,7 +159,7 @@
                                             <label class="col-sm-8 control-label">卖家备注旗帜拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="sellerFlag" name="sellerFlag" th:checked="${strategyAudit.sellerFlag == 0 ? true : false}">
+                                                    <input type="checkbox" id="sellerFlag" name="switch_sellerFlag" th:checked="${strategyAudit.sellerFlag == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -171,7 +171,7 @@
                                             <label class="col-sm-8 control-label">特定信息拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="orderIntercept" name="orderIntercept"
+                                                    <input type="checkbox" id="orderIntercept" name="switch_orderIntercept"
                                                            th:checked="${strategyAudit.orderIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -181,7 +181,7 @@
                                             <label class="col-sm-8 control-label">指定商品拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="commodityIntercept" name="commodityIntercept"
+                                                    <input type="checkbox" id="commodityIntercept" name="switch_commodityIntercept"
                                                            th:checked="${strategyAudit.commodityIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -191,7 +191,7 @@
                                             <label class="col-sm-8 control-label">特殊地址拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="addressIntercept" name="addressIntercept"
+                                                    <input type="checkbox" id="addressIntercept" name="switch_addressIntercept"
                                                            th:checked="${strategyAudit.addressIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -201,8 +201,7 @@
                                             <label class="col-sm-8 control-label">组合信息拦截:</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="comboIntercept" name="comboIntercept"
-
+                                                    <input type="checkbox" id="comboIntercept" name="switch_comboIntercept"
                                                            th:checked="${strategyAudit.comboIntercept == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -597,8 +596,17 @@
         $.fn.setForm = function (jsonValue) {
             var $this = this;
             $.each(jsonValue, function (name, ival) {
+                //优先使用name,因为表单提交使用name
                 var that = $this.find("[name=" + name + "]")[0];
                 if(that == undefined){
+
+                    //初始化switch控件，起别名是因为名称相同，控件值会污染到表单
+                    var switchs = $this.find("[name=switch_" + name + "]")[0];
+                    if(switchs != undefined && $(switchs).parent().hasClass("toggle-switch")){
+                        $(switchs).prop("checked", ival == 0 ? true : false);
+                        return true;
+                    }
+
                     console.log("init Form data error : " + name + " is undifined!");
                     return true;
                 }
@@ -610,21 +618,18 @@
                     //这里需要判断控件是否是switch
                     if (formcontrl.attr("type") == "checkbox") {
                         if (ival !== null) {
-                            if(formcontrl.parent().hasClass("toggle-switch")){
-                                $("[name=" + name + "]").prop("checked", ival == 0 ? true : false);
-                            }else{//这里是常规复选框
-                                var checkboxObj = $("[name=" + name + "]");
-                                ival = ival.toString();
-                                var checkArray = ival.split(";");
-                                for (var i = 0; i < checkboxObj.length; i++) {
-                                    for (var j = 0; j < checkArray.length; j++) {
-                                        if (checkboxObj[i].value == checkArray[j]) {
-                                            // checkboxObj[i].click();
-                                            checkboxObj[i].attr("checked", 'checked');
-                                        }
+                            var checkboxObj = $("[name=" + name + "]");
+                            ival = ival.toString();
+                            var checkArray = ival.split(";");
+                            for (var i = 0; i < checkboxObj.length; i++) {
+                                for (var j = 0; j < checkArray.length; j++) {
+                                    if (checkboxObj[i].value == checkArray[j]) {
+                                        // checkboxObj[i].click();
+                                        checkboxObj[i].attr("checked", 'checked');
                                     }
                                 }
                             }
+
                         }
                     } else if (formcontrl.attr("type") == "radio") {
                         formcontrl.each(function () {
@@ -632,7 +637,6 @@
                             $("input[name='" + name +"'][checked]").val(ival);
                         });
                     } else if (formcontrl.attr("type") == "checkbox") {
-                        console.log("init checkbox input。。");
                         formcontrl.each(function () {
                             var radioObj = $("[name=" + name + "]");
                             for (var i = 0; i < radioObj.length; i++) {
