@@ -16,6 +16,7 @@ public interface ILogisticsService extends IService<Logistics>, CommonService<Lo
 
     /**
      * 下拉框查询物流商
+     *
      * @return
      */
     List<Logistics> selectLogistics();

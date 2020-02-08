@@ -15,41 +15,57 @@ import java.io.Serializable;
  * @author lgy
  * @date 2020-02-01
  */
- @Data
+@Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("oms_strategy_distribution_warehouse_logistics")
 public class StrategyDistributionWarehouseLogistics extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**
+     * $column.columnComment
+     */
     private Long id;
 
-    /** 策略编码 */
+    /**
+     * 策略编码
+     */
     @Excel(name = "策略编码")
     private String gco;
 
-    /** 仓库编码 */
+    /**
+     * 仓库编码
+     */
     @Excel(name = "仓库编码")
     private String warehouse;
 
-    /** 优先级 */
+    /**
+     * 优先级
+     */
     @Excel(name = "优先级")
-    private Long priority;
+    private Integer priority;
 
-    /** 物流编码 */
+    /**
+     * 物流编码
+     */
     @Excel(name = "物流编码")
     private String logistics;
 
-    /** 是否到达 */
+    /**
+     * 是否到达
+     */
     @Excel(name = "是否到达")
     private Integer arrive;
 
-    /** 状态（0启用 1停用） */
+    /**
+     * 状态（0启用 1停用）
+     */
     @Excel(name = "状态", readConverterExp = "0=启用,1=停用")
-    private String status;
+    private Integer status;
 
-    /** 备注 */
+    /**
+     * 备注
+     */
     @Excel(name = "备注")
     private String remark;
 

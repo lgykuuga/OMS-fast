@@ -2,17 +2,20 @@ package com.lgy.base.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lgy.base.constant.BaseConstants;
 import com.lgy.base.domain.Commodity;
 import com.lgy.base.mapper.CommodityMapper;
 import com.lgy.base.service.ICommodityService;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.exception.BusinessException;
 import com.lgy.common.utils.StringUtils;
+import com.lgy.system.domain.vo.Config;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -93,6 +96,19 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         queryWrapper.eq("gco", gco);
         queryWrapper.eq("status", Constants.VALID);
         return getOne(queryWrapper);
+    }
+
+    @Override
+    public List<Config> selectCommodity() {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", BaseConstants.NORMAL);
+        List<Commodity> list = baseMapper.selectList(queryWrapper);
+
+        List<Config> configs = new ArrayList<>(list.size());
+        for (Commodity commodity : list) {
+            configs.add(new Config(commodity.getGco(), commodity.getGna()));
+        }
+        return configs;
     }
 
     /**

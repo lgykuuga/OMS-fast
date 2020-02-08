@@ -9,8 +9,8 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.domain.StrategyDistributionWarehouseArea;
-import com.lgy.oms.service.IStrategyDistributionWarehouseAreaService;
+import com.lgy.oms.domain.StrategyDistributionWarehouseLogistics;
+import com.lgy.oms.service.IStrategyDistributionWarehouseLogisticsService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,48 +21,51 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 配货策略分仓覆盖区域规则Controller
+ * 配货策略分仓物流规则Controller
  *
  * @author lgy
  * @date 2020-02-04
  */
 @Controller
-@RequestMapping("/oms/strategy/distribution/warehouse/area")
-public class StrategyDistributionWarehouseAreaController extends BaseController {
+@RequestMapping("/oms/strategy/distribution/warehouse/logistics")
+public class StrategyDistributionWarehouseLogisticsController extends BaseController {
 
-    private String prefix = "oms/strategy/distribution/warehouse/area";
+    private String prefix = "oms/strategy/distribution/warehouse/logistics";
 
     @Autowired
-    private IStrategyDistributionWarehouseAreaService strategyDistributionWarehouseAreaService;
+    private IStrategyDistributionWarehouseLogisticsService distributionWarehouseLogisticsService;
 
     @RequiresPermissions("oms:rule:view")
     @GetMapping("/{gco}")
-    public String area(@PathVariable("gco") String gco, ModelMap mmap) {
+    public String logistics(@PathVariable("gco") String gco, ModelMap mmap) {
         //策略编码
         mmap.put("gco", gco);
-        return prefix + "/area";
+        return prefix + "/logistics";
     }
 
     /**
-     * 查询配货策略分仓覆盖区域规则列表
+     * 查询配货策略分仓物流规则列表
      */
     @RequiresPermissions("oms:rule:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(StrategyDistributionWarehouseArea strategyDistributionWarehouseArea) {
-        QueryWrapper<StrategyDistributionWarehouseArea> queryWrapper = new QueryWrapper<>();
+    public TableDataInfo list(StrategyDistributionWarehouseLogistics entity) {
+        QueryWrapper<StrategyDistributionWarehouseLogistics> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
-        if (StringUtils.isNotEmpty(strategyDistributionWarehouseArea.getGco())) {
-            queryWrapper.eq("gco", strategyDistributionWarehouseArea.getGco());
+        if (StringUtils.isNotEmpty(entity.getGco())) {
+            queryWrapper.eq("gco", entity.getGco());
         }
-        if (StringUtils.isNotEmpty(strategyDistributionWarehouseArea.getWarehouse())) {
-            queryWrapper.eq("warehouse", strategyDistributionWarehouseArea.getWarehouse());
+        if (StringUtils.isNotEmpty(entity.getWarehouse())) {
+            queryWrapper.eq("warehouse", entity.getWarehouse());
         }
-        if (strategyDistributionWarehouseArea.getArrive() != null) {
-            queryWrapper.eq("arrive", strategyDistributionWarehouseArea.getArrive());
+        if (StringUtils.isNotEmpty(entity.getLogistics())) {
+            queryWrapper.eq("logistics", entity.getLogistics());
+        }
+        if (entity.getArrive() != null) {
+            queryWrapper.eq("arrive", entity.getArrive());
         }
         startPage();
-        return getDataTable(strategyDistributionWarehouseAreaService.list(queryWrapper));
+        return getDataTable(distributionWarehouseLogisticsService.list(queryWrapper));
     }
 
     /**
@@ -76,10 +79,10 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
         if (StringUtils.isEmpty(data)) {
             return AjaxResult.error("传入对象为空");
         }
-        List<StrategyDistributionWarehouseArea> list = JSON.parseArray(data, StrategyDistributionWarehouseArea.class);
+        List<StrategyDistributionWarehouseLogistics> list = JSON.parseArray(data, StrategyDistributionWarehouseLogistics.class);
         for (int i = 0; i < list.size(); i++) {
             //调整优先级顺序
-            strategyDistributionWarehouseAreaService.updatePrePriority(list.get(i).getId(), i);
+            distributionWarehouseLogisticsService.updatePrePriority(list.get(i).getId(), i);
         }
         return toAjax(true);
     }
@@ -91,7 +94,7 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
     @ResponseBody
     @Log(title = "配货策略分仓规则", businessType = BusinessType.UPDATE)
     public AjaxResult changeField(Long id, String field, int value) {
-        return toAjax(strategyDistributionWarehouseAreaService.changeField(id, field, value));
+        return toAjax(distributionWarehouseLogisticsService.changeField(id, field, value));
     }
 
     /**
@@ -103,27 +106,25 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
         return prefix + "/add";
     }
 
-
     /**
-     * 新增保存配货策略分仓覆盖区域规则
+     * 新增保存配货策略分仓物流规则
      */
     @RequiresPermissions("oms:rule:add")
     @Log(title = "配货策略分仓规则", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(StrategyDistributionWarehouseArea strategyDistributionWarehouseArea) {
-        return toAjax(strategyDistributionWarehouseAreaService.save(strategyDistributionWarehouseArea));
+    public AjaxResult addSave(StrategyDistributionWarehouseLogistics strategyDistributionWarehouseLogistics) {
+        return toAjax(distributionWarehouseLogisticsService.save(strategyDistributionWarehouseLogistics));
     }
 
-
     /**
-     * 删除配货策略分仓覆盖区域规则
+     * 删除配货策略分仓物流规则
      */
     @RequiresPermissions("oms:rule:remove")
     @Log(title = "配货策略分仓规则", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
-        return toAjax(strategyDistributionWarehouseAreaService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
+        return toAjax(distributionWarehouseLogisticsService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
 }

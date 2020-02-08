@@ -212,13 +212,19 @@ public class CommodityController extends BaseController {
     }
 
     /**
-     * 选择商品
-     * 点击提交后得到数据并回显到父窗体
+     * 获取商品档案信息
      */
-    @GetMapping("/selectCommodityParent/{combo}")
-    public String selectCommodityParent(@PathVariable("combo") String combo, ModelMap mmap) {
-        mmap.put("combo", combo);
-        return prefix + "/common/commodityParent";
+    @GetMapping("/selectCommodity")
+    @ResponseBody
+    public AjaxResult selectCommodityParent() {
+        AjaxResult ajax = new AjaxResult();
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "gco", "gna");
+        List<Commodity> commodityList = commodityService.list(queryWrapper);
+        ajax.put("code", 200);
+        ajax.put("value", commodityList);
+        return ajax;
     }
+
 
 }

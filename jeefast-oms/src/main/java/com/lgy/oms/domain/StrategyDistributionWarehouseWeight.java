@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 配货策略分仓重量规则表 oms_strategy_distribution_warehouse_weight
@@ -22,50 +23,74 @@ import java.io.Serializable;
 public class StrategyDistributionWarehouseWeight extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**
+     * $column.columnComment
+     */
     private Long id;
 
-    /** 策略编码 */
+    /**
+     * 策略编码
+     */
     @Excel(name = "策略编码")
     private String gco;
 
-    /** 仓库编码 */
+    /**
+     * 仓库编码
+     */
     @Excel(name = "仓库编码")
     private String warehouse;
 
-    /** 优先级 */
+    /**
+     * 优先级
+     */
     @Excel(name = "优先级")
-    private Long priority;
+    private Integer priority;
 
-    /** 收件人国家 */
+    /**
+     * 收件人国家
+     */
     @Excel(name = "收件人国家")
     private String nation;
 
-    /** 收件人省/州 */
+    /**
+     * 收件人省/州
+     */
     @Excel(name = "收件人省/州")
     private String province;
 
-    /** 收件人市 */
+    /**
+     * 收件人市
+     */
     @Excel(name = "收件人市")
     private String city;
 
-    /** 收件人区县 */
+    /**
+     * 收件人区县
+     */
     @Excel(name = "收件人区县")
     private String district;
 
-    /** 重量范围最小值 */
+    /**
+     * 重量范围最小值
+     */
     @Excel(name = "重量范围最小值")
-    private Double weightMin;
+    private BigDecimal weightMin;
 
-    /** 重量范围最小值 */
+    /**
+     * 重量范围最小值
+     */
     @Excel(name = "重量范围最小值")
-    private Double weightMax;
+    private BigDecimal weightMax;
 
-    /** 状态（0启用 1停用） */
+    /**
+     * 状态（0启用 1停用）
+     */
     @Excel(name = "状态", readConverterExp = "0=启用,1=停用")
-    private String status;
+    private Integer status;
 
-    /** 备注 */
+    /**
+     * 备注
+     */
     @Excel(name = "备注")
     private String remark;
 

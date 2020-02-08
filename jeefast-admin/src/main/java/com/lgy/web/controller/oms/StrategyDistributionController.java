@@ -13,6 +13,7 @@ import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyDistribution;
 import com.lgy.oms.domain.StrategyDistributionShop;
 import com.lgy.oms.enums.strategy.DistributionLockModelEnum;
+import com.lgy.oms.enums.strategy.DistributionModelEnum;
 import com.lgy.oms.service.IStrategyDistributionService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class StrategyDistributionController extends BaseController {
         model.addAttribute("strategyDistribution", new StrategyDistribution());
         //锁库方式
         model.addAttribute("lockModelList", DistributionLockModelEnum.getList());
+        //配货模式
+        model.addAttribute("modelList", DistributionModelEnum.getList());
         return prefix + "/distribution";
     }
 

@@ -3,6 +3,7 @@ package com.lgy.base.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lgy.base.domain.Commodity;
 import com.lgy.common.service.CommonService;
+import com.lgy.system.domain.vo.Config;
 
 import java.util.List;
 
@@ -32,4 +33,9 @@ public interface ICommodityService extends IService<Commodity>, CommonService<Co
      */
     Commodity getOne(String gco);
 
+    /**
+     * 下拉框查詢商品
+     * @return
+     */
+    List<Config> selectCommodity();
 }

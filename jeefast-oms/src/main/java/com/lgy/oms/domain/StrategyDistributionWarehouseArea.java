@@ -35,7 +35,7 @@ public class StrategyDistributionWarehouseArea extends BaseEntity implements Ser
 
     /** 优先级 */
     @Excel(name = "优先级")
-    private Long priority;
+    private Integer priority;
 
     /** 收件人国家 */
     @Excel(name = "收件人国家")
@@ -59,7 +59,7 @@ public class StrategyDistributionWarehouseArea extends BaseEntity implements Ser
 
     /** 状态（0启用 1停用） */
     @Excel(name = "状态", readConverterExp = "0=启用,1=停用")
-    private String status;
+    private Integer status;
 
     /** 备注 */
     @Excel(name = "备注")

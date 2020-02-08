@@ -96,6 +96,12 @@ public class StrategyDistribution extends BaseEntity implements Serializable {
     private Integer reLogistics;
 
     /**
+     * 配货模式
+     */
+    @Excel(name = "配货模式")
+    private Integer model;
+
+    /**
      * 自动配货等待时间(分钟)
      */
     @Excel(name = "自动配货等待时间(分钟)")

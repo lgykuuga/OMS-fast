@@ -9,9 +9,7 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.domain.StrategyDistributionPre;
 import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
-import com.lgy.oms.enums.strategy.DistributionLockModelEnum;
 import com.lgy.oms.service.IStrategyDistributionWarehouseAvailableService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +65,7 @@ public class StrategyDistributionWarehouseAvailableController extends BaseContro
     /**
      * 规则排序
      */
-    @RequiresPermissions("oms:distribution:edit")
+    @RequiresPermissions("oms:rule:edit")
     @Log(title = "配货策略分仓规则", businessType = BusinessType.UPDATE)
     @PostMapping("/sort")
     @ResponseBody
@@ -124,7 +122,6 @@ public class StrategyDistributionWarehouseAvailableController extends BaseContro
         List<String> idz = Arrays.asList(Convert.toStrArray(ids));
         return toAjax(distributionWarehouseAvailableService.removeByIds(idz));
     }
-
 
 
 }

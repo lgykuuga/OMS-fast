@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增配货策略分仓可用仓库')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-available-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">策略编码</label>
+                <div class="col-sm-8">
+                    <input name="gco" class="form-control" type="text"
+                           th:value="*{gco}" required readonly="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>仓库：</label>
+                <div class="col-sm-8">
+                    <select name="warehouse" class="form-control" th:with="warehouseList=${@base.selectWarehouse()}" required>
+                        <option value="">--请选择仓库--</option>
+                        <option th:each="warehouse : ${warehouseList}" th:text="${warehouse.gna}" th:value="${warehouse.gco}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">国家</label>
+                <div class="col-sm-8">
+                    <input name="nation" class="form-control" type="text" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">省/州</label>
+                <div class="col-sm-8">
+                    <input name="province" class="form-control" type="text" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">城市</label>
+                <div class="col-sm-8">
+                    <input name="city" class="form-control" type="text" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">区</label>
+                <div class="col-sm-8">
+                    <input name="district" class="form-control" type="text" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">是否到达</label>
+                <div class="col-sm-8">
+                    <div class="radio-inline">
+                        <label><input name="arrive" type="radio" value="0"/>到达</label>
+                    </div>
+                    <div class="radio-inline">
+                        <label><input name="arrive" type="radio" value="1"/>不到达</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/strategy/distribution/warehouse/area"
+        $("#form-available-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-available-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

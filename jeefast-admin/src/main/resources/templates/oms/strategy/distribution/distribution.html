@@ -106,7 +106,7 @@
                                             <label class="col-sm-8 control-label">预分配规则</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="preExecute"
+                                                    <input type="checkbox" id="preExecute" name="switch_preExecute"
                                                            th:checked="${strategyDistribution.preExecute == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -116,7 +116,7 @@
                                             <label class="col-sm-8 control-label">仓库商品拆分规则</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="warehouseSkuSplit"
+                                                    <input type="checkbox" id="warehouseSkuSplit" name="switch_warehouseSkuSplit"
                                                            th:checked="${strategyDistribution.warehouseSkuSplit == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -126,7 +126,7 @@
                                             <label class="col-sm-8 control-label">特殊商品拆分规则</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="specialSkuSplit"
+                                                    <input type="checkbox" id="specialSkuSplit" name="switch_specialSkuSplit"
                                                            th:checked="${strategyDistribution.specialSkuSplit == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -136,7 +136,7 @@
                                             <label class="col-sm-8 control-label">类别商品拆分规则</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="categorySkuSplit"
+                                                    <input type="checkbox" id="categorySkuSplit" name="switch_categorySkuSplit"
                                                            th:checked="${strategyDistribution.categorySkuSplit == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -149,7 +149,7 @@
                                             <label class="col-sm-8 control-label">库存不足拆分</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="stockSplit"
+                                                    <input type="checkbox" id="stockSplit" name="switch_stockSplit"
                                                            th:checked="${strategyDistribution.stockSplit == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -159,7 +159,7 @@
                                             <label class="col-sm-8 control-label">订单重量拆分规则</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="weightSplit"
+                                                    <input type="checkbox" id="weightSplit" name="switch_weightSplit"
                                                            th:checked="${strategyDistribution.weightSplit == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -169,7 +169,7 @@
                                             <label class="col-sm-8 control-label">重新分配仓库</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="reWarehouse"
+                                                    <input type="checkbox" id="reWarehouse" name="switch_reWarehouse"
                                                            th:checked="${strategyDistribution.reWarehouse == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -179,7 +179,7 @@
                                             <label class="col-sm-8 control-label">重新分配物流</label>
                                             <div class="col-sm-4">
                                                 <label class="toggle-switch switch-solid">
-                                                    <input type="checkbox" id="reLogistics"
+                                                    <input type="checkbox" id="reLogistics" name="switch_reLogistics"
                                                            th:checked="${strategyDistribution.reLogistics == 0 ? true : false}">
                                                     <span></span>
                                                 </label>
@@ -199,13 +199,27 @@
                                                 </select>
                                             </div>
                                         </div>
-
                                         <div class="form-group col-sm-6">
                                             <label class="col-sm-6 control-label">配货等待时间,单位:分钟</label>
                                             <div class="m-r-md inline">
                                                 <!-- 配货等待时间值 -->
                                                 <input name="profitValue" th:field="*{waitTime}" type="text" class="dial m-r"
                                                        data-fgColor="#ED5565" data-width="85" data-height="85" data-angleOffset=-125 data-angleArc=250 />
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="container-fluid">
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-4 control-label">配货模式</label>
+                                            <div class="col-sm-4">
+                                                <select name="model" class="form-control" id="model">
+                                                    <option th:each="model : ${modelList}"
+                                                            th:text="${model.configValue}"
+                                                            th:value="${model.configKey}"
+                                                            th:selected="${strategyDistribution.model == model.configKey}"></option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -479,37 +493,65 @@
          * @method serializeJson
          * */
         $.fn.setForm = function (jsonValue) {
-            var obj = this;
+            var $this = this;
             $.each(jsonValue, function (name, ival) {
-                var $oinput = obj.find("input[name=" + name + "]");
-                if ($oinput.attr("type") == "checkbox") {
-                    if (ival !== null) {
-                        var checkboxObj = $("[name=" + name + "]");
-                        ival = ival.toString();
-                        var checkArray = ival.split(";");
-                        for (var i = 0; i < checkboxObj.length; i++) {
-                            for (var j = 0; j < checkArray.length; j++) {
-                                if (checkboxObj[i].value == checkArray[j]) {
-                                    // checkboxObj[i].click();
-                                    checkboxObj[i].attr("checked", 'checked');
+                //优先使用name,因为表单提交使用name
+                var that = $this.find("[name=" + name + "]")[0];
+                if(that == undefined){
+
+                    //初始化switch控件，起别名是因为名称相同，控件值会污染到表单
+                    var switchs = $this.find("[name=switch_" + name + "]")[0];
+                    if(switchs != undefined && $(switchs).parent().hasClass("toggle-switch")){
+                        $(switchs).prop("checked", ival == 0 ? true : false);
+                        return true;
+                    }
+
+                    console.log("init Form data error : " + name + " is undifined!");
+                    return true;
+                }
+
+                var formcontrl = $(that);
+                if(formcontrl.is("select")){
+                    $("[name='" + name +"']").val(ival);
+                }else if(formcontrl.is("input")){
+                    //这里需要判断控件是否是switch
+                    if (formcontrl.attr("type") == "checkbox") {
+                        if (ival !== null) {
+                            var checkboxObj = $("[name=" + name + "]");
+                            ival = ival.toString();
+                            var checkArray = ival.split(";");
+                            for (var i = 0; i < checkboxObj.length; i++) {
+                                for (var j = 0; j < checkArray.length; j++) {
+                                    if (checkboxObj[i].value == checkArray[j]) {
+                                        // checkboxObj[i].click();
+                                        checkboxObj[i].attr("checked", 'checked');
+                                    }
                                 }
                             }
+
                         }
-                    }
-                } else if ($oinput.attr("type") == "radio") {
-                    $oinput.each(function () {
-                        var radioObj = $("[name=" + name + "]");
-                        for (var i = 0; i < radioObj.length; i++) {
-                            if (radioObj[i].value == ival) {
-                                radioObj[i].click();
+                    } else if (formcontrl.attr("type") == "radio") {
+                        formcontrl.each(function () {
+                            var radioObj = $("[name=" + name + "]");
+                            $("input[name='" + name +"'][checked]").val(ival);
+                        });
+                    } else if (formcontrl.attr("type") == "checkbox") {
+                        formcontrl.each(function () {
+                            var radioObj = $("[name=" + name + "]");
+                            for (var i = 0; i < radioObj.length; i++) {
+                                if (radioObj[i].value == ival) {
+                                    radioObj[i].click();
+                                }
                             }
-                        }
-                    });
-                } else if ($oinput.attr("type") == "textarea") {
-                    obj.find("[name=" + name + "]").html(ival);
-                } else {
-                    obj.find("[name=" + name + "]").val(ival);
+                        });
+                    }else {
+                        $this.find("[name=" + name + "]").val(ival);
+                    }
+                }else if(formcontrl.is("textarea")) {
+                    $this.find("[name=" + name + "]").html(ival);
                 }
+
+
             })
         }
 

@@ -9,8 +9,8 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.domain.StrategyDistributionWarehouseArea;
-import com.lgy.oms.service.IStrategyDistributionWarehouseAreaService;
+import com.lgy.oms.domain.StrategyDistributionWarehouseWeight;
+import com.lgy.oms.service.IStrategyDistributionWarehouseWeightService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,26 +21,26 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 配货策略分仓覆盖区域规则Controller
+ * 配货策略分仓重量规则Controller
  *
  * @author lgy
  * @date 2020-02-04
  */
 @Controller
-@RequestMapping("/oms/strategy/distribution/warehouse/area")
-public class StrategyDistributionWarehouseAreaController extends BaseController {
+@RequestMapping("/oms/strategy/distribution/warehouse/weight")
+public class StrategyDistributionWarehouseWeightController extends BaseController {
 
-    private String prefix = "oms/strategy/distribution/warehouse/area";
+    private String prefix = "oms/strategy/distribution/warehouse/weight";
 
     @Autowired
-    private IStrategyDistributionWarehouseAreaService strategyDistributionWarehouseAreaService;
+    private IStrategyDistributionWarehouseWeightService distributionWarehouseWeightService;
 
     @RequiresPermissions("oms:rule:view")
     @GetMapping("/{gco}")
-    public String area(@PathVariable("gco") String gco, ModelMap mmap) {
+    public String weight(@PathVariable("gco") String gco, ModelMap mmap) {
         //策略编码
         mmap.put("gco", gco);
-        return prefix + "/area";
+        return prefix + "/weight";
     }
 
     /**
@@ -49,20 +49,20 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
     @RequiresPermissions("oms:rule:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(StrategyDistributionWarehouseArea strategyDistributionWarehouseArea) {
-        QueryWrapper<StrategyDistributionWarehouseArea> queryWrapper = new QueryWrapper<>();
+    public TableDataInfo list(StrategyDistributionWarehouseWeight entity) {
+        QueryWrapper<StrategyDistributionWarehouseWeight> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
-        if (StringUtils.isNotEmpty(strategyDistributionWarehouseArea.getGco())) {
-            queryWrapper.eq("gco", strategyDistributionWarehouseArea.getGco());
+        if (StringUtils.isNotEmpty(entity.getGco())) {
+            queryWrapper.eq("gco", entity.getGco());
         }
-        if (StringUtils.isNotEmpty(strategyDistributionWarehouseArea.getWarehouse())) {
-            queryWrapper.eq("warehouse", strategyDistributionWarehouseArea.getWarehouse());
+        if (StringUtils.isNotEmpty(entity.getWarehouse())) {
+            queryWrapper.eq("warehouse", entity.getWarehouse());
         }
-        if (strategyDistributionWarehouseArea.getArrive() != null) {
-            queryWrapper.eq("arrive", strategyDistributionWarehouseArea.getArrive());
+        if (entity.getStatus() != null) {
+            queryWrapper.eq("status", entity.getStatus());
         }
         startPage();
-        return getDataTable(strategyDistributionWarehouseAreaService.list(queryWrapper));
+        return getDataTable(distributionWarehouseWeightService.list(queryWrapper));
     }
 
     /**
@@ -76,10 +76,10 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
         if (StringUtils.isEmpty(data)) {
             return AjaxResult.error("传入对象为空");
         }
-        List<StrategyDistributionWarehouseArea> list = JSON.parseArray(data, StrategyDistributionWarehouseArea.class);
+        List<StrategyDistributionWarehouseWeight> list = JSON.parseArray(data, StrategyDistributionWarehouseWeight.class);
         for (int i = 0; i < list.size(); i++) {
             //调整优先级顺序
-            strategyDistributionWarehouseAreaService.updatePrePriority(list.get(i).getId(), i);
+            distributionWarehouseWeightService.updatePrePriority(list.get(i).getId(), i);
         }
         return toAjax(true);
     }
@@ -91,7 +91,7 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
     @ResponseBody
     @Log(title = "配货策略分仓规则", businessType = BusinessType.UPDATE)
     public AjaxResult changeField(Long id, String field, int value) {
-        return toAjax(strategyDistributionWarehouseAreaService.changeField(id, field, value));
+        return toAjax(distributionWarehouseWeightService.changeField(id, field, value));
     }
 
     /**
@@ -105,25 +105,25 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
 
 
     /**
-     * 新增保存配货策略分仓覆盖区域规则
+     * 新增保存配货策略分仓规则
      */
     @RequiresPermissions("oms:rule:add")
     @Log(title = "配货策略分仓规则", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(StrategyDistributionWarehouseArea strategyDistributionWarehouseArea) {
-        return toAjax(strategyDistributionWarehouseAreaService.save(strategyDistributionWarehouseArea));
+    public AjaxResult addSave(StrategyDistributionWarehouseWeight strategyDistributionWarehouseWeight) {
+        return toAjax(distributionWarehouseWeightService.save(strategyDistributionWarehouseWeight));
     }
 
 
     /**
-     * 删除配货策略分仓覆盖区域规则
+     * 删除配货策略分仓规则
      */
     @RequiresPermissions("oms:rule:remove")
     @Log(title = "配货策略分仓规则", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
-        return toAjax(strategyDistributionWarehouseAreaService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
+        return toAjax(distributionWarehouseWeightService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));
     }
 }

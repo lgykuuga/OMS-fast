@@ -29,6 +29,18 @@ public class BaseService {
     IWarehouseService warehouseService;
     @Autowired
     ILogisticsService logisticsService;
+    @Autowired
+    ICommodityService commodityService;
+
+
+    /**
+     * 下来框查询货主
+     *
+     * @return 货主列表
+     */
+    public List<Config> selectCommodity() {
+        return commodityService.selectCommodity();
+    }
 
     /**
      * 下来框查询货主
@@ -69,7 +81,7 @@ public class BaseService {
     /**
      * 下来框查询物流商
      *
-     * @return 仓库列表
+     * @return 物流列表
      */
     public List<Logistics> selectLogistics() {
         return logisticsService.selectLogistics();

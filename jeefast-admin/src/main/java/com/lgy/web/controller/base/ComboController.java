@@ -147,10 +147,11 @@ public class ComboController extends BaseController {
     @ResponseBody
     public AjaxResult selectCommodityParent(@PathVariable("combo") String combo) {
         AjaxResult ajax = new AjaxResult();
-
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(combo)) {
+            queryWrapper.eq("combo", combo);
+        }
         queryWrapper.select("id", "gco", "gna");
-        queryWrapper.eq("combo", combo);
         List<Commodity> commodityList = commodityService.list(queryWrapper);
         ajax.put("code", 200);
         ajax.put("value", commodityList);
