@@ -81,7 +81,7 @@
                 {
                     field : 'priority',
                     title : '优先级',
-                    width: 80,
+                    width: 30,
                     visible: true
                 },
                 {
@@ -120,15 +120,24 @@
                 {
                     field : 'weightMin',
                     title : '范围最小值',
+                    align: 'center',
                     width: 80,
                     visible: true
                 },
                 {
                     field : 'weightMax',
                     title : '范围最大值',
+                    align: 'center',
                     width: 80,
                     visible: true
                 },
+
+                    {
+                        field : 'remark',
+                        title : '备注',
+                        width: 160,
+                        visible: true
+                    },
                 {
                     title: '禁用/启用',
                     align: 'center',
@@ -136,11 +145,7 @@
                         return statusTools(row);
                     }
                 },
-                    {
-                        field : 'remark',
-                        title : '备注',
-                        visible: true
-                    },
+
                 {
                     field : 'createBy',
                     title : '创建人',
