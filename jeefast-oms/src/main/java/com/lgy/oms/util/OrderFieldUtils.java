@@ -50,6 +50,11 @@ public class OrderFieldUtils {
      */
     private static List<Config> orderDetailConfigs;
 
+    /**
+     * 订单所有字段信息
+     */
+    private static List<Config> orderFullFieldConfigs;
+
 
     public final static List<Config> getOrderMainList() {
         if (orderMainConfigs == null) {
@@ -140,6 +145,21 @@ public class OrderFieldUtils {
             }
         }
         return orderDetailConfigs;
+    }
+
+
+    public final static List<Config> getFullFieldList() {
+        if (orderFullFieldConfigs == null) {
+            orderFullFieldConfigs = new ArrayList<>();
+            orderFullFieldConfigs.addAll(getOrderMainList());
+            orderFullFieldConfigs.addAll(getBuyerInfoList());
+            orderFullFieldConfigs.addAll(getPayInfoList());
+            orderFullFieldConfigs.addAll(getStatusInfoList());
+            orderFullFieldConfigs.addAll(getTypeInfoList());
+            orderFullFieldConfigs.addAll(getInterceptList());
+            orderFullFieldConfigs.addAll(getDetailList());
+        }
+        return orderFullFieldConfigs;
     }
 
 

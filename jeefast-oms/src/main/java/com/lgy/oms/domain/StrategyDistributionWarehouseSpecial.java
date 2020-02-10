@@ -35,7 +35,7 @@ public class StrategyDistributionWarehouseSpecial extends BaseEntity implements 
 
     /** 优先级 */
     @Excel(name = "优先级")
-    private Long priority;
+    private Integer priority;
 
     /** 属性类型(订单主信息/订单用户信息/订单支付信息...) */
     @Excel(name = "属性类型(订单主信息/订单用户信息/订单支付信息...)")
@@ -51,7 +51,7 @@ public class StrategyDistributionWarehouseSpecial extends BaseEntity implements 
 
     /** 匹配值(多条用英文逗号分隔) */
     @Excel(name = "匹配值(多条用英文逗号分隔)")
-    private String value;
+    private String valueCode;
 
     /** 匹配值(中文含义) */
     @Excel(name = "匹配值(中文含义)")
@@ -59,7 +59,7 @@ public class StrategyDistributionWarehouseSpecial extends BaseEntity implements 
 
     /** 状态（0启用 1停用） */
     @Excel(name = "状态", readConverterExp = "0=启用,1=停用")
-    private String status;
+    private Integer status;
 
     /** 备注 */
     @Excel(name = "备注")

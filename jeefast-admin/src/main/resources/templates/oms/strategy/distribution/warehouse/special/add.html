@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增配货策略特定信息分仓')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-available-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">策略编码</label>
+                <div class="col-sm-8">
+                    <input name="gco" class="form-control" type="text"
+                           th:value="*{gco}" required readonly="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>仓库：</label>
+                <div class="col-sm-8">
+                    <select name="warehouse" class="form-control" th:with="warehouseList=${@base.selectWarehouse()}" required>
+                        <option value="">--请选择仓库--</option>
+                        <option th:each="warehouse : ${warehouseList}" th:text="${warehouse.gna}" th:value="${warehouse.gco}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">订单类型</label>
+                <div class="col-sm-8">
+                    <select name="type" class="form-control" id="type">
+                        <option th:each="orderTable : ${orderTableEnum}" th:text="${orderTable.configValue}"
+                                th:value="${orderTable.configKey}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">字段</label>
+                <div class="col-sm-8">
+                    <select name="field" class="form-control" id="field">
+                        <option value="">-选择字段-</option>
+                        <!--                    <option th:each="orderMain : ${orderMainField}" th:text="${orderMain.configValue}" th:value="${orderMain.configKey}"></option>-->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">条件</label>
+                <div class="col-sm-8">
+                    <select name="requirement" class="form-control" id="requirement">
+                        <option th:each="condition : ${conditionEnum}" th:text="${condition.configValue}"
+                                th:value="${condition.configKey}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">匹配值</label>
+                <div class="col-sm-8">
+                    <textarea id="valueCode" name="valueCode" class="form-control" autocomplete="off"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">匹配值</label>
+                <div class="col-sm-8">
+                    <textarea id="valueName" name="valueName" class="form-control" readonly="true"></textarea>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">规则描述</label>
+                <div class="col-sm-8">
+                    <textarea id="remark" name="remark" class="form-control" autocomplete="off"></textarea>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "oms/strategy/distribution/warehouse/special"
+        $("#form-available-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-available-add').serialize());
+            }
+        }
+
+        $(document).ready(function () {
+            $("#type").change(function () {
+                var code = $("#type").val();
+                if (code == '') {
+                    return;
+                }
+
+                $.ajax({
+                    url: prefix + '/selectField',
+                    async: false,
+                    type: 'post',
+                    data: {code: code},
+                    success: function (data) {
+                        data = data.data;
+                        var field = $("#field").empty();
+                        for (var i = 0; i < data.length; i++) {
+                            field.append("<option value='" + data[i].configKey + "'>" + data[i].configValue + "</option>");
+                        }
+                    }
+                })
+            });
+        })
+
+
+    </script>
+</body>
+</html>

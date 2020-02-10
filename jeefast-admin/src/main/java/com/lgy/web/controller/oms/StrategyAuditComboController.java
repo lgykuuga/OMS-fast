@@ -52,6 +52,8 @@ public class StrategyAuditComboController extends BaseController {
     public String combo(@PathVariable("gco") String gco,  ModelMap mmap) {
         //表
         mmap.put("orderTableEnum", OrderTableEnum.getList());
+        //订单全字段
+        mmap.put("orderFullFieldEnum", OrderFieldUtils.getFullFieldList());
         //判断条件
         mmap.put("conditionEnum", ConditionEnum.getList());
         return prefix + "/auditCombo";

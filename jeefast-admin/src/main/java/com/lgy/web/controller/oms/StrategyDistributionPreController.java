@@ -16,6 +16,7 @@ import com.lgy.oms.enums.strategy.ConditionEnum;
 import com.lgy.oms.enums.strategy.DistributionLockModelEnum;
 import com.lgy.oms.service.IStrategyDistributionPreDetailService;
 import com.lgy.oms.service.IStrategyDistributionPreService;
+import com.lgy.oms.util.OrderFieldUtils;
 import com.lgy.system.domain.vo.Config;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,8 @@ public class StrategyDistributionPreController extends BaseController {
     public String pre(@PathVariable("gco") String gco, ModelMap mmap) {
         //订单表类型字段
         mmap.put("orderTableEnum", OrderTableEnum.getList());
+        //订单全字段
+        mmap.put("orderFullFieldEnum", OrderFieldUtils.getFullFieldList());
         //判断条件
         mmap.put("conditionEnum", ConditionEnum.getList());
         //锁库方式

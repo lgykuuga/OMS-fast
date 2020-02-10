@@ -92,6 +92,8 @@
         var gna = "";
         // 表
         var orderTableEnum = [[${orderTableEnum}]];
+        //订单全字段
+        var orderFullFieldEnum = [[${orderFullFieldEnum}]];
         // 判断条件
         var conditionEnum = [[${conditionEnum}]];
         // 锁库方式
@@ -273,7 +275,11 @@
                     },
                     {
                         field : 'field',
-                        title : '字段'
+                        title : '字段',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return $.table.selectValue(orderFullFieldEnum, value);
+                        }
                     },
                     {
                         field : 'requirement',
