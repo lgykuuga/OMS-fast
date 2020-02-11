@@ -46,6 +46,15 @@ public interface IStrategyDistributionWarehouseRuleService extends IService<Stra
      * @param field 修改字段
      * @param value 更新值
      * @return
+     * @throws Exception
      */
     boolean changeField(Long id, String field, Integer value) throws Exception;
+
+    /**
+     * 订单匹配仓库,根据策略编码获取分仓规则
+     *
+     * @param gco 策略编码
+     * @return
+     */
+    List<StrategyDistributionWarehouseRule> matchWarehouseGyRules(String gco);
 }

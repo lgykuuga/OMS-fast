@@ -108,6 +108,19 @@ public class StrategyDistribution extends BaseEntity implements Serializable {
     private Long waitTime;
 
     /**
+     * 默认仓库
+     */
+    @Excel(name = "默认仓库")
+    private String warehouse;
+
+    /**
+     * 默认物流
+     */
+    @Excel(name = "默认物流")
+    private String logistics;
+
+
+    /**
      * 货主
      */
     @Excel(name = "货主")

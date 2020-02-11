@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.utils.reflect.ReflectUtils;
 import com.lgy.oms.domain.StrategyDistributionWarehouseSpecial;
+import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.mapper.StrategyDistributionWarehouseSpecialMapper;
 import com.lgy.oms.service.IStrategyDistributionWarehouseSpecialService;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,11 @@ public class StrategyDistributionWarehouseSpecialServiceImpl extends ServiceImpl
         rule.setId(id);
         ReflectUtils.setFieldValue(rule, field, value);
         return updateById(rule);
+    }
+
+    @Override
+    public String getSpecialWarehouse(OrderMain orderMain, String gco) {
+        return null;
     }
 
 }

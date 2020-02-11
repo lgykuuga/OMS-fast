@@ -2,6 +2,8 @@ package com.lgy.oms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lgy.oms.domain.StrategyDistributionWarehouseArea;
+import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
+import com.lgy.oms.domain.order.OrderMain;
 
 import java.util.List;
 
@@ -39,4 +41,16 @@ public interface IStrategyDistributionWarehouseAreaService extends IService<Stra
      * @return
      */
     boolean changeField(Long id, String field, int value);
+
+    /**
+     * 获取可用仓库列表
+     *
+     *
+     * @param warehouseList 可用仓库列表
+     * @param orderMain 订单信息
+     * @param gco       策略编码
+     * @param warehouseRule 分仓规则设置
+     * @return 可用仓库列表
+     */
+    List<String> getAreaWarehouse(List<String> warehouseList, OrderMain orderMain, String gco, StrategyDistributionWarehouseRule warehouseRule);
 }

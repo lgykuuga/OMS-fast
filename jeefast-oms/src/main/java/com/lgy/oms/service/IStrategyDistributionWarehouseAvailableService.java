@@ -39,4 +39,11 @@ public interface IStrategyDistributionWarehouseAvailableService extends IService
      * @return
      */
     boolean changeField(Long id, String field, int value);
+
+    /**
+     * 获取可用仓库列表
+     * @param gco 策略编码
+     * @return 可用仓库列表
+     */
+    List<String> getAvailableWarehouse(String gco);
 }
