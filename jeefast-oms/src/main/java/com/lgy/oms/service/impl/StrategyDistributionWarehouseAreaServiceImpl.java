@@ -3,6 +3,7 @@ package com.lgy.oms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
+import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.reflect.ReflectUtils;
 import com.lgy.oms.domain.StrategyDistributionWarehouseArea;
 import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
@@ -59,9 +60,6 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
             return warehouseList;
         }
 
-        // 根据审单单号查询订单信息
-        OdinBean odin = odinService.findOne("odid", phma.getSoid());
-
         //设置不到达区域,需要过滤的仓库
         List<String> removeWarehouse = new ArrayList<>();
 
@@ -71,7 +69,7 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
         for (StrategyDistributionWarehouseArea area : areaList) {
             String warehouse = area.getWarehouse();
             if (Constants.YES.equals(area.getArrive())) {
-                //设置到达仓库逻辑
+                //设置到达仓库加入map
                 if (toMap.get(warehouse) == null || toMap.get(warehouse).size() == 0) {
                     List<StrategyDistributionWarehouseArea> list = new ArrayList<>();
                     list.add(area);
@@ -84,7 +82,7 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
                 for (String originalWarehouse : warehouseList) {
                     //判断该订单地址是否不到达该仓库
                     if (warehouse.equals(originalWarehouse)) {
-                        if (!isArriveWarehouse(area, orderMain)) {
+                        if (!isHitRule(area, orderMain)) {
                             //该仓库不到达区域,过滤.
                             removeWhco.add(originalWhco);
                         }
@@ -121,15 +119,14 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
     }
 
     /**
-     * 判断到达区域规则
-     * @param area区域设置
+     * 判断是否击中规则
+     * @param area 区域设置
      * @param orderMain 订单信息
      * @return
      */
-    private boolean isArriveWarehouse(StrategyDistributionWarehouseArea area, OrderMain orderMain) {
-        //默认到达
-        boolean flag = true;
-
+    private boolean isHitRule(StrategyDistributionWarehouseArea area, OrderMain orderMain) {
+        //击中标识
+        boolean flag = false;
 
         if (Constants.NO.equals(area.getArrive())) {
             //设置不到
@@ -144,9 +141,14 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
             String district = area.getDistrict();
 
             if (orderMain.getOrderBuyerinfo().getNation().contains(nation)) {
+
+                if (StringUtils.isEmpty(province)) {
+
+                }
+
                 //国家设置相同
                 if (orderMain.getOrderBuyerinfo().getProvince().contains(province)) {
-
+                    if ()
                 }
             }
 
