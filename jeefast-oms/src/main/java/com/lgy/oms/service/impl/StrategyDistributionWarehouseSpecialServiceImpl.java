@@ -3,6 +3,7 @@ package com.lgy.oms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.utils.reflect.ReflectUtils;
+import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
 import com.lgy.oms.domain.StrategyDistributionWarehouseSpecial;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.mapper.StrategyDistributionWarehouseSpecialMapper;
@@ -44,8 +45,10 @@ public class StrategyDistributionWarehouseSpecialServiceImpl extends ServiceImpl
     }
 
     @Override
-    public String getSpecialWarehouse(OrderMain orderMain, String gco) {
+    public List<String> getSpecialWarehouse(List<String> warehouseList, OrderMain orderMain, String gco,
+                                            StrategyDistributionWarehouseRule warehouseRule) {
         return null;
     }
+
 
 }

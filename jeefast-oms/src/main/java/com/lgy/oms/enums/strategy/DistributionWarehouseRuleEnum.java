@@ -20,7 +20,7 @@ public enum DistributionWarehouseRuleEnum {
     RULE_LOGISTICS(2, "指定物流分配仓库", "指定物流分配仓库"),
     RULE_AREA(3, "覆盖区域到达仓库", "覆盖区域到达仓库"),
     RULE_WEIGHT(4,"根据重量分配仓库", "根据重量分配仓库"),
-    RULE_DETAIL(5, "特定商品指定仓库", "根据重量分配仓库"),
+    RULE_DETAIL(5, "特定商品指定仓库", "特定商品指定仓库"),
     RULE_DEFAULT(6, "配货策略默认仓库", "配货策略默认仓库"),
     RULE_LOCK_STOCK(7, "可用库存分配仓库", "可用库存分配仓库");
 

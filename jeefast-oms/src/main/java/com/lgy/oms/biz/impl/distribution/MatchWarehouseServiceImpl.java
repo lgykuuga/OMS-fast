@@ -62,11 +62,10 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
     IStrategyDistributionWarehouseWeightService weightService;
 
 
-
     @Override
     public CommonResponse<List<String>> start(OrderMain orderMain, StrategyDistribution strategyDistribution, DistributionParamDTO param) {
 
-        logger.info("订单[{}]开始配货策略[{}]分仓流程", orderMain.getOrderId(), strategyDistribution.getGco());
+        logger.debug("订单[{}]开始配货策略[{}]分仓流程", orderMain.getOrderId(), strategyDistribution.getGco());
 
         //可用仓库有序集合
         List<String> warehouseList = new ArrayList<>();
@@ -77,7 +76,7 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
 
         if (warehouseRules == null || warehouseRules.isEmpty()) {
             if (StringUtils.isNotEmpty(strategyDistribution.getWarehouse())) {
-                logger.info("订单[{}]匹配策略[{}]没有初始化分仓规则,分配店铺策略默认仓库。", orderMain.getOrderId(), strategyDistribution.getGco());
+                logger.debug("订单[{}]匹配策略[{}]没有初始化分仓规则,分配店铺策略默认仓库。", orderMain.getOrderId(), strategyDistribution.getGco());
                 warehouseList.add(strategyDistribution.getWarehouse());
                 return new CommonResponse<List<String>>().ok(warehouseList);
             } else {
@@ -90,42 +89,75 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
         }
 
         for (StrategyDistributionWarehouseRule warehouseRule : warehouseRules) {
-            //开启必须规则:排除其他仓库并执行必须规则
-            if (Constants.ON.equals(warehouseRule.getMust())) {
 
-                if (DistributionWarehouseRuleEnum.RULE_AVAILABLE.getCode().equals(warehouseRule.getRuleId())) {
-                    //分仓策略-可用仓库
-                    warehouseList = availableService.getAvailableWarehouse(strategyDistribution.getGco());
-                    if (warehouseList == null || warehouseList.isEmpty()) {
-                        rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
-                                .append(strategyDistribution.getGco())
-                                .append("可用仓库没有维护,分仓失败。");
-                        logger.error(rtnMessage.toString());
-                        return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
-                    }
-                } else if (DistributionWarehouseRuleEnum.RULE_SPECIAL.getCode().equals(warehouseRule.getRuleId())) {
-                    //分仓策略-特定信息分仓
-                    String warehouse = specialService.getSpecialWarehouse(orderMain, strategyDistribution.getGco());
-                    if (StringUtils.isNotEmpty(warehouse)) {
-                        //确定唯一仓库
-                        if (warehouseList.contains(warehouse)) {
-                            warehouseList.clear();
-                            warehouseList.add(warehouse);
-                        } else {
-                            rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
-                                    .append(strategyDistribution.getGco())
-                                    .append("根据必须规则:特定信息分配仓库")
-                                    .append(warehouse)
-                                    .append("与其他规则冲突,请检查分仓规则设置");
-                            logger.error(rtnMessage.toString());
-                            return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
-                        }
-                    }
-                } else if (DistributionWarehouseRuleEnum.RULE_AREA.getCode().equals(warehouseRule.getRuleId())) {
-                    //分仓策略-到达区域分仓
-                    warehouseList = areaService.getAreaWarehouse(warehouseList, orderMain, strategyDistribution.getGco(), warehouseRule);
+            if (DistributionWarehouseRuleEnum.RULE_AVAILABLE.getCode().equals(warehouseRule.getRuleId())) {
+                //分仓策略-可用仓库
+                warehouseList = availableService.getAvailableWarehouse(strategyDistribution.getGco());
+                if (warehouseList == null || warehouseList.isEmpty()) {
+                    rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
+                            .append(strategyDistribution.getGco())
+                            .append("可用仓库没有维护,分仓失败。请检查规则设置");
+                    logger.error(rtnMessage.toString());
+                    return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
+                }
+            } else if (DistributionWarehouseRuleEnum.RULE_SPECIAL.getCode().equals(warehouseRule.getRuleId())) {
+                //分仓策略-特定信息分仓
+                warehouseList = specialService.getSpecialWarehouse(warehouseList, orderMain, strategyDistribution.getGco(), warehouseRule);
+
+            } else if (DistributionWarehouseRuleEnum.RULE_LOGISTICS.getCode().equals(warehouseRule.getRuleId())) {
+                //分仓策略-物流仓库分仓
+                warehouseList = logisticsService.getLogisticsWarehouse(warehouseList, orderMain, strategyDistribution.getGco(), warehouseRule);
+                //物流仓库分仓存在排除仓库情况,因此存在仓库为空的可能
+                if (warehouseList == null || warehouseList.isEmpty()) {
+                    rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
+                            .append(strategyDistribution.getGco())
+                            .append("物流仓库分仓后可用仓库为空,分仓失败。请检查规则设置");
+                    logger.error(rtnMessage.toString());
+                    return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
                 }
 
+            } else if (DistributionWarehouseRuleEnum.RULE_AREA.getCode().equals(warehouseRule.getRuleId())) {
+                //分仓策略-到达区域分仓
+                warehouseList = areaService.getAreaWarehouse(warehouseList, orderMain, strategyDistribution.getGco(), warehouseRule);
+                //到达区域分仓存在排除仓库情况,因此存在仓库为空的可能
+                if (warehouseList == null || warehouseList.isEmpty()) {
+                    rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
+                            .append(strategyDistribution.getGco())
+                            .append("到达区域分仓后可用仓库为空,分仓失败。请检查规则设置");
+                    logger.error(rtnMessage.toString());
+                    return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
+                }
+
+            } else if (DistributionWarehouseRuleEnum.RULE_WEIGHT.getCode().equals(warehouseRule.getRuleId())) {
+                //分仓策略-根据重量分仓
+                warehouseList = weightService.getWeightWarehouse(warehouseList, orderMain, strategyDistribution.getGco(), warehouseRule);
+            } else if (DistributionWarehouseRuleEnum.RULE_DETAIL.getCode().equals(warehouseRule.getRuleId())) {
+                //分仓策略-根据订单明细分仓
+                warehouseList = skuService.getSkuWarehouse(warehouseList, orderMain, strategyDistribution.getGco(), warehouseRule);
+            } else if (DistributionWarehouseRuleEnum.RULE_DEFAULT.getCode().equals(warehouseRule.getRuleId())) {
+                //分仓策略-分配默认仓库
+                String warehouse = strategyDistribution.getWarehouse();
+                if (StringUtils.isNotEmpty(warehouse)) {
+                    //确定唯一仓库
+                    if (warehouseList.contains(warehouse)) {
+                        warehouseList.clear();
+                        warehouseList.add(warehouse);
+                    } else {
+                        rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
+                                .append(strategyDistribution.getGco())
+                                .append("根据必须规则:配货策略默认仓库")
+                                .append(warehouse)
+                                .append("与其他规则冲突,请检查分仓规则设置");
+                        logger.warn(rtnMessage.toString());
+                        return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
+                    }
+                } else {
+                    rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
+                            .append(strategyDistribution.getGco())
+                            .append("根据必须规则:配货策略默认仓库规则开启,默认仓库为空");
+                    logger.warn(rtnMessage.toString());
+                    return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
+                }
             }
         }
 

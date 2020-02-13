@@ -6,17 +6,15 @@ import com.lgy.common.constant.Constants;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.reflect.ReflectUtils;
 import com.lgy.oms.domain.StrategyDistributionWarehouseArea;
-import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
 import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.mapper.StrategyDistributionWarehouseAreaMapper;
 import com.lgy.oms.service.IStrategyDistributionWarehouseAreaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 配货策略分仓覆盖区域规则 服务层实现
@@ -27,10 +25,20 @@ import java.util.Map;
 @Service
 public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<StrategyDistributionWarehouseAreaMapper, StrategyDistributionWarehouseArea> implements IStrategyDistributionWarehouseAreaService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public List<StrategyDistributionWarehouseArea> getStrategyByGco(String gco) {
         QueryWrapper<StrategyDistributionWarehouseArea> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
+        return this.list(queryWrapper);
+    }
+
+    private List<StrategyDistributionWarehouseArea> getStrategyByGcoAndWarehouse(String gco, List<String> warehouseList) {
+        QueryWrapper<StrategyDistributionWarehouseArea> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("gco", gco);
+        queryWrapper.in("warehouse", warehouseList);
+        queryWrapper.orderByDesc("priority");
         return this.list(queryWrapper);
     }
 
@@ -53,8 +61,8 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
     @Override
     public List<String> getAreaWarehouse(List<String> warehouseList, OrderMain orderMain, String gco,
                                          StrategyDistributionWarehouseRule warehouseRule) {
-        // 查询配货策略下的到达区域
-        List<StrategyDistributionWarehouseArea> areaList = getStrategyByGco(gco);
+        // 查询配货策略下的区域规则
+        List<StrategyDistributionWarehouseArea> areaList = getStrategyByGcoAndWarehouse(gco, warehouseList);
         if (areaList == null || areaList.isEmpty()) {
             // 当条件为空是，返回原仓库信息
             return warehouseList;
@@ -64,27 +72,28 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
         List<String> removeWarehouse = new ArrayList<>();
 
         //对覆盖区域条件到达
-        Map<String, List<StrategyDistributionWarehouseArea>> toMap = new HashMap<>(areaList.size());
+        Map<String, List<StrategyDistributionWarehouseArea>> arriveMap = new HashMap<>(areaList.size());
 
         for (StrategyDistributionWarehouseArea area : areaList) {
             String warehouse = area.getWarehouse();
             if (Constants.YES.equals(area.getArrive())) {
                 //设置到达仓库加入map
-                if (toMap.get(warehouse) == null || toMap.get(warehouse).size() == 0) {
+                if (arriveMap.get(warehouse) == null || arriveMap.get(warehouse).size() == 0) {
                     List<StrategyDistributionWarehouseArea> list = new ArrayList<>();
                     list.add(area);
-                    toMap.put(warehouse, list);
+                    arriveMap.put(warehouse, list);
                 } else {
-                    toMap.get(warehouse).add(area);
+                    arriveMap.get(warehouse).add(area);
                 }
             } else {
                 //设置不到达只做排除仓库逻辑
                 for (String originalWarehouse : warehouseList) {
-                    //判断该订单地址是否不到达该仓库
+
                     if (warehouse.equals(originalWarehouse)) {
-                        if (!isHitRule(area, orderMain)) {
+                        //判断该订单地址是否命中规则
+                        if (isHitRule(area, orderMain)) {
                             //该仓库不到达区域,过滤.
-                            removeWhco.add(originalWhco);
+                            removeWarehouse.add(originalWarehouse);
                         }
 
                     }
@@ -93,79 +102,123 @@ public class StrategyDistributionWarehouseAreaServiceImpl extends ServiceImpl<St
         }
 
         //删除不到达的仓库
-        whcos.removeAll(removeWhco);
+        warehouseList.removeAll(removeWarehouse);
         //添加到达的优先级最高的仓库
-        List<WharBean> toWhcoList = getToWhcoList(toMap, odin.getPrve(), odin.getCity(), odin.getArea());
-        if (toWhcoList != null && toWhcoList.size() > 0) {
-            String whco = toWhcoList.get(0).getWhco();
-            if (waru.getIsbx() != null && waru.getIsbx() == 1) {
-                logger.info("配货单[{}]根据到达区域规则获取到指定仓库:[{}]", phma.getBiid(), whco);
-                whcos.clear();
-                whcos.add(toWhcoList.get(0).getWhco());
+        List<StrategyDistributionWarehouseArea> arriveWarehouseList = getArriveWarehouseList(arriveMap, orderMain);
+        if (arriveWarehouseList != null) {
+            String warehouse = arriveWarehouseList.get(0).getWarehouse();
+            if (Constants.YES.equals(warehouseRule.getMust())) {
+                logger.debug("订单[{}]根据到达区域必须规则获取到指定仓库:[{}]", orderMain.getOrderId(), warehouse);
+                warehouseList.clear();
+                warehouseList.add(warehouse);
             } else {
                 int i = 0;
-                for (WharBean whar : toWhcoList) {
-                    if (whcos.contains(whar.getWhco())) {
-                        logger.info("配货单[{}]根据到达区域规则获取到优先级[{}]的仓库:[{}]", phma.getBiid(), i, whar.getWhco());
+                for (StrategyDistributionWarehouseArea area : arriveWarehouseList) {
+                    if (warehouseList.contains(area.getWarehouse())) {
+                        logger.debug("订单[{}]根据到达区域规则获取到优先级[{}]的仓库:[{}]", orderMain.getOrderId(), i, area.getWarehouse());
                         //将到达区域匹配到的仓库放在优先级最高位,优先判断库存
-                        whcos.remove(whar.getWhco());
-                        whcos.add(i, whar.getWhco());
+                        warehouseList.remove(area.getWarehouse());
+                        warehouseList.add(i, area.getWarehouse());
                         i++;
                     }
                 }
             }
         }
-        return whcos;
+        return warehouseList;
+    }
+
+
+
+
+    /**
+     * 获取区域到的仓库
+     *
+     * @param arriveMap 到达区域仓库
+     * @param orderMain 订单信息
+     * @return
+     */
+    private List<StrategyDistributionWarehouseArea> getArriveWarehouseList(Map<String, List<StrategyDistributionWarehouseArea>> arriveMap, OrderMain orderMain) {
+        if (arriveMap == null || arriveMap.isEmpty()) {
+            return null;
+        }
+
+        List<StrategyDistributionWarehouseArea> areaList = new ArrayList<>(arriveMap.size());
+
+        // 先遍历所有的仓库覆盖区域设置
+        for (String whco : arriveMap.keySet()) {
+            List<StrategyDistributionWarehouseArea> toList = arriveMap.get(whco);
+            //根据优先级从高到低排序
+            toList.sort(Comparator.comparing(StrategyDistributionWarehouseArea::getPriority));
+            // 遍历指定仓库里的每条设置
+            for (StrategyDistributionWarehouseArea area : toList) {
+
+                if (isHitRule(area, orderMain)) {
+                    areaList.add(area);
+                    // 如果该仓库有满足到的，添加进去，不需要匹配其他的设置，直接跳出循环
+                    break;
+                }
+            }
+        }
+
+        if (!areaList.isEmpty()) {
+            //根据优先级从高到低排序
+            areaList.sort(Comparator.comparing(StrategyDistributionWarehouseArea::getPriority));
+            //取出符合优先级最高的仓库
+            return areaList;
+        }
+
+        return null;
     }
 
     /**
      * 判断是否击中规则
-     * @param area 区域设置
+     *
+     * @param area      区域设置
      * @param orderMain 订单信息
      * @return
      */
     private boolean isHitRule(StrategyDistributionWarehouseArea area, OrderMain orderMain) {
-        //击中标识
-        boolean flag = false;
 
-        if (Constants.NO.equals(area.getArrive())) {
-            //设置不到
+        //设置条件国家
+        String nation = area.getNation();
+        //设置条件省份
+        String province = area.getProvince();
+        //设置条件市
+        String city = area.getCity();
+        //设置条件区
+        String district = area.getDistrict();
 
-            //设置条件国家
-            String nation = area.getNation();
-            //设置条件省份
-            String province = area.getProvince();
-            //设置条件市
-            String city = area.getCity();
-            //设置条件区
-            String district = area.getDistrict();
+        if (orderMain.getOrderBuyerinfo().getNation().contains(nation) || StringUtils.isEmpty(nation)) {
 
-            if (orderMain.getOrderBuyerinfo().getNation().contains(nation)) {
+            if (StringUtils.isEmpty(province)) {
+                //填入国家并击中,规则没填省份,即为该国家所有省份都到达,则当作击中
+                return true;
+            } else if (!orderMain.getOrderBuyerinfo().getProvince().contains(province)) {
+                return false;
+            } else {
 
-                if (StringUtils.isEmpty(province)) {
+                if (StringUtils.isEmpty(city)) {
+                    //填入省份并击中,规则没填城市,即为该省份所有城市都到达,则当作击中
+                    return true;
+                } else if (!orderMain.getOrderBuyerinfo().getCity().contains(city)) {
+                    return false;
+                } else {
 
-                }
-
-                //国家设置相同
-                if (orderMain.getOrderBuyerinfo().getProvince().contains(province)) {
-                    if ()
-                }
-            }
-
-
-            if (prve.indexOf(wharProv) > -1) {//订单省与规则省相同
-                if (StringUtils.isBlank(wharCity)) {
-                    flag = false;
-                } else if (city.indexOf(wharCity) > -1) {
-                    if (StringUtils.isBlank(wharArea) || area.indexOf(wharArea) > -1) {
-                        flag = false;
+                    if (StringUtils.isEmpty(district)) {
+                        //填入城市并击中,规则没填区域,即为该城市所有区域都到达,则当作击中
+                        return true;
+                    } else if (!orderMain.getOrderBuyerinfo().getDistrict().contains(district)) {
+                        return false;
+                    } else {
+                        return true;
                     }
+
                 }
             }
         }
-        return flag;
-    }
 
+        return false;
+    }
 
 
 }

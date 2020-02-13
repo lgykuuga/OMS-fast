@@ -115,8 +115,6 @@ public class StrategyDistributionWarehouseRuleServiceImpl extends ServiceImpl<St
         QueryWrapper<StrategyDistributionWarehouseRule> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
         queryWrapper.eq("status", Constants.ON);
-        //可用库存分配仓库不参与分仓策略,只展示数据
-        queryWrapper.ne("rule_id", DistributionWarehouseRuleEnum.RULE_LOCK_STOCK.getCode());
         queryWrapper.orderByAsc("priority");
         return this.list(queryWrapper);
     }
