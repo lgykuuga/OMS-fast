@@ -157,6 +157,8 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
                             .append("根据必须规则:配货策略默认仓库规则开启,默认仓库为空");
                     logger.warn(rtnMessage.toString());
                     return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
+
+
                 }
             }
         }
