@@ -163,7 +163,7 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
             }
         }
 
-        return null;
+        return new CommonResponse<List<String>>().ok(warehouseList);
     }
 
 
