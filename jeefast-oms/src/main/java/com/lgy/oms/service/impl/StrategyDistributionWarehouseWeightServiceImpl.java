@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.reflect.ReflectUtils;
+import com.lgy.oms.domain.StrategyDistributionWarehouseLogistics;
 import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
 import com.lgy.oms.domain.StrategyDistributionWarehouseWeight;
 import com.lgy.oms.domain.order.OrderMain;
@@ -15,10 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +57,7 @@ public class StrategyDistributionWarehouseWeightServiceImpl extends ServiceImpl<
     public List<String> getWeightWarehouse(List<String> warehouseList, OrderMain orderMain, String gco,
                                            StrategyDistributionWarehouseRule warehouseRule) {
 
-        List<StrategyDistributionWarehouseWeight> weightList = getStrategyByGco(gco);
+        List<StrategyDistributionWarehouseWeight> weightList = getStrategyByGcoAndWarehouse(gco, warehouseList);
         // 当条件为空是，返回原仓库信息
         if (weightList == null || weightList.isEmpty()) {
             return warehouseList;
@@ -89,6 +87,15 @@ public class StrategyDistributionWarehouseWeightServiceImpl extends ServiceImpl<
         }
 
         return warehouseList;
+    }
+
+    private List<StrategyDistributionWarehouseWeight> getStrategyByGcoAndWarehouse(String gco, List<String> warehouseList) {
+        QueryWrapper<StrategyDistributionWarehouseWeight> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("gco", gco);
+        queryWrapper.in("warehouse", warehouseList);
+        queryWrapper.orderByAsc("priority");
+        return this.list(queryWrapper);
+
     }
 
     /**

@@ -1,16 +1,11 @@
 package com.lgy.oms.biz.impl.distribution;
 
-import com.lgy.base.service.ICommodityService;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.biz.IEventDrivenService;
-import com.lgy.oms.biz.IFulfillService;
 import com.lgy.oms.biz.IMatchWarehouseService;
-import com.lgy.oms.biz.IOrderConvertService;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.StrategyDistribution;
-import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
 import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
@@ -160,6 +155,8 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
 
 
                 }
+            } else if (DistributionWarehouseRuleEnum.RULE_LOCK_STOCK.getCode().equals(warehouseRule.getRuleId())) {
+                //可用库存分配仓库在选仓后执行
             }
         }
 

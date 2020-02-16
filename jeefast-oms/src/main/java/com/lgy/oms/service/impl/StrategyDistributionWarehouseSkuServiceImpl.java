@@ -76,8 +76,9 @@ public class StrategyDistributionWarehouseSkuServiceImpl extends ServiceImpl<Str
         if (toArriveList == null || toArriveList.isEmpty()) {
             return warehouseList;
         }
-        String warehouse = toArriveList.get(0).getWarehouse();
+
         if (Constants.YES.equals(warehouseRule.getMust())) {
+            String warehouse = toArriveList.get(0).getWarehouse();
             logger.debug("订单[{}]根据sku仓库必须规则获取到指定仓库:[{}]", orderMain.getOrderId(), warehouse);
             warehouseList.clear();
             warehouseList.add(warehouse);
