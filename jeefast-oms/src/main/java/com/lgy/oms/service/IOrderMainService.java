@@ -51,15 +51,8 @@ public interface IOrderMainService extends IService<OrderMain> {
     List<String> checkSameOrderExist(String orderId, String sourceId, String owner, Integer status);
 
     /**
-     * 审核成功更新订单
-     *
-     * @param orderMain 订单主信息
-     * @return
-     */
-    boolean auditUpdateOrder(OrderMain orderMain);
-
-    /**
      * 订单界面查询
+     *
      * @param orderVO
      * @return
      */

@@ -8,6 +8,7 @@ import com.lgy.common.utils.StringUtils;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.biz.IAuditOrderService;
 import com.lgy.oms.biz.IEventDrivenService;
+import com.lgy.oms.biz.IUpdateOrderFlagService;
 import com.lgy.oms.constants.OrderModuleConstants;
 import com.lgy.oms.constants.OrderOperateType;
 import com.lgy.oms.constants.TraceLevelType;
@@ -80,6 +81,11 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
      */
     @Autowired
     IStrategyAuditService strategyAuditService;
+    /**
+     * 更新订单状态
+     */
+    @Autowired
+    IUpdateOrderFlagService updateOrderFlagService;
 
     /**
      * 事件驱动
@@ -331,7 +337,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
 
         if (access) {
             //更新订单状态
-            boolean b = orderMainService.auditUpdateOrder(event.getOrderMain());
+            boolean b = updateOrderFlagService.auditUpdateOrder(event.getOrderMain());
             if (b) {
                 //清除拦截信息
                 orderInterceptService.deleteByOrderId(event.getOrderMain().getOrderId());

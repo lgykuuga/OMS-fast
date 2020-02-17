@@ -78,6 +78,18 @@ public class OrderDetail implements Serializable {
     private Integer qty;
 
     /**
+     * 下发配货单数量
+     */
+    @JsonProperty("下发配货单数量")
+    private Integer distributionQty;
+
+    /**
+     * 发货完成数量
+     */
+    @JsonProperty("发货完成数量")
+    private Integer sendQty;
+
+    /**
      * 商品名称
      */
     @JsonProperty("商品名称")

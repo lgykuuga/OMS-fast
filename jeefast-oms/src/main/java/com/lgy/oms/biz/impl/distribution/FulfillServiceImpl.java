@@ -1,6 +1,7 @@
 package com.lgy.oms.biz.impl.distribution;
 
 import com.lgy.base.service.ICommodityService;
+import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.biz.IEventDrivenService;
 import com.lgy.oms.biz.IFulfillService;
@@ -87,11 +88,27 @@ public class FulfillServiceImpl implements IFulfillService {
     @Override
     public CommonResponse<String> start(OrderMain orderMain, DistributionParamDTO param) {
 
-        //
+        //预分配
 
+        //拆分订单
+
+        //分配仓库
+
+        //锁库
+
+        //分配物流商
+
+        //请求快递单号
 
         //生成配货单
-        orderConvertService.execute(orderMain, param);
+        CommonResponse<String> orderConvertResponse = orderConvertService.execute(orderMain, param);
+        if (!Constants.SUCCESS.equals(orderConvertResponse.getCode())) {
+
+
+
+        }
+
+        //更新订单状态
 
         return null;
     }

@@ -166,6 +166,12 @@ public class OrderMain extends BaseEntity implements Serializable {
     private Integer distributionQty;
 
     /**
+     * 发货完成数量
+     */
+    @JsonProperty("发货完成数量")
+    private Integer sendQty;
+
+    /**
      * 商品编码集合
      */
     @JsonProperty("商品编码集合")

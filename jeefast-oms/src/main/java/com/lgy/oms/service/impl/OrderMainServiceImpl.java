@@ -1,21 +1,16 @@
 package com.lgy.oms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.order.*;
 import com.lgy.oms.domain.vo.OrderVO;
-import com.lgy.oms.enums.order.OrderFlagEnum;
 import com.lgy.oms.mapper.OrderMainMapper;
 import com.lgy.oms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.transaction.TransactionManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,41 +142,6 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
         return orderStatusService.list(queryWrapper);
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean auditUpdateOrder(OrderMain orderMain) {
-
-        boolean flag = false;
-
-        OrderStatusInfo orderStatusinfo = orderMain.getOrderStatusinfo();
-        //更新状态为已审核
-        orderStatusinfo.setFlag(OrderFlagEnum.AUDIT.getCode());
-        //更新条件
-        UpdateWrapper<OrderStatusInfo> orderStatusWrapper = new UpdateWrapper<>();
-        orderStatusWrapper.eq("order_id", orderMain.getOrderId());
-        orderStatusWrapper.eq("status", Constants.VALID);
-        orderStatusWrapper.in("flag", OrderFlagEnum.NEW.getCode(), OrderFlagEnum.EDIT.getCode());
-
-        boolean update = orderStatusService.update(orderMain.getOrderStatusinfo(), orderStatusWrapper);
-
-        if (update) {
-            //设置放行
-            orderMain.setIntercept(Constants.NO);
-            //设置解冻
-            orderMain.setFrozen(Constants.NO);
-
-            UpdateWrapper<OrderMain> mainUpdateWrapper = new UpdateWrapper<>();
-            mainUpdateWrapper.eq("order_id", orderMain.getOrderId());
-            flag = this.update(orderMain, mainUpdateWrapper);
-        }
-
-        if (!flag) {
-            //更新失败,手动回滚事务
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
-
-        return flag;
-    }
 
     @Override
     public List<OrderVO> queryOrderList(OrderVO orderVO) {
