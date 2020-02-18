@@ -1,5 +1,6 @@
 package com.lgy.oms.biz;
 
+import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.order.OrderMain;
 
 /**
@@ -20,9 +21,9 @@ public interface IUpdateOrderFlagService {
     /**
      * 配货成功更新订单
      *
-     * @param orderMain 订单主信息
+     * @param distributionOrder 配货订单对象
      * @return
      */
-    boolean distributionUpdateOrder(OrderMain orderMain);
+    boolean distributionUpdateOrder(DistributionOrder distributionOrder);
 
 }

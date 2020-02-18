@@ -2,13 +2,16 @@ package com.lgy.oms.domain.distribution;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lgy.common.annotation.Excel;
 import com.lgy.common.core.domain.BaseEntity;
+import com.lgy.oms.domain.order.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class DistributionOrder extends BaseEntity implements Serializable {
     /**
      * 配货单号
      */
+    @Excel(name = "配货单号")
     private String distributionId;
 
     /**
@@ -66,6 +70,12 @@ public class DistributionOrder extends BaseEntity implements Serializable {
     private String owner;
 
     /**
+     * 来源类型
+     */
+    @Excel(name = "来源类型")
+    private Integer sourceType;
+
+    /**
      * 尺码类型
      */
     @Excel(name = "尺码类型")
@@ -75,13 +85,13 @@ public class DistributionOrder extends BaseEntity implements Serializable {
      * sku种类数量
      */
     @Excel(name = "sku种类数量")
-    private Long skuNum;
+    private Integer skuNum;
 
     /**
      * 总件数
      */
     @Excel(name = "总件数")
-    private Long qty;
+    private Integer qty;
 
     /**
      * 商品编码集合
@@ -93,19 +103,19 @@ public class DistributionOrder extends BaseEntity implements Serializable {
      * 总体积
      */
     @Excel(name = "总体积")
-    private Double volume;
+    private BigDecimal volume;
 
     /**
      * 总重量
      */
     @Excel(name = "总重量")
-    private Double weight;
+    private BigDecimal weight;
 
     /**
      * 运费
      */
     @Excel(name = "运费")
-    private Double freightAmount;
+    private BigDecimal freightAmount;
 
     /**
      * 发货仓库编码
@@ -136,6 +146,36 @@ public class DistributionOrder extends BaseEntity implements Serializable {
      */
     @Excel(name = "发货时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date sendoutTime;
+
+    /**
+     * 订单买家信息
+     */
+    @TableField(exist = false)
+    private OrderBuyerInfo orderBuyerinfo;
+
+    /**
+     * 订单支付信息
+     */
+    @TableField(exist = false)
+    private OrderPayInfo orderPayinfo;
+
+    /**
+     * 订单业务类型信息
+     */
+    @TableField(exist = false)
+    private OrderTypeInfo orderTypeinfo;
+
+    /**
+     * 订单状态类型信息
+     */
+    @TableField(exist = false)
+    private OrderStatusInfo orderStatusinfo;
+
+    /**
+     * 订单拦截信息表
+     */
+    @TableField(exist = false)
+    private OrderInterceptInfo orderInterceptInfo;
 
     /**
      * 订单明细信息

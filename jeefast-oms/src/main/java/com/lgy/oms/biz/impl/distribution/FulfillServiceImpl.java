@@ -6,7 +6,9 @@ import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.biz.IEventDrivenService;
 import com.lgy.oms.biz.IFulfillService;
 import com.lgy.oms.biz.IOrderConvertService;
+import com.lgy.oms.biz.IUpdateOrderFlagService;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
+import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.service.IOrderDetailService;
@@ -74,6 +76,12 @@ public class FulfillServiceImpl implements IFulfillService {
     @Autowired
     IOrderConvertService orderConvertService;
 
+    /**
+     * 更新订单信息
+     */
+    @Autowired
+    IUpdateOrderFlagService updateOrderFlagService;
+
 
     @Override
     public CommonResponse<String> fulfillOrder(String orderId, DistributionParamDTO param) {
@@ -86,7 +94,7 @@ public class FulfillServiceImpl implements IFulfillService {
 
 
     @Override
-    public CommonResponse<String> start(OrderMain orderMain, DistributionParamDTO param) {
+    public CommonResponse<String> start(DistributionOrder orderMain, DistributionParamDTO param) {
 
         //预分配
 
@@ -103,12 +111,12 @@ public class FulfillServiceImpl implements IFulfillService {
         //生成配货单
         CommonResponse<String> orderConvertResponse = orderConvertService.execute(orderMain, param);
         if (!Constants.SUCCESS.equals(orderConvertResponse.getCode())) {
-
-
-
+            return orderConvertResponse;
         }
 
         //更新订单状态
+        updateOrderFlagService.distributionUpdateOrder(orderMain);
+
 
         return null;
     }
