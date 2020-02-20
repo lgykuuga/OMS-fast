@@ -44,7 +44,7 @@ public class OrderConvertServiceImpl implements IOrderConvertService {
     TraceLogApi traceLogApi;
 
     @Override
-    public CommonResponse<String> execute(OrderMain orderMain, DistributionParamDTO param) {
+    public CommonResponse<DistributionOrder> execute(OrderMain orderMain, DistributionParamDTO param) {
 
         //转换生成配货单
         DistributionOrder distributionOrder = convert(orderMain, param);
@@ -61,9 +61,9 @@ public class OrderConvertServiceImpl implements IOrderConvertService {
                     OrderOperateType.CREATE_DISTRIBUTION.getValue(), TraceLevelType.ABNORMAL.getKey(),
                     "生成配货单失败,请开发人员检查代码"));
             logger.error("单据[{}]生成配货单失败,请开发人员检查代码", orderMain.getOrderId());
-            return new CommonResponse<String>().error(Constants.FAIL, "生成配货单失败,请开发人员检查代码");
+            return new CommonResponse<DistributionOrder>().error(Constants.FAIL, "生成配货单失败,请开发人员检查代码");
         }
-        return new CommonResponse<String>().ok("生成配货单成功");
+        return new CommonResponse<DistributionOrder>().ok(distributionOrder);
     }
 
     /**
@@ -116,6 +116,6 @@ public class OrderConvertServiceImpl implements IOrderConvertService {
          */
         return orderMain.getOrderId()
                 + "-"
-                + orderMain.getDistributionQty();
+                + orderMain.getDistributionOrderQty();
     }
 }

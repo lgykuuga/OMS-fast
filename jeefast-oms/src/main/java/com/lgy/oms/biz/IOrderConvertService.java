@@ -1,6 +1,7 @@
 package com.lgy.oms.biz;
 
 import com.lgy.common.core.domain.CommonResponse;
+import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
 
@@ -18,7 +19,7 @@ public interface IOrderConvertService {
      * @param param     其它参数
      * @return
      */
-    CommonResponse<String> execute(OrderMain orderMain, DistributionParamDTO param);
+    CommonResponse<DistributionOrder> execute(OrderMain orderMain, DistributionParamDTO param);
 
 
 }

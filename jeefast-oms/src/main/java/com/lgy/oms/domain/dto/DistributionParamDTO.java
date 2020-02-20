@@ -1,5 +1,6 @@
 package com.lgy.oms.domain.dto;
 
+import com.lgy.common.annotation.Excel;
 import com.lgy.common.utils.StringUtils;
 
 import java.util.Date;
@@ -50,6 +51,18 @@ public class DistributionParamDTO {
      * 备注
      */
     private String remark;
+
+    /** 参与特殊商品拆分 */
+    private Integer specialSkuSplit;
+
+    /** 参与类别商品拆分 */
+    private Integer categorySkuSplit;
+
+    /** 参与库存不足拆分 */
+    private Integer stockSplit;
+
+    /** 参与订单重量拆分 */
+    private Integer weightSplit;
 
     /**
      * 开始时间,用于统计耗时
@@ -141,6 +154,38 @@ public class DistributionParamDTO {
 
     public void setInstall(Boolean install) {
         this.install = install;
+    }
+
+    public Integer getSpecialSkuSplit() {
+        return specialSkuSplit;
+    }
+
+    public void setSpecialSkuSplit(Integer specialSkuSplit) {
+        this.specialSkuSplit = specialSkuSplit;
+    }
+
+    public Integer getCategorySkuSplit() {
+        return categorySkuSplit;
+    }
+
+    public void setCategorySkuSplit(Integer categorySkuSplit) {
+        this.categorySkuSplit = categorySkuSplit;
+    }
+
+    public Integer getStockSplit() {
+        return stockSplit;
+    }
+
+    public void setStockSplit(Integer stockSplit) {
+        this.stockSplit = stockSplit;
+    }
+
+    public Integer getWeightSplit() {
+        return weightSplit;
+    }
+
+    public void setWeightSplit(Integer weightSplit) {
+        this.weightSplit = weightSplit;
     }
 
     @Override

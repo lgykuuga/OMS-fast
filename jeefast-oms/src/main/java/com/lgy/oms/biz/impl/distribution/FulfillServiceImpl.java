@@ -3,20 +3,21 @@ package com.lgy.oms.biz.impl.distribution;
 import com.lgy.base.service.ICommodityService;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.oms.biz.IEventDrivenService;
-import com.lgy.oms.biz.IFulfillService;
-import com.lgy.oms.biz.IOrderConvertService;
-import com.lgy.oms.biz.IUpdateOrderFlagService;
+import com.lgy.oms.biz.*;
+import com.lgy.oms.constants.OrderModuleConstants;
+import com.lgy.oms.constants.OrderOperateType;
+import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
+import com.lgy.oms.domain.StrategyAudit;
+import com.lgy.oms.domain.StrategyDistribution;
+import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
-import com.lgy.oms.service.IOrderDetailService;
-import com.lgy.oms.service.IOrderInterceptService;
-import com.lgy.oms.service.IOrderMainService;
-import com.lgy.oms.service.IStrategyAuditService;
+import com.lgy.oms.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +38,6 @@ public class FulfillServiceImpl implements IFulfillService {
     TraceLogApi traceLogApi;
 
     /**
-     * 商品档案
-     */
-    @Autowired
-    ICommodityService commodityService;
-    /**
      * 主订单信息
      */
     @Autowired
@@ -59,10 +55,10 @@ public class FulfillServiceImpl implements IFulfillService {
     IOrderInterceptService orderInterceptService;
 
     /**
-     * 审单策略
+     * 配货策略
      */
     @Autowired
-    IStrategyAuditService strategyAuditService;
+    IStrategyDistributionService strategyDistributionService;
 
     /**
      * 事件驱动
@@ -75,6 +71,12 @@ public class FulfillServiceImpl implements IFulfillService {
      */
     @Autowired
     IOrderConvertService orderConvertService;
+
+    /**
+     * 预分配流程
+     */
+    @Autowired
+    IPreDistributionService preDistributionService;
 
     /**
      * 更新订单信息
@@ -94,11 +96,32 @@ public class FulfillServiceImpl implements IFulfillService {
 
 
     @Override
-    public CommonResponse<String> start(DistributionOrder orderMain, DistributionParamDTO param) {
+    public CommonResponse<String> start(OrderMain orderMain, DistributionParamDTO param) {
+
+        //开始时间,用于统计耗时
+        long startTime = System.currentTimeMillis();
+        param.setStartTime(startTime);
+
+        logger.debug("开始订单配货[{}]", orderMain.getOrderId());
+
+        //保存轨迹
+        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                OrderOperateType.DISTRIBUTION.getValue(), TraceLevelType.TRACE.getKey(), "开始订单配货:" + param.toString()));
+
+        //店铺策略
+        StrategyDistribution strategyDistribution = new StrategyDistribution();
+
+        //1.组装配货策略
+        conditionDistributionOrder(orderMain, strategyDistribution);
 
         //预分配
+        CommonResponse<String> preResponse = preDistributionService.start(orderMain, strategyDistribution, param);
+        if (!Constants.SUCCESS.equals(preResponse.getCode())) {
+            return preResponse;
+        }
 
         //拆分订单
+
 
         //分配仓库
 
@@ -108,17 +131,35 @@ public class FulfillServiceImpl implements IFulfillService {
 
         //请求快递单号
 
+
         //生成配货单
-        CommonResponse<String> orderConvertResponse = orderConvertService.execute(orderMain, param);
+        CommonResponse<DistributionOrder> orderConvertResponse = orderConvertService.execute(orderMain, param);
         if (!Constants.SUCCESS.equals(orderConvertResponse.getCode())) {
-            return orderConvertResponse;
+            return new CommonResponse<String>().error(orderConvertResponse.getCode(), orderConvertResponse.getMsg());
         }
 
+        DistributionOrder distributionOrder = orderConvertResponse.getData();
+
         //更新订单状态
-        updateOrderFlagService.distributionUpdateOrder(orderMain);
+        updateOrderFlagService.distributionUpdateOrder(distributionOrder);
 
 
         return null;
+    }
+
+    private CommonResponse<OrderMain> conditionDistributionOrder(OrderMain orderMain, StrategyDistribution strategyDistribution) {
+
+        //审单策略
+        StrategyDistribution strategy = strategyDistributionService.getFullInfoStrategyByShop(orderMain.getShop());
+
+        if (strategy == null) {
+            logger.error("订单[{}]店铺[{}]未设置配货策略,不能配货;", orderMain.getOrderId(), orderMain.getShop());
+            return new CommonResponse<OrderMain>().error(Constants.FAIL,
+                    "店铺" + orderMain.getShop() + "未设置审单策略,不能审核订单;");
+        } else {
+            BeanUtils.copyProperties(strategy, strategyDistribution);
+        }
+        return new CommonResponse<OrderMain>().ok(orderMain);
     }
 
 

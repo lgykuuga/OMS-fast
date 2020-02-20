@@ -1,8 +1,8 @@
 package com.lgy.oms.biz;
 
 import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
+import com.lgy.oms.domain.order.OrderMain;
 
 
 /**
@@ -24,9 +24,9 @@ public interface IFulfillService {
     /**
      * 开始配货订单
      *
-     * @param order 配货订单对象
-     * @param param 配货参数
+     * @param orderMain 订单主信息
+     * @param param     配货参数
      * @return
      */
-    CommonResponse<String> start(DistributionOrder order, DistributionParamDTO param);
+    CommonResponse<String> start(OrderMain orderMain, DistributionParamDTO param);
 }
