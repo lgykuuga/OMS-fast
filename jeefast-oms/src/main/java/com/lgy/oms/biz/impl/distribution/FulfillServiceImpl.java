@@ -21,6 +21,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Description 履约订单服务实现
  * @Author LGy
@@ -79,6 +82,24 @@ public class FulfillServiceImpl implements IFulfillService {
     IPreDistributionService preDistributionService;
 
     /**
+     * 拆分订单逻辑
+     */
+    @Autowired
+    ISplitOrderService splitOrderService;
+
+    /**
+     * 匹配仓库逻辑
+     */
+    @Autowired
+    IMatchWarehouseService matchWarehouseService;
+
+    /**
+     * 订单锁定(占用)库存
+     */
+    @Autowired
+    IOrderLockStockService orderLockStockService;
+
+    /**
      * 更新订单信息
      */
     @Autowired
@@ -117,15 +138,30 @@ public class FulfillServiceImpl implements IFulfillService {
         //预分配
         CommonResponse<String> preResponse = preDistributionService.start(orderMain, strategyDistribution, param);
         if (!Constants.SUCCESS.equals(preResponse.getCode())) {
-            return preResponse;
+            return new CommonResponse<String>().ok(preResponse.getMsg());
         }
 
-        //拆分订单
+        //开始标准拆分订单(第一次拆分)
+        CommonResponse<String> standardSplitResponse = splitOrderService.standardSplit(orderMain, strategyDistribution, param);
+        if (!Constants.SUCCESS.equals(standardSplitResponse.getCode())) {
+            return new CommonResponse<String>().ok(standardSplitResponse.getMsg());
+        }
 
-
+        //可用仓库列表
+        List<String> warehouseList;
         //分配仓库
+        CommonResponse<List<String>> matchWarehouseResponse = matchWarehouseService.start(orderMain, strategyDistribution, param);
+        if (Constants.SUCCESS.equals(matchWarehouseResponse.getCode())) {
+            warehouseList = matchWarehouseResponse.getData();
+        } else {
+            return new CommonResponse<String>().ok(matchWarehouseResponse.getMsg());
+        }
 
         //锁库
+        CommonResponse<DistributionOrder> lockStockResponse = orderLockStockService.execute(orderMain, strategyDistribution, param, warehouseList);
+        if (!Constants.SUCCESS.equals(lockStockResponse.getCode())) {
+            return new CommonResponse<String>().ok(lockStockResponse.getMsg());
+        }
 
         //分配物流商
 

@@ -43,6 +43,8 @@ public class SplitOrderServiceImpl implements ISplitOrderService {
 
         //是否参与拆分流程标识
         boolean flag = true;
+        //订单是否被拆分
+        boolean split = false;
 
         if (OrderSizeTypeEnum.SINGLE_CARGO.getCode().equals(orderMain.getSizeType())) {
             //一单一货订单无法再拆分
@@ -70,6 +72,8 @@ public class SplitOrderServiceImpl implements ISplitOrderService {
 
 
 
+
+
         long spendTime = System.currentTimeMillis() - startTime;
         msg.append("订单完成第一步拆分流程,耗时:").append(spendTime).append("ms");
 
@@ -78,7 +82,12 @@ public class SplitOrderServiceImpl implements ISplitOrderService {
                 OrderOperateType.DISTRIBUTION_PRE.getValue(), TraceLevelType.STATUS.getKey(), msg.toString()));
         logger.debug(orderMain.getOrderId() + msg.toString());
 
-        return null;
+        if (split) {
+            return new CommonResponse<String>().error(Constants.FAIL,"单据被拆分。");
+        }
+
+        return new CommonResponse<String>().ok("单据未参与类别商品拆分、特殊商品拆分、仓库商品拆分。");
+
     }
 
 

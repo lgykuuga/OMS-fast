@@ -47,7 +47,7 @@ public class PreDistributionServiceImpl implements IPreDistributionService {
 
         //保存轨迹
         traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
-                OrderOperateType.SPLIT.getValue(), TraceLevelType.STATUS.getKey(), msg.toString()));
+                OrderOperateType.SPLIT.getValue(), TraceLevelType.TRACE.getKey(), msg.toString()));
         logger.debug(msg.toString());
 
         return null;

@@ -57,8 +57,8 @@ public enum OrderOperateType {
 	 */
 	DISTRIBUTION("配货"),
 	DISTRIBUTION_PRE("预分配"),
-	WAREHOUSE_MATCH("订单分配仓库"),
-	LOGISTICS_MATCH("订单分配物流商"),
+	WAREHOUSE_MATCH("分配仓库"),
+	LOGISTICS_MATCH("分配物流商"),
 	LOGISTICS_NUMBER_MATCH("订单分配物流单号"),
 	LOCK_STOCK("订单锁定库存"),
 	UNLOCK_STOCK("订单解锁库存"),

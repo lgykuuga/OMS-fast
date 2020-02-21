@@ -4,9 +4,13 @@ import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.biz.IMatchWarehouseService;
+import com.lgy.oms.constants.OrderModuleConstants;
+import com.lgy.oms.constants.OrderOperateType;
+import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.StrategyDistribution;
 import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
+import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.enums.strategy.DistributionWarehouseRuleEnum;
@@ -62,10 +66,22 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
 
         logger.debug("订单[{}]开始配货策略[{}]分仓流程", orderMain.getOrderId(), strategyDistribution.getGco());
 
+        //开始时间
+        long startTime = System.currentTimeMillis();
+
         //可用仓库有序集合
         List<String> warehouseList = new ArrayList<>();
         //返回消息
         StringBuilder rtnMessage = new StringBuilder();
+
+        if (StringUtils.isNotEmpty(param.getWarehouse())) {
+            logger.debug("订单[{}]配货请求参数存在设置仓库[{}]", orderMain.getOrderId(), strategyDistribution.getGco());
+            warehouseList.add(param.getWarehouse());
+            //保存轨迹
+            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                    OrderOperateType.WAREHOUSE_MATCH.getValue(), TraceLevelType.TRACE.getKey(), "请求配货设置仓库:" + param.getWarehouse()));
+            return new CommonResponse<List<String>>().ok(warehouseList);
+        }
 
         List<StrategyDistributionWarehouseRule> warehouseRules = ruleService.matchWarehouseGyRules(strategyDistribution.getGco());
 
@@ -73,12 +89,20 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
             if (StringUtils.isNotEmpty(strategyDistribution.getWarehouse())) {
                 logger.debug("订单[{}]匹配策略[{}]没有初始化分仓规则,分配店铺策略默认仓库。", orderMain.getOrderId(), strategyDistribution.getGco());
                 warehouseList.add(strategyDistribution.getWarehouse());
+                //保存轨迹
+                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                        OrderOperateType.WAREHOUSE_MATCH.getValue(), TraceLevelType.TRACE.getKey(),
+                        "匹配策略没有初始化分仓规则,分配店铺策略默认仓库。:" + strategyDistribution.getWarehouse()));
                 return new CommonResponse<List<String>>().ok(warehouseList);
             } else {
-                rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
+                rtnMessage.append("订单").append(orderMain.getOrderId()).append("配货策略")
                         .append(strategyDistribution.getGco())
                         .append("没有初始化分仓规则,且没有分配店铺策略默认仓库。");
                 logger.error(rtnMessage.toString());
+                //保存轨迹
+                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                        OrderOperateType.WAREHOUSE_MATCH.getValue(), TraceLevelType.TRACE.getKey(),
+                        "配货策略没有初始化分仓规则,且没有分配店铺策略默认仓库。"));
                 return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
             }
         }
@@ -93,6 +117,9 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
                             .append(strategyDistribution.getGco())
                             .append("可用仓库没有维护,分仓失败。请检查规则设置");
                     logger.error(rtnMessage.toString());
+                    //保存轨迹
+                    traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                            OrderOperateType.WAREHOUSE_MATCH.getValue(), TraceLevelType.TRACE.getKey(), rtnMessage.toString()));
                     return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
                 }
             } else if (DistributionWarehouseRuleEnum.RULE_SPECIAL.getCode().equals(warehouseRule.getRuleId())) {
@@ -160,6 +187,23 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
             }
         }
 
+        if (warehouseRules.isEmpty()) {
+            rtnMessage.append("订单").append(orderMain.getOrderId()).append("匹配策略")
+                    .append(strategyDistribution.getGco())
+                    .append("后可用仓库为空,请检查规则设置。");
+            logger.error(rtnMessage.toString());
+            //保存轨迹
+            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                    OrderOperateType.WAREHOUSE_MATCH.getValue(), TraceLevelType.TRACE.getKey(), rtnMessage.toString()));
+            return new CommonResponse<List<String>>().error(Constants.FAIL, rtnMessage.toString());
+        }
+
+        rtnMessage.append("分仓成功,可用仓库列表【").append(warehouseList).append("】,耗时")
+                .append(System.currentTimeMillis()-startTime).append("ms");
+        logger.debug(rtnMessage.toString());
+        //保存轨迹
+        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+                OrderOperateType.WAREHOUSE_MATCH.getValue(), TraceLevelType.TRACE.getKey(), rtnMessage.toString()));
         return new CommonResponse<List<String>>().ok(warehouseList);
     }
 
