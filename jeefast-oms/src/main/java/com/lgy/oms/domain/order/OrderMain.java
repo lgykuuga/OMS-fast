@@ -226,6 +226,20 @@ public class OrderMain extends BaseEntity implements Serializable {
     private String remark;
 
     /**
+     * 缺货标识
+     * @see com.lgy.oms.enums.order.OrderLackStockEnum
+     */
+    @JsonProperty("缺货标识")
+    private Integer lackStock;
+
+    /**
+     * 库存占用标识
+     *  @see com.lgy.oms.enums.order.OrderLockStockEnum
+     */
+    @JsonProperty("库存占用标识")
+    private Integer lockStock;
+
+    /**
      * 订单买家信息
      */
     @TableField(exist = false)

@@ -35,7 +35,7 @@ public class StockLock extends BaseEntity implements Serializable {
 
     /** 单据编号 */
     @Excel(name = "单据编号")
-    private String biid;
+    private String orderId;
 
     /** 商品编码 */
     @Excel(name = "商品编码")
@@ -43,7 +43,7 @@ public class StockLock extends BaseEntity implements Serializable {
 
     /** 商品行序号 */
     @Excel(name = "商品行序号")
-    private Long srid;
+    private String rowNumber;
 
     /** 业务模块 */
     @Excel(name = "业务模块")
@@ -51,6 +51,6 @@ public class StockLock extends BaseEntity implements Serializable {
 
     /** 数量 */
     @Excel(name = "数量")
-    private Long qty;
+    private Integer qty;
 
 }

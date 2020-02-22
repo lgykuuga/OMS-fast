@@ -2,7 +2,6 @@ package com.lgy.oms.biz;
 
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.domain.StrategyDistribution;
-import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
 
@@ -24,8 +23,8 @@ public interface IOrderLockStockService {
      * @param warehouseList        可用仓库列表
      * @return 锁库结果信息
      */
-    CommonResponse<DistributionOrder> execute(OrderMain orderMain, StrategyDistribution strategyDistribution,
-                                              DistributionParamDTO param, List<String> warehouseList);
+    CommonResponse<String> execute(OrderMain orderMain, StrategyDistribution strategyDistribution,
+                                   DistributionParamDTO param, List<String> warehouseList);
 
 
 }

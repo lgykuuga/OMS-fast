@@ -7,8 +7,12 @@ import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.StrategyDistribution;
 import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
+import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.oms.enums.order.OrderLockStockEnum;
+import com.lgy.oms.enums.strategy.DistributionLockModelEnum;
 import com.lgy.oms.service.IDistributionOrderService;
+import com.lgy.oms.service.IStockLockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +39,42 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
     @Autowired
     TraceLogApi traceLogApi;
 
+    /**
+     * 库存锁定Service
+     */
+    @Autowired
+    IStockLockService stockLockService;
+
 
     @Override
-    public CommonResponse<DistributionOrder> execute(OrderMain orderMain, StrategyDistribution strategyDistribution,
+    public CommonResponse<String> execute(OrderMain orderMain, StrategyDistribution strategyDistribution,
                                                      DistributionParamDTO param, List<String> warehouseList) {
 
 
+        if (OrderLockStockEnum.COMPLETE_LOCK.getCode().equals(orderMain.getLockStock())) {
+            //订单完全占用
+            return new CommonResponse<String>().ok("订单已完全占用,无需再次订单明细锁定库存");
+        }
+
+        //锁库成功标识
+        boolean lock = false;
+
+        List<OrderDetail> orderDetails = orderMain.getOrderDetails();
+
+        if (DistributionLockModelEnum.FORCE.getCode().equals(strategyDistribution.getLockModel()) ||
+                !param.getCheckStock()) {
+            //配货策略强制锁库或配货请求参数不校验库存
+            //直接锁定库存.
+            boolean lockStock = stockLockService.lockStock(orderMain, warehouseList.get(0));
+            if (lockStock) {
+                lock = true;
+            }
+        }
+
+
+        if (lock) {
+
+        }
 
         return null;
     }

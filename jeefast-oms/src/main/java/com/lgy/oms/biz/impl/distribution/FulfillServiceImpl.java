@@ -138,12 +138,14 @@ public class FulfillServiceImpl implements IFulfillService {
         //预分配
         CommonResponse<String> preResponse = preDistributionService.start(orderMain, strategyDistribution, param);
         if (!Constants.SUCCESS.equals(preResponse.getCode())) {
+            //预分配失败,代码或设置问题导致抛出异常
             return new CommonResponse<String>().ok(preResponse.getMsg());
         }
 
         //开始标准拆分订单(第一次拆分)
         CommonResponse<String> standardSplitResponse = splitOrderService.standardSplit(orderMain, strategyDistribution, param);
         if (!Constants.SUCCESS.equals(standardSplitResponse.getCode())) {
+            //订单被拆分,不再继续流程,return
             return new CommonResponse<String>().ok(standardSplitResponse.getMsg());
         }
 
@@ -154,12 +156,14 @@ public class FulfillServiceImpl implements IFulfillService {
         if (Constants.SUCCESS.equals(matchWarehouseResponse.getCode())) {
             warehouseList = matchWarehouseResponse.getData();
         } else {
+            //订单分仓失败,代码或设置问题导致抛出异常,return
             return new CommonResponse<String>().ok(matchWarehouseResponse.getMsg());
         }
 
         //锁库
         CommonResponse<DistributionOrder> lockStockResponse = orderLockStockService.execute(orderMain, strategyDistribution, param, warehouseList);
         if (!Constants.SUCCESS.equals(lockStockResponse.getCode())) {
+            //订单库存不足或者订单被拆分,return
             return new CommonResponse<String>().ok(lockStockResponse.getMsg());
         }
 
