@@ -161,7 +161,7 @@ public class FulfillServiceImpl implements IFulfillService {
         }
 
         //锁库
-        CommonResponse<DistributionOrder> lockStockResponse = orderLockStockService.execute(orderMain, strategyDistribution, param, warehouseList);
+        CommonResponse<String> lockStockResponse = orderLockStockService.execute(orderMain, strategyDistribution, param, warehouseList);
         if (!Constants.SUCCESS.equals(lockStockResponse.getCode())) {
             //订单库存不足或者订单被拆分,return
             return new CommonResponse<String>().ok(lockStockResponse.getMsg());

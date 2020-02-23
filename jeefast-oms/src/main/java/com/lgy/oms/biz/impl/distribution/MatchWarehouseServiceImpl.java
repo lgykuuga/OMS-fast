@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -70,7 +71,7 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
         long startTime = System.currentTimeMillis();
 
         //可用仓库有序集合
-        List<String> warehouseList = new ArrayList<>();
+        List<String> warehouseList = new LinkedList<>();
         //返回消息
         StringBuilder rtnMessage = new StringBuilder();
 

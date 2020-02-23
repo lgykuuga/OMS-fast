@@ -53,7 +53,7 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
 
         if (OrderLockStockEnum.COMPLETE_LOCK.getCode().equals(orderMain.getLockStock())) {
             //订单完全占用
-            return new CommonResponse<String>().ok("订单已完全占用,无需再次订单明细锁定库存");
+            return new CommonResponse<String>().ok("订单已完全占用,订单明细无需再次锁定库存");
         }
 
         //锁库成功标识
@@ -73,7 +73,7 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
 
 
         if (lock) {
-
+            orderMain.setLockStock(OrderLockStockEnum.COMPLETE_LOCK.getCode());
         }
 
         return null;
