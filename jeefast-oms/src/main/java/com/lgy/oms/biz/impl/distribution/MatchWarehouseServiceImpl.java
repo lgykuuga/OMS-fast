@@ -71,7 +71,7 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
         long startTime = System.currentTimeMillis();
 
         //可用仓库有序集合
-        List<String> warehouseList = new LinkedList<>();
+        List<String> warehouseList = new ArrayList<>();
         //返回消息
         StringBuilder rtnMessage = new StringBuilder();
 

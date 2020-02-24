@@ -58,8 +58,8 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
 
         //锁库成功标识
         boolean lock = false;
-
-        List<OrderDetail> orderDetails = orderMain.getOrderDetails();
+        //订单占用库存状态
+        int lockStockStatus = OrderLockStockEnum.NONE.getCode();
 
         if (DistributionLockModelEnum.FORCE.getCode().equals(strategyDistribution.getLockModel()) ||
                 !param.getCheckStock()) {
@@ -68,12 +68,30 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
             boolean lockStock = stockLockService.lockStock(orderMain, warehouseList.get(0));
             if (lockStock) {
                 lock = true;
+                //完全占用
+                lockStockStatus = OrderLockStockEnum.COMPLETE_LOCK.getCode();
             }
+        } else {
+            //校验库存
+            List<OrderDetail> orderDetails = orderMain.getOrderDetails();
+
+            for (String warehouse : warehouseList) {
+                for (OrderDetail orderDetail : orderDetails) {
+
+
+
+                }
+            }
+
+
+
+
+
         }
 
 
         if (lock) {
-            orderMain.setLockStock(OrderLockStockEnum.COMPLETE_LOCK.getCode());
+            orderMain.setLockStock(lockStockStatus);
         }
 
         return null;
