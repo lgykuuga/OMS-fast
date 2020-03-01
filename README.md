@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 <p>
-  <a href="https://github.com/lgykuuga/OMS-fast"><img src="" alt="项目地址"></a>
+  <a href="https://github.com/lgykuuga/OMS-fast"><img src="https://github.com/lgykuuga/OMS-fast/blob/master/img/orange.svg" alt="项目地址"></a>
 </p>
 
 ## 前言
