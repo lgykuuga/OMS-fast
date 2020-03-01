@@ -19,12 +19,12 @@
 ## 项目介绍
 
 `OMS`项目是一套订单管理系统，基于SpringBoot+MyBatis Plus实现。系统功能包含基础资料（商品管理、货主管理、仓库管理、物流商管理...）、订单管理（下载订单、订单审核、订单配货、订单推送）、库存管理设置等模块。  
-可根据系统订单量级,配置项目集群或者单点应用。一键开关配置中间件.做到开箱即用效果。
+可根据系统订单量级,配置项目集群或者单点应用。一键开关配置中间件.做到开箱即用效果的同时也兼顾到技术。
 
 ### 项目演示
 
 
-项目演示地址：[http://www.baidu.html](http://www.baidu.html)
+项目演示地址：[http://115.159.201.193:8080/login](http://115.159.201.193:8080/login)（懒...不定期更新）
 
 
 ### 组织结构
@@ -75,17 +75,17 @@ OMS
 
 ##### 系统架构图
 
-![系统架构图](document/resource/mall_micro_service_arch.jpg)
+![系统架构图](document/resource/mall_micro_service_arch.jpg)（未画）
 
 ##### 业务架构图
 
-![系统架构图](document/resource/mall_business_arch.png)
+![系统架构图](document/resource/mall_business_arch.png)（未画）
 
 #### 模块介绍
 
 #### 开发进度
 
-![项目开发进度图](document/resource/mall_dev_flow.png)
+![项目开发进度图](document/resource/mall_dev_flow.png)（未画）
 
 ## 环境搭建
 
