@@ -4,12 +4,12 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 <p>
-  <a href="https://github.com/lgykuuga/OMS-fast"><img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/badge/%E7%A0%81%E4%BA%91-%E9%A1%B9%E7%9B%AE%E5%9C%B0%E5%9D%80-orange.svg" alt="项目地址"></a>
+  <a href="https://github.com/lgykuuga/OMS-fast"><img src="" alt="项目地址"></a>
 </p>
 
 ## 前言
 
-`oms`项目基于RuoYi 4.0版本进行修改，仅凭个人兴趣所输出的业务项目，新增现阶段流行技术，带着思考去学习技术并落地到项目中。
+`OMS`项目基于RuoYi 4.0(2019-8-15)版本进行修改，仅凭个人兴趣所输出的业务项目，新增现阶段流行技术，带着思考去学习技术并落地到项目中。
 
 ## 项目文档
 
