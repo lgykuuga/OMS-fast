@@ -75,7 +75,7 @@ OMS
 
 ##### 系统架构图
 
-![系统架构图](document/resource/mall_micro_service_arch.jpg)（未画）
+![系统架构图](https://github.com/lgykuuga/OMS-fast/blob/master/img/%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE.png)
 
 ##### 业务架构图
 
