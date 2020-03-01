@@ -9,7 +9,7 @@
 
 ## 前言
 
-`OMS`项目基于RuoYi 4.0(2019-8-15)版本进行修改，新增集成现阶段流行技术(rabbitMQ、redis、mongoDB、mybatis plus、disruptor并发框架),仅凭个人兴趣及行业累积经验所输出的业务项目，带着思考去学习技术并落地到项目中。
+`OMS`项目基于RuoYi 4.0(2019-8-15)版本进行修改，新增集成现阶段流行技术(rabbitMQ、redis、mongoDB、mybatis plus、xxl-job、disruptor并发框架...),仅凭个人兴趣及行业累积经验所输出的业务项目，带着思考去学习技术并落地到项目中。
 
 ## 项目文档
 
@@ -49,7 +49,6 @@ OMS
 | 技术                 | 说明                | 官网                                                 |
 | -------------------- | ------------------- | ---------------------------------------------------- |
 | SpringBoot           | 容器+MVC框架        | https://spring.io/projects/spring-boot               |
-| SpringSecurity       | 认证和授权框架      | https://spring.io/projects/spring-security           |
 | MyBatis Plus         | ORM框架             | http://www.mybatis.org/mybatis-3/zh/index.html       |
 | MyBatisGenerator     | 数据层代码生成      | http://www.mybatis.org/generator/index.html          |
 | PageHelper           | MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper       |
@@ -60,8 +59,9 @@ OMS
 | MongoDb              | NoSql数据库         | https://www.mongodb.com                              |
 | Docker               | 应用容器引擎        | https://www.docker.com                               |
 | Druid                | 数据库连接池        | https://github.com/alibaba/druid                     |
-| JWT                  | JWT登录支持         | https://github.com/jwtk/jjwt                         |
-| Disruptor            | Java并发框架        | https://github.com/LMAX-Exchange/disruptor |
+| Shiro                | 认证、授权、会话管理  | http://shiro.apache.org/                            |
+| Disruptor            | Java并发框架        | https://github.com/LMAX-Exchange/disruptor          |
+| XXL-JOB              | 任务调度中心        | https://github.com/xuxueli/xxl-job               |
 | Lombok               | 简化对象封装工具    | https://github.com/rzwitserloot/lombok               |
 
 #### 前端技术
@@ -116,6 +116,7 @@ OMS
 | Elasticsearch | 6.2.2  | https://www.elastic.co/downloads                             |
 | MongoDb       | 3.2    | https://www.mongodb.com/download-center                      |
 | RabbitMq      | 3.7.7  | http://www.rabbitmq.com/download.html                        |
+| XXL-JOB       | (待开发)  | https://github.com/xuxueli/xxl-job                        |
 | Nginx         | 1.10   | http://nginx.org/en/download.html                            |
 
 ## Ruoyi内置功能
