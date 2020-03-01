@@ -1,16 +1,124 @@
-## 平台简介
-基于RuoYi 4.0（2019-09-21）版修改
+# OMS
+[![Build Status](https://travis-ci.org/apache/rocketmq-externals.svg?branch=master)](https://travis-ci.org/apache/rocketmq-externals) 
+[![Coverage Status](https://coveralls.io/repos/github/rocketmq/rocketmq-console-ng/badge.svg?branch=master)](https://coveralls.io/github/rocketmq/rocketmq-console-ng?branch=master)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-> 已完成
-- 增加Mybatis-Plus依赖，支持代码生成
-- 增加lombok依赖
-- 增加逻辑删除功能 增加deleted字段用于逻辑删除，使用mp自带方法删除和查找都会附带逻辑删除功能 (自己写的xml不会)
-- 增加自动填充 create_by, create_time, update_by, update_time字段
-- logback日志设置成彩色高亮打印
-- 增加浅蓝skin-light-blue样式
+<p>
+  <a href="https://github.com/lgykuuga/OMS-fast"><img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/badge/%E7%A0%81%E4%BA%91-%E9%A1%B9%E7%9B%AE%E5%9C%B0%E5%9D%80-orange.svg" alt="项目地址"></a>
+</p>
+
+## 前言
+
+`oms`项目基于RuoYi 4.0版本进行修改，仅凭个人兴趣所输出的业务项目，新增现阶段流行技术，带着思考去学习技术并落地到项目中。
+
+## 项目文档
+
+- 文档地址：[https://github.com/lgykuuga/OMS-fast/blob/master/README.md](https://github.com/lgykuuga/OMS-fast/blob/master/README.md)
+- 开发手册：[http://doc.ruoyi.vip/ruoyi/](http://doc.ruoyi.vip/ruoyi/)
+
+## 项目介绍
+
+`OMS`项目是一套订单管理系统，基于SpringBoot+MyBatis Plus实现。系统功能包含基础资料（商品管理、货主管理、仓库管理、物流商管理...）、订单管理（下载订单、订单审核、订单配货、订单推送）、库存管理设置等模块。  
+可根据系统订单量级,配置项目集群或者单点应用。一键开关配置中间件.做到开箱即用效果。
+
+### 项目演示
 
 
-## 内置功能
+项目演示地址：[http://www.baidu.html](http://www.baidu.html)
+
+
+### 组织结构
+
+``` lua
+OMS
+├── jeefast-admin     -- 前端代码及对后台管理系统接口
+├── jeefast-base      -- OMS基础资料模块
+├── jeefast-common    -- 系统公用类、工具类等基础封装
+├── jeefast-framework -- 基于Ruoyi项目工程基础框架封装
+├── jeefast-generator -- MyBatisGenerator生成的数据库操作代码
+├── jeefast-oms       -- OMS系统核心业务代码
+├── jeefast-quartz    -- 定时任务
+├── jeefast-system    -- 基于Ruoyi项目工程基础模块
+├── jeefast-search    -- 基于Elasticsearch的商品搜索系统(待开发)
+```
+
+### 技术选型
+
+#### 后端技术
+
+| 技术                 | 说明                | 官网                                                 |
+| -------------------- | ------------------- | ---------------------------------------------------- |
+| SpringBoot           | 容器+MVC框架        | https://spring.io/projects/spring-boot               |
+| SpringSecurity       | 认证和授权框架      | https://spring.io/projects/spring-security           |
+| MyBatis Plus         | ORM框架             | http://www.mybatis.org/mybatis-3/zh/index.html       |
+| MyBatisGenerator     | 数据层代码生成      | http://www.mybatis.org/generator/index.html          |
+| PageHelper           | MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper       |
+| Swagger-UI           | 文档生产工具        | https://github.com/swagger-api/swagger-ui            |
+| Elasticsearch(待开发) | 搜索引擎            | https://github.com/elastic/elasticsearch             |
+| RabbitMq             | 消息队列            | https://www.rabbitmq.com/                            |
+| Redis                | 分布式缓存          | https://redis.io/                                    |
+| MongoDb              | NoSql数据库         | https://www.mongodb.com                              |
+| Docker               | 应用容器引擎        | https://www.docker.com                               |
+| Druid                | 数据库连接池        | https://github.com/alibaba/druid                     |
+| JWT                  | JWT登录支持         | https://github.com/jwtk/jjwt                         |
+| Disruptor            | Java并发框架        | https://github.com/LMAX-Exchange/disruptor |
+| Lombok               | 简化对象封装工具    | https://github.com/rzwitserloot/lombok               |
+
+#### 前端技术
+
+| 技术       | 说明                  | 官网                                   |
+| ---------- | --------------------- | -------------------------------------- |
+| thymeleaf  | 前端框架              | https://www.thymeleaf.org/                     |
+| Bootstrap  | 前端UI框架            | https://getbootstrap.com/               |
+
+#### 架构图
+
+##### 系统架构图
+
+![系统架构图](document/resource/mall_micro_service_arch.jpg)
+
+##### 业务架构图
+
+![系统架构图](document/resource/mall_business_arch.png)
+
+#### 模块介绍
+
+#### 开发进度
+
+![项目开发进度图](document/resource/mall_dev_flow.png)
+
+## 环境搭建
+
+### 开发工具
+
+| 工具          | 说明                | 官网                                            |
+| ------------- | ------------------- | ----------------------------------------------- |
+| IDEA          | 开发IDE             | https://www.jetbrains.com/idea/download         |
+| RedisDesktop  | redis客户端连接工具 | https://redisdesktop.com/download               |
+| Robomongo     | mongo客户端连接工具 | https://robomongo.org/download                  |
+| X-shell       | Linux远程连接工具   | http://www.netsarang.com/download/software.html |
+| Navicat       | 数据库连接工具      | http://www.formysql.com/xiazai.html             |
+| Axure         | 原型设计工具        | https://www.axure.com/                          |
+| MindMaster    | 思维导图设计工具    | http://www.edrawsoft.cn/mindmaster              |
+| ScreenToGif   | gif录制工具         | https://www.screentogif.com/                    |
+| ProcessOn     | 流程图绘制工具      | https://www.processon.com/                      |
+| PicPick       | 图片处理工具        | https://picpick.app/zh/                         |
+| Postman       | API接口调试工具      | https://www.postman.com/                        |
+| Typora        | Markdown编辑器      | https://typora.io/                              |
+
+### 开发环境
+
+| 工具          | 版本号 | 下载                                                         |
+| ------------- | ------ | ------------------------------------------------------------ |
+| JDK           | 1.8    | https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html |
+| Mysql         | 5.7    | https://www.mysql.com/                                       |
+| Redis         | 3.4    | https://redis.io/download                                    |
+| Elasticsearch | 6.2.2  | https://www.elastic.co/downloads                             |
+| MongoDb       | 3.2    | https://www.mongodb.com/download-center                      |
+| RabbitMq      | 3.7.7  | http://www.rabbitmq.com/download.html                        |
+| Nginx         | 1.10   | http://nginx.org/en/download.html                            |
+
+## Ruoyi内置功能
 
 1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
 2.  部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
@@ -30,3 +138,4 @@
 16. 在线构建器：拖动表单元素生成相应的HTML代码。
 17. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
+Copyright (c) 2019-2020 LGy
