@@ -5,10 +5,14 @@ import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
+import com.lgy.oms.disruptor.tracelog.TraceLogEvent;
 import com.lgy.oms.domain.TraceLog;
+import com.lgy.oms.mapstruct.TraceLogMapStruct;
 import com.lgy.oms.service.ITraceLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +28,8 @@ import java.util.List;
 @Api("订单轨迹日志接口")
 public class TraceLogController {
 
+    public Logger logger = LoggerFactory.getLogger(getClass());
+
     /**
      * 订单轨迹服务Disruptor
      */
@@ -31,6 +37,9 @@ public class TraceLogController {
     TraceLogApi traceLogApi;
     @Autowired
     ITraceLogService traceLogService;
+
+    @Autowired
+    TraceLogMapStruct traceLogMapStruct;
 
 
     /**
@@ -42,6 +51,9 @@ public class TraceLogController {
     @GetMapping("/getTraceLog")
     @ApiOperation(value = "获取订单状态信息", httpMethod = "GET")
     public CommonResponse<List<TraceLog>> get(TraceLog traceLog) {
+
+        TraceLogEvent traceLogEvent = traceLogMapStruct.traceLog2Event(traceLog);
+        logger.info(traceLogEvent.toString());
 
         if (StringUtils.isEmpty(traceLog.getOrderId())) {
             return new CommonResponse<List<TraceLog>>().error(Constants.FAIL, "订单号不能为空");
