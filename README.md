@@ -63,6 +63,7 @@ OMS
 | Disruptor            | Java并发框架        | https://github.com/LMAX-Exchange/disruptor          |
 | XXL-JOB              | 任务调度中心        | https://github.com/xuxueli/xxl-job               |
 | Lombok               | 简化对象封装工具    | https://github.com/rzwitserloot/lombok               |
+| MapStruct            | Bean映射的简化工具    | https://mapstruct.org/               |
 
 #### 前端技术
 
