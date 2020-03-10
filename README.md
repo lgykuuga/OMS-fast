@@ -24,7 +24,7 @@
 ### 项目演示
 
 
-项目演示地址：[http://115.159.201.193:8080/login](http://115.159.201.193:8080/login)（建议使用chrome浏览器访问，不定期更新）
+#项目演示地址：[http://115.159.201.193:8080/login](http://115.159.201.193:8080/login)（建议使用chrome浏览器访问，不定期更新）
 
 
 ### 组织结构
@@ -63,7 +63,7 @@ OMS
 | Disruptor            | Java并发框架        | https://github.com/LMAX-Exchange/disruptor          |
 | XXL-JOB              | 任务调度中心        | https://github.com/xuxueli/xxl-job               |
 | Lombok               | 简化对象封装工具    | https://github.com/rzwitserloot/lombok               |
-| MapStruct            | Bean映射的简化工具    | https://mapstruct.org/               |
+| MapStruct            | Bean映射的简化框架  | https://mapstruct.org/               |
 
 #### 前端技术
 
@@ -80,13 +80,13 @@ OMS
 
 ##### 业务架构图
 
-![系统架构图](document/resource/mall_business_arch.png)（未画）
+（未画）
 
 #### 模块介绍
 
 #### 开发进度
 
-![项目开发进度图](document/resource/mall_dev_flow.png)（未画）
+（未画）
 
 ## 环境搭建
 

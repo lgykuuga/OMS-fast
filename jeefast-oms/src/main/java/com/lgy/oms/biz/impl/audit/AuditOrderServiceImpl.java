@@ -117,7 +117,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         long startTime = System.currentTimeMillis();
         param.setStartTime(startTime);
 
-        logger.info("开始审核订单[{}]", orderMain.getOrderId());
+        logger.debug("开始审核订单[{}]", orderMain.getOrderId());
 
         //保存轨迹
         traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),

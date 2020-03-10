@@ -11,10 +11,6 @@ import com.lgy.system.domain.SysUser;
  */
 public class TraceLogEvent {
 
-    /**
-     * 订单流水编号
-     */
-    private String orderId;
 
     /**
      * 轨迹日志
@@ -42,20 +38,4 @@ public class TraceLogEvent {
         this.sysUser = sysUser;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    @Override
-    public String toString() {
-        return "TraceLogEvent{" +
-                "orderId='" + orderId + '\'' +
-                ", traceLog=" + traceLog +
-                ", sysUser=" + sysUser +
-                '}';
-    }
 }
