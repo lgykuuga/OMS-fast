@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.oms.domain.Stock;
 import com.lgy.oms.mapper.StockMapper;
 import com.lgy.oms.service.IStockService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,4 +16,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class StockServiceImpl extends ServiceImpl<StockMapper, Stock> implements IStockService {
 
+
+    @Autowired
+    StockMapper stockMapper;
+
+    @Override
+    public int getStockQty(String commodity, String warehouse, String owner) {
+        return stockMapper.getStockQty(commodity, warehouse, owner);
+    }
+
+    @Override
+    public int getAvailableStockQty(String commodity, String warehouse, String owner) {
+        return stockMapper.getAvailableStockQty(commodity, warehouse, owner);
+    }
 }

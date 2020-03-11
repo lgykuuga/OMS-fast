@@ -18,5 +18,23 @@
     </resultMap>
     -->
 
+    <select id="getStockQty" resultType="java.lang.Integer">
+
+        select sum(qty) from oms_stock where warehouse = #{warehouse} and owner = #{owner} and commodity = #{commodity}
+    </select>
+
+    <select id="getAvailableStockQty" resultType="java.lang.Integer">
+        select sum(a.qty) from (
+
+            select sum(qty) as qty from oms_stock
+            where warehouse = #{warehouse} and owner = #{owner} and commodity = #{commodity}
+
+            union all
+
+            select sum(qty) * -1 as qty from oms_stock_lock
+            where warehouse = #{warehouse} and owner = #{owner} and commodity = #{commodity}
+
+            ) a
+    </select>
 </mapper>
 

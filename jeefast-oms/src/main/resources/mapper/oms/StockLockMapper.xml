@@ -21,5 +21,8 @@
     </resultMap>
     -->
 
+    <select id="getStockLockQty" resultType="java.lang.Integer">
+        select qty from oms_stock_lock where warehouse = #{warehouse} and owner = #{owner} and commodity = #{commodity}
+    </select>
 </mapper>
 

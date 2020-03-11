@@ -2,13 +2,15 @@ package com.lgy.oms.biz.impl.distribution;
 
 
 import com.lgy.common.core.domain.CommonResponse;
+import com.lgy.oms.biz.ICheckStockService;
 import com.lgy.oms.biz.IOrderLockStockService;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
+import com.lgy.oms.domain.StockLock;
 import com.lgy.oms.domain.StrategyDistribution;
-import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.oms.enums.order.OrderLackStockEnum;
 import com.lgy.oms.enums.order.OrderLockStockEnum;
 import com.lgy.oms.enums.strategy.DistributionLockModelEnum;
 import com.lgy.oms.service.IDistributionOrderService;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -40,16 +43,21 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
     TraceLogApi traceLogApi;
 
     /**
-     * 库存锁定Service
+     * 校验库存Service
      */
     @Autowired
     IStockLockService stockLockService;
 
+    /**
+     * 校验库存Service
+     */
+    @Autowired
+    ICheckStockService checkStockService;
+
 
     @Override
     public CommonResponse<String> execute(OrderMain orderMain, StrategyDistribution strategyDistribution,
-                                                     DistributionParamDTO param, List<String> warehouseList) {
-
+                                          DistributionParamDTO param, List<String> warehouseList) {
 
         if (OrderLockStockEnum.COMPLETE_LOCK.getCode().equals(orderMain.getLockStock())) {
             //订单完全占用
@@ -60,6 +68,8 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
         boolean lock = false;
         //订单占用库存状态
         int lockStockStatus = OrderLockStockEnum.NONE.getCode();
+        //订单缺货状态
+        int lackStockStatus = OrderLackStockEnum.NONE.getCode();
 
         if (DistributionLockModelEnum.FORCE.getCode().equals(strategyDistribution.getLockModel()) ||
                 !param.getCheckStock()) {
@@ -72,19 +82,21 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
                 lockStockStatus = OrderLockStockEnum.COMPLETE_LOCK.getCode();
             }
         } else {
-            //校验库存
-            List<OrderDetail> orderDetails = orderMain.getOrderDetails();
+            //开始校验库存
+
+            //转换成库存锁定对象,便于统计(杜绝一个订单出现两条相同明细,从而造成统计可用库存数量错误)
+            List<StockLock> stockLockList = stockLockService.orderConvert(orderMain.getOrderDetails());
 
             for (String warehouse : warehouseList) {
-                for (OrderDetail orderDetail : orderDetails) {
+                for (StockLock stockLock : stockLockList) {
+                    //获取订单明细可用库存数量
+                    int availableStockQty = checkStockService.getAvailableStockQty(stockLock.getCommodity(), warehouse, stockLock.getOwner());
 
+                    if (availableStockQty <= BigDecimal.ZERO.intValue()) {
 
-
+                    }
                 }
             }
-
-
-
 
 
         }

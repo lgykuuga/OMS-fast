@@ -197,4 +197,10 @@ public class OrderDetail implements Serializable {
     @JsonProperty("活动编码")
     private String active;
 
+    /**
+     * 货主
+     */
+    @JsonProperty("货主")
+    private String owner;
+
 }

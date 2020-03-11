@@ -1,35 +1,13 @@
 package com.lgy.oms.biz.impl.stock;
 
 
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lgy.common.constant.Constants;
-import com.lgy.common.constant.ResponseCode;
-import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.common.utils.StringUtils;
-import com.lgy.oms.biz.*;
-import com.lgy.oms.constants.OrderModuleConstants;
-import com.lgy.oms.constants.OrderOperateType;
-import com.lgy.oms.constants.TraceLevelType;
-import com.lgy.oms.disruptor.tracelog.TraceLogApi;
-import com.lgy.oms.domain.StandardOrderData;
-import com.lgy.oms.domain.StrategyConvert;
-import com.lgy.oms.domain.TraceLog;
-import com.lgy.oms.domain.Trade;
-import com.lgy.oms.domain.dto.TradeParamDTO;
-import com.lgy.oms.domain.order.*;
-import com.lgy.oms.enums.order.*;
-import com.lgy.oms.interfaces.common.dto.standard.StandardOrder;
-import com.lgy.oms.interfaces.common.dto.standard.StandardOrderDetail;
-import com.lgy.oms.service.*;
+import com.lgy.oms.biz.ICheckStockService;
+import com.lgy.oms.service.IStockLockService;
+import com.lgy.oms.service.IStockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Description 获取库存Service实现
@@ -41,11 +19,32 @@ public class CheckStockServiceImpl implements ICheckStockService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * 库存Service
+     */
     @Autowired
     IStockService stockService;
 
+    /**
+     * 库存锁定Service
+     */
+    @Autowired
+    IStockLockService stockLockService;
+
     @Override
     public int getStockQty(String commodity, String warehouse, String owner) {
-        return 0;
+        return stockService.getStockQty(commodity, warehouse, owner);
     }
+
+    @Override
+    public int getStockLockQty(String commodity, String warehouse, String owner) {
+        return stockLockService.getStockLockQty(commodity, warehouse, owner);
+    }
+
+    @Override
+    public int getAvailableStockQty(String commodity, String warehouse, String owner) {
+        return stockService.getAvailableStockQty(commodity, warehouse, owner);
+    }
+
+
 }
