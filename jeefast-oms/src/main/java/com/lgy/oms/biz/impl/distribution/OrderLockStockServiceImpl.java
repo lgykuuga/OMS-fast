@@ -71,8 +71,9 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
         //订单缺货状态
         int lackStockStatus = OrderLackStockEnum.NONE.getCode();
 
-        if (DistributionLockModelEnum.FORCE.getCode().equals(strategyDistribution.getLockModel()) ||
-                !param.getCheckStock()) {
+
+        if (DistributionLockModelEnum.FORCE.getCode().equals(strategyDistribution.getLockModel())
+                || !param.getCheckStock()) {
             //配货策略强制锁库或配货请求参数不校验库存
             //直接锁定库存.
             boolean lockStock = stockLockService.lockStock(orderMain, warehouseList.get(0));
@@ -84,18 +85,40 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
         } else {
             //开始校验库存
 
+            //是否库存充足(用于判断是否部分缺货)
+            boolean isLack = false;
+            //是否缺货
+            boolean isAllLack = true;
+
             //转换成库存锁定对象,便于统计(杜绝一个订单出现两条相同明细,从而造成统计可用库存数量错误)
             List<StockLock> stockLockList = stockLockService.orderConvert(orderMain.getOrderDetails());
 
             for (String warehouse : warehouseList) {
+
                 for (StockLock stockLock : stockLockList) {
-                    //获取订单明细可用库存数量
+                    //获取订单明细商品可用库存数量
                     int availableStockQty = checkStockService.getAvailableStockQty(stockLock.getCommodity(), warehouse, stockLock.getOwner());
 
                     if (availableStockQty <= BigDecimal.ZERO.intValue()) {
+                        logger.debug("订单[{}]货主[{}]明细商品[{}]仓库[{}]库存数量[{}]不足。", stockLock.getOrderId(),
+                                stockLock.getOwner(), stockLock.getCommodity(), warehouse, availableStockQty);
+
+                    } else {
+                        //可用库存 >= 订单所需数量
+                        if (availableStockQty >= stockLock.getQty())  {
+
+                        } else {
+                            logger.debug("订单[{}]货主[{}]明细商品[{}]仓库[{}]库存数量[{}]不足订单所需数量[{}]。", stockLock.getOrderId(),
+                                    stockLock.getOwner(), stockLock.getCommodity(), warehouse, availableStockQty, stockLock.getQty());
+
+                        }
+
 
                     }
                 }
+
+
+
             }
 
 
