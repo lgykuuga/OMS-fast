@@ -29,8 +29,16 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public List<Warehouse> selectWarehouse() {
-        QueryWrapper queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Warehouse> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", BaseConstants.NORMAL);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Warehouse> selectWarehouse(List<String> warehouseList) {
+
+        QueryWrapper<Warehouse> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("gco", warehouseList);
         return baseMapper.selectList(queryWrapper);
     }
 
@@ -47,7 +55,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     @Override
     @CacheEvict(value = CACHE_NAMES, key = "#gco")
     public boolean delete(String gco) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Warehouse> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
         return this.remove(queryWrapper);
     }
@@ -55,7 +63,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     @Override
     @Cacheable(cacheNames = CACHE_NAMES, key = "#gco")
     public Warehouse findOne(String gco) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Warehouse> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
         return getOne(queryWrapper);
     }

@@ -2,6 +2,8 @@ package com.lgy.web.controller.oms;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Warehouse;
+import com.lgy.base.service.IWarehouseService;
 import com.lgy.common.annotation.Log;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
@@ -10,7 +12,9 @@ import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.StrategyDistributionWarehouseArea;
+import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
 import com.lgy.oms.service.IStrategyDistributionWarehouseAreaService;
+import com.lgy.oms.service.IStrategyDistributionWarehouseAvailableService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +22,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 配货策略分仓覆盖区域规则Controller
@@ -33,7 +39,13 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
     private String prefix = "oms/strategy/distribution/warehouse/area";
 
     @Autowired
-    private IStrategyDistributionWarehouseAreaService strategyDistributionWarehouseAreaService;
+    IStrategyDistributionWarehouseAreaService strategyDistributionWarehouseAreaService;
+
+    @Autowired
+    IStrategyDistributionWarehouseAvailableService availableService;
+
+    @Autowired
+    IWarehouseService warehouseService;
 
     @RequiresPermissions("oms:rule:view")
     @GetMapping("/{gco}")
@@ -100,6 +112,15 @@ public class StrategyDistributionWarehouseAreaController extends BaseController 
     @GetMapping("/add/{gco}")
     public String add(@PathVariable("gco") String gco, ModelMap mmap) {
         mmap.put("gco", gco);
+
+        //配货策略可用仓库列表
+        List<StrategyDistributionWarehouseAvailable> availableList = availableService.getStrategyByGco(gco);
+
+        if (StringUtils.isNotEmpty(availableList)) {
+            List<String> warehouseList = availableList.stream().map(StrategyDistributionWarehouseAvailable::getWarehouse).collect(Collectors.toList());
+            List<Warehouse> warehouses = warehouseService.selectWarehouse(warehouseList);
+            mmap.put("warehouses", warehouses);
+        }
         return prefix + "/add";
     }
 

@@ -2,6 +2,8 @@ package com.lgy.web.controller.oms;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.base.domain.Warehouse;
+import com.lgy.base.service.IWarehouseService;
 import com.lgy.common.annotation.Log;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
@@ -9,7 +11,9 @@ import com.lgy.common.core.page.TableDataInfo;
 import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
+import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
 import com.lgy.oms.domain.StrategyDistributionWarehouseLogistics;
+import com.lgy.oms.service.IStrategyDistributionWarehouseAvailableService;
 import com.lgy.oms.service.IStrategyDistributionWarehouseLogisticsService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 配货策略分仓物流规则Controller
@@ -34,6 +39,12 @@ public class StrategyDistributionWarehouseLogisticsController extends BaseContro
 
     @Autowired
     private IStrategyDistributionWarehouseLogisticsService distributionWarehouseLogisticsService;
+
+    @Autowired
+    IStrategyDistributionWarehouseAvailableService availableService;
+
+    @Autowired
+    IWarehouseService warehouseService;
 
     @RequiresPermissions("oms:rule:view")
     @GetMapping("/{gco}")
@@ -103,6 +114,14 @@ public class StrategyDistributionWarehouseLogisticsController extends BaseContro
     @GetMapping("/add/{gco}")
     public String add(@PathVariable("gco") String gco, ModelMap mmap) {
         mmap.put("gco", gco);
+        //配货策略可用仓库列表
+        List<StrategyDistributionWarehouseAvailable> availableList = availableService.getStrategyByGco(gco);
+
+        if (StringUtils.isNotEmpty(availableList)) {
+            List<String> warehouseList = availableList.stream().map(StrategyDistributionWarehouseAvailable::getWarehouse).collect(Collectors.toList());
+            List<Warehouse> warehouses = warehouseService.selectWarehouse(warehouseList);
+            mmap.put("warehouses", warehouses);
+        }
         return prefix + "/add";
     }
 

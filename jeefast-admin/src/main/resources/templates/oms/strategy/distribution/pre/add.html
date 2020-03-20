@@ -110,7 +110,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">仓库</label>
                 <div class="col-sm-8">
-                    <select name="warehouse" class="form-control" th:with="warehouseList=${@base.selectWarehouse()}" autocomplete="off" >
+                    <select name="warehouse" class="form-control th:with"="warehouseList=${@base.selectWarehouse()}" autocomplete="off" >
                         <option value="">--请选择仓库--</option>
                         <option th:each="warehouse : ${warehouseList}" th:text="${warehouse.gna}" th:value="${warehouse.gco}"></option>
                     </select>

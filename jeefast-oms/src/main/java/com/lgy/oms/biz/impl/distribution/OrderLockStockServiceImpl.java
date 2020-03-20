@@ -107,6 +107,9 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
                         //可用库存 >= 订单所需数量
                         if (availableStockQty >= stockLock.getQty())  {
 
+
+
+
                         } else {
                             logger.debug("订单[{}]货主[{}]明细商品[{}]仓库[{}]库存数量[{}]不足订单所需数量[{}]。", stockLock.getOrderId(),
                                     stockLock.getOwner(), stockLock.getCommodity(), warehouse, availableStockQty, stockLock.getQty());

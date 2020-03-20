@@ -20,4 +20,11 @@ public interface IWarehouseService extends IService<Warehouse>, CommonService<Wa
      * @return
      */
     List<Warehouse> selectWarehouse();
+
+    /**
+     * 下拉框查询仓库
+     * @param warehouseList 仓库列表编码
+     * @return 仓库列表
+     */
+    List<Warehouse> selectWarehouse(List<String> warehouseList);
 }
