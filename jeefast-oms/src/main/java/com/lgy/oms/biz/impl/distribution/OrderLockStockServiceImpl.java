@@ -85,15 +85,16 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
         } else {
             //开始校验库存
 
-            //是否库存充足(用于判断是否部分缺货)
-            boolean isLack = false;
-            //是否缺货
-            boolean isAllLack = true;
-
             //转换成库存锁定对象,便于统计(杜绝一个订单出现两条相同明细,从而造成统计可用库存数量错误)
             List<StockLock> stockLockList = stockLockService.orderConvert(orderMain.getOrderDetails());
 
             for (String warehouse : warehouseList) {
+
+                //是否部分库存满足
+                boolean isPartEnough = false;
+
+                //是否所有明细满足库存
+                boolean isEnough = true;
 
                 for (StockLock stockLock : stockLockList) {
                     //获取订单明细商品可用库存数量
@@ -103,22 +104,40 @@ public class OrderLockStockServiceImpl implements IOrderLockStockService {
                         logger.debug("订单[{}]货主[{}]明细商品[{}]仓库[{}]库存数量[{}]不足。", stockLock.getOrderId(),
                                 stockLock.getOwner(), stockLock.getCommodity(), warehouse, availableStockQty);
 
+                        isEnough = false;
+
                     } else {
                         //可用库存 >= 订单所需数量
                         if (availableStockQty >= stockLock.getQty())  {
-
-
-
-
+                            isPartEnough = true;
                         } else {
                             logger.debug("订单[{}]货主[{}]明细商品[{}]仓库[{}]库存数量[{}]不足订单所需数量[{}]。", stockLock.getOrderId(),
                                     stockLock.getOwner(), stockLock.getCommodity(), warehouse, availableStockQty, stockLock.getQty());
-
+                            isEnough = false;
                         }
-
-
                     }
                 }
+
+                if (isEnough) {
+                    //所有明细满足库存
+
+
+
+                    break;
+                } else {
+                    //判断全部缺货/部分缺货
+                    if (isPartEnough) {
+                        //部分库存满足
+                        lackStockStatus = OrderLackStockEnum.PART_LACK.getCode();
+                    } else {
+                        //全部缺货
+                        lackStockStatus = OrderLackStockEnum.COMPLETE_LACK.getCode();
+                    }
+                }
+
+
+
+
 
 
 
