@@ -80,7 +80,9 @@ OMS
 
 ##### 业务架构图
 
-（未画）
+
+![业务架构图](https://github.com/lgykuuga/OMS-fast/blob/master/img/%E4%B8%9A%E5%8A%A1%E6%9E%B6%E6%9E%84.png)
+
 
 #### 模块介绍
 
