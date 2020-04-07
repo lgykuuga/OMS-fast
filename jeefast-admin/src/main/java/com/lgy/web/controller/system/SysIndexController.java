@@ -5,6 +5,7 @@ import com.lgy.common.core.controller.BaseController;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.system.domain.SysMenu;
 import com.lgy.system.domain.SysUser;
+import com.lgy.system.service.ISysConfigService;
 import com.lgy.system.service.ISysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,12 @@ public class SysIndexController extends BaseController {
     @Autowired
     private ISysMenuService menuService;
 
-    // 系统首页
+    @Autowired
+    private ISysConfigService configService;
+
+    /**
+     * 系统首页
+     */
     @GetMapping("/index")
     public String index(ModelMap mmap) {
         // 取身份信息
@@ -32,12 +38,24 @@ public class SysIndexController extends BaseController {
         List<SysMenu> menus = menuService.selectMenusByUser(user);
         mmap.put("menus", menus);
         mmap.put("user", user);
+        mmap.put("sideTheme", configService.selectConfigByKey("sys.index.sideTheme"));
+        mmap.put("skinName", configService.selectConfigByKey("sys.index.skinName"));
         mmap.put("copyrightYear", Global.getCopyrightYear());
         mmap.put("demoEnabled", Global.isDemoEnabled());
         return "index";
     }
 
-    // 系统介绍
+    /**
+     * 切换主题
+     */
+    @GetMapping("/system/switchSkin")
+    public String switchSkin(ModelMap mmap) {
+        return "skin";
+    }
+
+    /**
+     * 系统介绍
+     */
     @GetMapping("/system/main")
     public String main(ModelMap mmap) {
         mmap.put("version", Global.getVersion());

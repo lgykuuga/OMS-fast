@@ -119,6 +119,19 @@ public class SysDictTypeController extends BaseController {
     }
 
     /**
+     * 清空缓存
+     */
+    @RequiresPermissions("system:dict:remove")
+    @Log(title = "字典类型", businessType = BusinessType.CLEAN)
+    @GetMapping("/clearCache")
+    @ResponseBody
+    public AjaxResult clearCache() {
+        dictTypeService.clearCache();
+        return success();
+    }
+
+
+    /**
      * 查询字典详细
      */
     @RequiresPermissions("system:dict:list")

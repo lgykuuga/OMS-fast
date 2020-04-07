@@ -118,7 +118,7 @@ public class ExcelUtil<T> {
     /**
      * 对excel表单默认第一个索引名转换成list
      *
-     * @param input 输入流
+     * @param is 输入流
      * @return 转换后集合
      */
     public List<T> importExcel(InputStream is) throws Exception {
@@ -129,7 +129,7 @@ public class ExcelUtil<T> {
      * 对excel表单指定表格索引名转换成list
      *
      * @param sheetName 表格索引名
-     * @param input     输入流
+     * @param is        输入流
      * @return 转换后集合
      */
     public List<T> importExcel(String sheetName, InputStream is) throws Exception {
@@ -197,7 +197,12 @@ public class ExcelUtil<T> {
                         if (StringUtils.endsWith(s, ".0")) {
                             val = StringUtils.substringBefore(s, ".0");
                         } else {
-                            val = Convert.toStr(val);
+                            String dateFormat = field.getAnnotation(Excel.class).dateFormat();
+                            if (StringUtils.isNotEmpty(dateFormat)) {
+                                val = DateUtils.parseDateToStr(dateFormat, (Date) val);
+                            } else {
+                                val = Convert.toStr(val);
+                            }
                         }
                     } else if ((Integer.TYPE == fieldType) || (Integer.class == fieldType)) {
                         val = Convert.toInt(val);
@@ -311,7 +316,6 @@ public class ExcelUtil<T> {
      *
      * @param index 序号
      * @param row   单元格行
-     * @param cell  类型单元格
      */
     public void fillExcelData(int index, Row row) {
         int startNo = index * sheetSize;
@@ -667,9 +671,8 @@ public class ExcelUtil<T> {
     /**
      * 创建工作表
      *
-     * @param sheetName，指定Sheet名称
-     * @param sheetNo             sheet数量
-     * @param index               序号
+     * @param sheetNo sheet数量
+     * @param index   序号
      */
     public void createSheet(double sheetNo, int index) {
         this.sheet = wb.createSheet();
@@ -700,8 +703,7 @@ public class ExcelUtil<T> {
                 if (cell.getCellTypeEnum() == CellType.NUMERIC || cell.getCellTypeEnum() == CellType.FORMULA) {
                     val = cell.getNumericCellValue();
                     if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                        // POI Excel 日期格式转换
-                        val = DateUtil.getJavaDate((Double) val);
+                        val = DateUtil.getJavaDate((Double) val); // POI Excel 日期格式转换
                     } else {
                         if ((Double) val % 1 > 0) {
                             val = new DecimalFormat("0.00").format(val);
@@ -725,7 +727,7 @@ public class ExcelUtil<T> {
     }
 
     /**
-     * 校验Excle是否有字段值相同
+     * 校验Excel是否有字段值相同
      * @param set
      * @param value
      * @param setSize

@@ -5,6 +5,7 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties;
 import com.alibaba.druid.util.Utils;
 import com.lgy.common.enums.DataSourceType;
+import com.lgy.common.utils.spring.SpringUtils;
 import com.lgy.framework.config.properties.DruidProperties;
 import com.lgy.framework.datasource.DynamicDataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -45,11 +46,26 @@ public class DruidConfig {
 
     @Bean(name = "dynamicDataSource")
     @Primary
-    public DynamicDataSource dataSource(DataSource masterDataSource, DataSource slaveDataSource) {
+    public DynamicDataSource dataSource(DataSource masterDataSource) {
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(DataSourceType.MASTER.name(), masterDataSource);
-        targetDataSources.put(DataSourceType.SLAVE.name(), slaveDataSource);
+        setDataSource(targetDataSources, DataSourceType.SLAVE.name(), "slaveDataSource");
         return new DynamicDataSource(masterDataSource, targetDataSources);
+    }
+
+    /**
+     * 设置数据源
+     *
+     * @param targetDataSources 备选数据源集合
+     * @param sourceName        数据源名称
+     * @param beanName          bean名称
+     */
+    public void setDataSource(Map<Object, Object> targetDataSources, String sourceName, String beanName) {
+        try {
+            DataSource dataSource = SpringUtils.getBean(beanName);
+            targetDataSources.put(sourceName, dataSource);
+        } catch (Exception e) {
+        }
     }
 
     /**

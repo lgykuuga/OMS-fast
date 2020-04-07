@@ -80,9 +80,9 @@ public class FileUploadUtils {
     /**
      * 文件上传
      *
-     * @param baseDir   相对应用的基目录
-     * @param file      上传的文件
-     * @param extension 上传文件类型
+     * @param baseDir          相对应用的基目录
+     * @param file             上传的文件
+     * @param allowedExtension 上传文件类型
      * @return 返回上传成功的文件名
      * @throws FileSizeLimitExceededException       如果超出最大大小
      * @throws FileNameLengthLimitExceededException 文件名太长
@@ -130,7 +130,7 @@ public class FileUploadUtils {
     }
 
     private static final String getPathFileName(String uploadDir, String fileName) throws IOException {
-        int dirLastIndex = uploadDir.lastIndexOf("/") + 1;
+        int dirLastIndex = Global.getProfile().length() + 1;
         String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
         String pathFileName = Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
         return pathFileName;

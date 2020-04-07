@@ -260,6 +260,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/my/**", "anon");
         filterChainDefinitionMap.put("/druid/**", "anon");
         filterChainDefinitionMap.put("/captcha/captchaImage**", "anon");
+        // 注册相关
+        filterChainDefinitionMap.put("/register", "anon,captchaValidate");
         // 退出 logout地址，shiro去清除session
         filterChainDefinitionMap.put("/logout", "logout");
         // 不需要拦截的访问

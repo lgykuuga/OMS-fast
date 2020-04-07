@@ -2,12 +2,14 @@ package com.lgy.common.xss;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+
+import com.lgy.common.utils.html.EscapeUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 /**
  * XSS过滤处理
- * 
+ *
  * @author lgy
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
@@ -31,7 +33,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
             for (int i = 0; i < length; i++)
             {
                 // 防xss攻击和过滤前后空格
-                escapseValues[i] = Jsoup.clean(values[i], Whitelist.relaxed()).trim();
+                escapseValues[i] = EscapeUtil.clean(values[i]).trim();
             }
             return escapseValues;
         }
