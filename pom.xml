@@ -21,6 +21,7 @@
 		<module>jeefast-common</module>
 		<module>jeefast-oms</module>
 		<module>jeefast-base</module>
+		<module>jeefast-es</module>
 	</modules>
 	<packaging>pom</packaging>
 
