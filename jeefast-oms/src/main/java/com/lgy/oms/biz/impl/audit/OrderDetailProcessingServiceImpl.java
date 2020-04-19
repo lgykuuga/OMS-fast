@@ -140,14 +140,14 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
         //匹配商品编码成功标识
         boolean flag = true;
         //记录匹配失败原因
-        StringBuffer failReason = new StringBuffer();
+        StringBuilder failReason = new StringBuilder();
 
         for (OrderDetail orderDetail : orderMain.getOrderDetails()) {
 
             if (StringUtils.isNotEmpty(orderDetail.getCommodity())) {
 
                 if (ConvertMatchCommodityEnum.ORDER_OUT_NUM.getKey().equals(strategy.getMatchCommodity())) {
-                    /** 根据订单外部编码匹配商品编码 */
+                    // 根据订单外部编码匹配商品编码
                     if (StringUtils.isNotEmpty(orderDetail.getSkuId()) && StringUtils.isNotEmpty(orderDetail.getOuterSkuId())) {
                         //SKU外部编码
                         orderDetail.setCommodity(orderDetail.getOuterSkuId().trim());
@@ -163,7 +163,7 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
                         break;
                     }
                 } else if (ConvertMatchCommodityEnum.SHOP_COMMODITY.getKey().equals(strategy.getMatchCommodity())) {
-                    /** 根据铺货关系匹配商品编码 */
+                    // 根据铺货关系匹配商品编码
                     if (StringUtils.isNotEmpty(orderDetail.getNumIid()) || StringUtils.isNotEmpty(orderDetail.getSkuId())
                             || StringUtils.isNotEmpty(orderDetail.getOuterIid()) || StringUtils.isNotEmpty(orderDetail.getOuterSkuId())) {
                         //匹配铺货关系
@@ -219,7 +219,7 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
         //解析组合商品成功标识
         boolean flag = true;
         //记录解析失败原因
-        StringBuffer failReason = new StringBuffer();
+        StringBuilder failReason = new StringBuilder();
 
         //订单明细信息
         if (StringUtils.isNotEmpty(orderMain.getOrderDetails())) {
@@ -229,7 +229,7 @@ public class OrderDetailProcessingServiceImpl implements IOrderDetailProcessingS
             for (OrderDetail orderDetail : orderMain.getOrderDetails()) {
 
                 if (StringUtils.isNotEmpty(orderDetail.getCommodity())) {
-                    /** 存在商品编码,解析组合商品 */
+                    //存在商品编码,解析组合商品
                     //关联商品档案
                     Commodity commodity = commodityService.getOne(orderDetail.getCommodity());
                     if (commodity != null) {
