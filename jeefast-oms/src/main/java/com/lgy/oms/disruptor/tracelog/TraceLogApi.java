@@ -1,6 +1,5 @@
 package com.lgy.oms.disruptor.tracelog;
 
-import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.domain.TraceLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
