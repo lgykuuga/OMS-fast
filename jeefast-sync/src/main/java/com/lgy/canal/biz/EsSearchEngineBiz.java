@@ -16,6 +16,7 @@ import com.lgy.base.service.IShopService;
 import com.lgy.canal.constant.EsOrderFieldConstant;
 import com.lgy.canal.constant.EsOrderTableConstant;
 import com.lgy.canal.model.OrderMainMessage;
+import com.lgy.canal.util.EsFieldUtils;
 import com.lgy.es.EsSearchEngine;
 import com.lgy.es.exception.EsException;
 import com.lgy.es.param.EsSort;
@@ -368,55 +369,28 @@ public class EsSearchEngineBiz extends EsSearchEngine {
         switch (tableName) {
             //订单
             case EsOrderTableConstant.OMS_ORDER_MAIN:
-                return getEsFields(EsOrderMain.class);
+                return EsFieldUtils.getEsFields(EsOrderMain.class);
             case EsOrderTableConstant.OMS_ORDER_BUYERINFO:
-                return getEsFields(EsOrderBuyer.class);
+                return EsFieldUtils.getEsFields(EsOrderBuyer.class);
             case EsOrderTableConstant.OMS_ORDER_DETAIL:
-                return getEsFields(EsOrderDetail.class);
+                return EsFieldUtils.getEsFields(EsOrderDetail.class);
             case EsOrderTableConstant.OMS_ORDER_PAYINFO:
-                return getEsFields(EsOrderPayment.class);
+                return EsFieldUtils.getEsFields(EsOrderPayment.class);
             case EsOrderTableConstant.OMS_ORDER_STATUS:
-                return getEsFields(EsOrderStatus.class);
+                return EsFieldUtils.getEsFields(EsOrderStatus.class);
             case EsOrderTableConstant.OMS_ORDER_TYPEINFO:
-                return getEsFields(EsOrderType.class);
+                return EsFieldUtils.getEsFields(EsOrderType.class);
             //配货单
             case EsOrderTableConstant.OMS_DISTRIBUTION_DETAIL:
-                return getEsFields(EsDistributionDetail.class);
+                return EsFieldUtils.getEsFields(EsDistributionDetail.class);
             case EsOrderTableConstant.OMS_DISTRIBUTION_ORDER:
-                return getEsFields(EsDistributionOrder.class);
+                return EsFieldUtils.getEsFields(EsDistributionOrder.class);
             default:
                 return Collections.emptyList();
         }
     }
 
-    /**
-     * 根据类反射获取需要的字段
-     */
-    private List getEsFields(Class clazz) {
 
-        List<Field> fields = new ArrayList<>();
-
-        Class superClass = clazz;
-        while (superClass != null) {
-            fields.addAll(new ArrayList<>(Arrays.asList(superClass.getDeclaredFields())));
-            superClass = superClass.getSuperclass();
-        }
-
-        List<String> fieldNames = new ArrayList<>();
-
-        fields.forEach(field -> {
-            String fieldName = Optional.ofNullable(field.getAnnotation(JSONField.class)).map(JSONField::name).orElse(null);
-            if (StringUtils.isNotBlank(fieldName)) {
-                fieldNames.add(fieldName);
-            }
-        });
-
-        if (clazz == EsOrderMain.class) {
-            fieldNames.add("company_id");
-        }
-
-        return fieldNames;
-    }
 
 
     public String getOrderMainDoc(OrderMainMessage orderMainMessage) {

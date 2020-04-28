@@ -39,7 +39,8 @@ OMS
 ├── jeefast-oms       -- OMS系统核心业务代码
 ├── jeefast-quartz    -- 定时任务
 ├── jeefast-system    -- 基于Ruoyi项目工程基础模块
-├── jeefast-search    -- 基于Elasticsearch的商品搜索系统(待开发)
+├── jeefast-es        -- 基于Elasticsearch的订单搜索系统
+├── jeefast-sync      -- 数据传输服务模块
 ```
 
 ### 技术选型
@@ -53,7 +54,8 @@ OMS
 | MyBatisGenerator     | 数据层代码生成      | http://www.mybatis.org/generator/index.html          |
 | PageHelper           | MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper       |
 | Swagger-UI           | 文档生产工具        | https://github.com/swagger-api/swagger-ui            |
-| Elasticsearch(待开发) | 搜索引擎            | https://github.com/elastic/elasticsearch             |
+| Elasticsearch        | 搜索引擎            | https://github.com/elastic/elasticsearch             |
+| Canal                | MySQL binlog 增量订阅&消费组件  | https://github.com/alibaba/canal             |
 | RabbitMq             | 消息队列            | https://www.rabbitmq.com/                            |
 | Redis                | 分布式缓存          | https://redis.io/                                    |
 | MongoDb              | NoSql数据库         | https://www.mongodb.com                              |
@@ -69,7 +71,7 @@ OMS
 
 | 技术       | 说明                  | 官网                                   |
 | ---------- | --------------------- | -------------------------------------- |
-| thymeleaf  | 前端框架              | https://www.thymeleaf.org/                     |
+| thymeleaf  | 前端模板引擎框架        | https://www.thymeleaf.org/                     |
 | Bootstrap  | 前端UI框架            | https://getbootstrap.com/               |
 
 #### 架构图
@@ -108,6 +110,8 @@ OMS
 | PicPick       | 图片处理工具        | https://picpick.app/zh/                         |
 | Postman       | API接口调试工具      | https://www.postman.com/                        |
 | Typora        | Markdown编辑器      | https://typora.io/                              |
+| ElasticSearch Head Chrome插件 | es数据可视化工具   |                                    |
+| Kibana        | es数据可视化工具    | https://www.elastic.co/products/kibana           |
 
 ### 开发环境
 
@@ -116,7 +120,8 @@ OMS
 | JDK           | 1.8    | https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html |
 | Mysql         | 5.7    | https://www.mysql.com/                                       |
 | Redis         | 3.4    | https://redis.io/download                                    |
-| Elasticsearch | 6.2.2  | https://www.elastic.co/downloads                             |
+| Elasticsearch | 6.2.4  | https://www.elastic.co/downloads                             |
+| Canal         | 1.1.4  | https://github.com/alibaba/canal                             |
 | MongoDb       | 3.2    | https://www.mongodb.com/download-center                      |
 | RabbitMq      | 3.7.7  | http://www.rabbitmq.com/download.html                        |
 | XXL-JOB       | (待开发)  | https://github.com/xuxueli/xxl-job                        |

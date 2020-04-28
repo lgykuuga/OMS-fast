@@ -2,6 +2,7 @@ package com.lgy.es;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.lgy.common.utils.StringUtils;
 import com.lgy.es.exception.EsException;
 import com.lgy.es.param.EsSort;
 import lombok.extern.log4j.Log4j2;
@@ -29,7 +30,7 @@ public class EsSearchEngine {
     public JSONObject query(QueryBuilder queryBuilder, int page, int size, EsSort esSort, String... filedNames)
             throws EsException {
         log.info("es order 查询开始 入参：{}", JSON.toJSONString(queryBuilder));
-        String respJson = null;
+        String respJson;
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         try {
 
@@ -49,7 +50,7 @@ public class EsSearchEngine {
             throw new EsException(e);
         }
 
-        if (respJson != null) {
+        if (StringUtils.isNotBlank(respJson)) {
             return JSONObject.parseObject(respJson).getJSONObject("hits");
         }
         return new JSONObject();
