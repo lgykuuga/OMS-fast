@@ -21,4 +21,12 @@ public interface IOwnerService extends IService<Owner>, CommonService<Owner> {
      * @return 货主列表
      */
     List<Config> selectOwner();
+
+    /**
+     * 根据货主编码获取货主信息
+     *
+     * @param gcos 货主编码集合,用
+     * @return
+     */
+    List<Owner> listByGcos(List<String> gcos);
 }

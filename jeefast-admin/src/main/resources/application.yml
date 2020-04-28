@@ -28,6 +28,8 @@ lgy:
   rabbitMQ: 1
   # 项目是否启用 elasticSearch(待开发) mysql
   elasticSearch: 1
+  # 项目是否启用 canal (可以不安装)
+  canal: 1
 
 # 开发环境配置
 server:
@@ -180,3 +182,4 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>jeefast</artifactId>
+        <groupId>com.jeefast</groupId>
+        <version>2.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jeefast-sync</artifactId>
+
+
+    <description>
+        数据同步
+    </description>
+
+    <dependencies>
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.jeefast</groupId>
+            <artifactId>jeefast-common</artifactId>
+        </dependency>
+
+        <!-- 核心模块-->
+        <dependency>
+            <groupId>com.jeefast</groupId>
+            <artifactId>jeefast-framework</artifactId>
+        </dependency>
+
+        <!-- es模块 -->
+        <dependency>
+            <groupId>com.jeefast</groupId>
+            <artifactId>jeefast-es</artifactId>
+            <version>${jeefast.version}</version>
+        </dependency>
+
+        <!-- 基础数据模块 -->
+        <dependency>
+            <groupId>com.jeefast</groupId>
+            <artifactId>jeefast-base</artifactId>
+            <version>${jeefast.version}</version>
+        </dependency>
+
+        <!-- canal -->
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.client</artifactId>
+            <version>${canal.version}</version>
+        </dependency>
+
+        <!-- elasticsearch -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>transport</artifactId>
+            <version>${org.elasticsearch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${org.elasticsearch.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.elasticsearch.plugin</groupId>
+            <artifactId>transport-netty4-client</artifactId>
+            <version>${org.elasticsearch.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+
+</project>

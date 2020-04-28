@@ -20,4 +20,12 @@ public interface IPlatformService extends IService<Platform>, CommonService<Plat
      * @return 可用平台列表
      */
     List<Platform> selectPlatform();
+
+    /**
+     * 获取平台列表
+     *
+     * @param gcos 平台列表编码
+     * @return
+     */
+    List<Platform> listByGcos(List<String> gcos);
 }

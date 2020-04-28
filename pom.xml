@@ -9,7 +9,7 @@
 	<version>2.0</version>
 
 	<name>jeefast</name>
-	<url>http://www.jeefast.vip</url>
+	<url>http://www.lgykuuga.vip</url>
 	<description>JeeFast管理系统</description>
 
 	<modules>
@@ -22,7 +22,8 @@
 		<module>jeefast-oms</module>
 		<module>jeefast-base</module>
 		<module>jeefast-es</module>
-	</modules>
+        <module>jeefast-sync</module>
+    </modules>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -47,6 +48,8 @@
 		<velocity.version>1.7</velocity.version>
 		<disruptor.version>3.3.6</disruptor.version>
 		<org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+		<org.elasticsearch.version>6.2.4</org.elasticsearch.version>
+		<canal.version>1.1.4</canal.version>
 	</properties>
 
 	<!-- 依赖声明 -->

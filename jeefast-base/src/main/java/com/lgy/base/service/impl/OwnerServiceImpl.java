@@ -45,6 +45,13 @@ public class OwnerServiceImpl extends ServiceImpl<OwnerMapper, Owner> implements
     }
 
     @Override
+    public List<Owner> listByGcos(List<String> gcos) {
+        QueryWrapper<Owner> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("gco", gcos);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
     @CachePut(value = CACHE_NAMES, key = "#entity.gco")
     public Owner add(Owner entity) {
         boolean b = super.save(entity);

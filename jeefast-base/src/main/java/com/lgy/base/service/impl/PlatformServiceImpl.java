@@ -29,8 +29,15 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
 
     @Override
     public List<Platform> selectPlatform() {
-        QueryWrapper queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Platform> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", BaseConstants.NORMAL);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Platform> listByGcos(List<String> gcos) {
+        QueryWrapper<Platform> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("gco", gcos);
         return baseMapper.selectList(queryWrapper);
     }
 
@@ -47,7 +54,7 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
     @Override
     @CacheEvict(value = CACHE_NAMES, key = "#gco")
     public boolean delete(String gco) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Platform> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
         return this.remove(queryWrapper);
     }
@@ -55,7 +62,7 @@ public class PlatformServiceImpl extends ServiceImpl<PlatformMapper, Platform> i
     @Override
     @Cacheable(cacheNames = CACHE_NAMES, key = "#gco")
     public Platform findOne(String gco) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Platform> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
         return getOne(queryWrapper);
     }

@@ -21,9 +21,6 @@ spring:
             # 一般来说是不用配置的，Spring Cache 会根据依赖的包自行装配
             type: redis
     data:
-        elasticsearch:
-            cluster-name: elasticsearch
-            cluster-nodes: 127.0.0.1:9300
         mongodb:
             host: 127.0.0.1
             port: 27017
@@ -92,3 +89,21 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+
+# canal配置
+canal:
+    host: 127.0.0.1
+    port: 11111
+    destination: example
+    username:
+    password:
+
+# elasticsearch配置
+elasticsearch:
+    username:
+    password:
+    cluster:
+        name: elasticsearch
+    host: 127.0.0.1
+    port: 9300
+    index: oms

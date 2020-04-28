@@ -29,8 +29,15 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
     @Override
     public List<Shop> selectShop() {
-        QueryWrapper queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", BaseConstants.NORMAL);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Shop> listByGcos(List<String> gcos) {
+        QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("gco", gcos);
         return baseMapper.selectList(queryWrapper);
     }
 
@@ -48,7 +55,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Override
     @CacheEvict(value = CACHE_NAMES, key = "#gco")
     public boolean delete(String gco) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
         return this.remove(queryWrapper);
     }
@@ -56,7 +63,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Override
     @Cacheable(cacheNames = CACHE_NAMES, key = "#gco")
     public Shop findOne(String gco) {
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("gco", gco);
         return getOne(queryWrapper);
     }

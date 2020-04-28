@@ -20,4 +20,11 @@ public interface IShopService extends IService<Shop>, CommonService<Shop> {
      * @return 可用店铺列表
      */
     List<Shop> selectShop();
+
+    /**
+     * 获取店铺列表
+     * @param shops 店铺列表编码
+     * @return
+     */
+    List<Shop> listByGcos(List<String> shops);
 }
