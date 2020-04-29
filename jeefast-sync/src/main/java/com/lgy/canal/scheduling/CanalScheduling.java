@@ -125,8 +125,8 @@ public class CanalScheduling {
             }
             canalConnector.ack(batchId);
         } catch (Exception e) {
-            logger.error("发送监听事件失败！batchId回滚,batchId=" + batchId, e);
-            canalConnector.rollback(batchId);
+            logger.error("发送监听事件失败：" + batchId, e);
+//            canalConnector.rollback(batchId);
         }
     }
 

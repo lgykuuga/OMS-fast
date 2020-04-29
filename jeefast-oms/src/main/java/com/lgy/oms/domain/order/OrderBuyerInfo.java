@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
-import java.util.Map.Entry;
 
 /**
  * 订单买家信息表 oms_order_buyerinfo

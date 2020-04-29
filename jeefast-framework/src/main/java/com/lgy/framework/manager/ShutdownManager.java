@@ -1,13 +1,12 @@
 package com.lgy.framework.manager;
 
+import com.lgy.framework.shiro.web.session.SpringSessionValidationScheduler;
 import net.sf.ehcache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.lgy.framework.shiro.web.session.SpringSessionValidationScheduler;
 
 import javax.annotation.PreDestroy;
 

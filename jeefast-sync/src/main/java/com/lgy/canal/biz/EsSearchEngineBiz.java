@@ -85,7 +85,7 @@ public class EsSearchEngineBiz extends EsSearchEngine {
 
         String postJson = JSON.toJSONString(data, SerializerFeature.WriteNullStringAsEmpty);
 
-        //格式: oms/order/OD20200426000001
+        //格式: oms/order_main/OD20200426000001
         String router = String.format(BASIC_FORMAT, index, ES_TYPE, orderId);
 
         log.info("请求路径 -> {}, 请求数据 -> {}", router, postJson);
@@ -261,30 +261,24 @@ public class EsSearchEngineBiz extends EsSearchEngine {
     public void delete(Map<String, Object> modifyData, EsOrderMain order, String innerTableName) {
 
         if (EsOrderTableConstant.OMS_ORDER_MAIN.equals(innerTableName)) {
-
             delete(String.valueOf(order.getOrderId()));
             return;
         }
 
         if (EsOrderTableConstant.OMS_ORDER_PAYINFO.equals(innerTableName)) {
-
             order.setOrderPayment(null);
 
         } else if (EsOrderTableConstant.OMS_ORDER_DETAIL.equals(innerTableName)) {
-
             List<EsOrderDetail> orderItems = extractOrderItems(modifyData, order);
             order.setOrderDetails(orderItems);
 
         } else if (EsOrderTableConstant.OMS_ORDER_BUYERINFO.equals(innerTableName)) {
-
             order.setOrderBuyer(null);
 
         } else if (EsOrderTableConstant.OMS_ORDER_STATUS.equals(innerTableName)) {
-
             order.setOrderStatus(null);
 
         } else if (EsOrderTableConstant.OMS_ORDER_TYPEINFO.equals(innerTableName)) {
-
             order.setOrderType(null);
         }
 
@@ -347,7 +341,7 @@ public class EsSearchEngineBiz extends EsSearchEngine {
         if (CollectionUtils.isNotEmpty(esOrderDetails)) {
             for (int i = 0; i < esOrderDetails.size(); i++) {
                 EsOrderDetail esOrderDetail = esOrderDetails.get(i);
-                if (StringUtils.equals(String.valueOf(esOrderDetail.getOrderItemSeqId()), String.valueOf(esOrderItem.getOrderItemSeqId()))) {
+                if (StringUtils.equals(String.valueOf(esOrderDetail.getOrderId()), String.valueOf(esOrderItem.getOrderId()))) {
                     esOrderDetails.set(i, esOrderItem);
                     esOrderDetails.remove(i);
                     isExit = true;

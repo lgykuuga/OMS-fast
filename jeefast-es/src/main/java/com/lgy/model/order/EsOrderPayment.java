@@ -15,46 +15,50 @@ import lombok.experimental.Accessors;
 public class EsOrderPayment {
 
     @EsField(fieldType = EsFieldTypeEnum.KEYWORD,isKey = true)
-    @JSONField(name="order_item_seq_id")
-    private Object orderItemSeqId;
+    @JSONField(name="order_id")
+    private Object orderId;
 
     @EsField(fieldType = EsFieldTypeEnum.KEYWORD)
-    @JSONField(name="order_item_type_id")
-    private Object orderItemTypeId;
+    @JSONField(name="source_id")
+    private Object sourceId;
+
+    @EsField(fieldType = EsFieldTypeEnum.DATE)
+    @JSONField(name="order_time")
+    private Object orderTime;
+
+    @EsField(fieldType = EsFieldTypeEnum.DATE)
+    @JSONField(name="pay_time")
+    private Object payTime;
 
     @EsField(fieldType = EsFieldTypeEnum.KEYWORD)
-    @JSONField(name="product_id")
-    private Object productId;
-
-    @EsField(fieldType = EsFieldTypeEnum.KEYWORD)
-    @JSONField(name="internal_num")
-    private Object internalNum;
-
-    @EsField(fieldType = EsFieldTypeEnum.KEYWORD)
-    @JSONField(name="parts_num_trim")
-    private Object partsNumTrim;
-
-    @EsField(fieldType = EsFieldTypeEnum.KEYWORD)
-    @JSONField(name="replace_parts_num")
-    private Object replacePartsNum;
-
-    @EsField(fieldType = EsFieldTypeEnum.TEXT)
-    @JSONField(name="parts_name")
-    private Object partsName;
+    @JSONField(name="currency")
+    private Object currency;
 
     @EsField(fieldType = EsFieldTypeEnum.NUM)
-    @JSONField(name="quantity")
-    private Object quantity;
-
-    @EsField(fieldType = EsFieldTypeEnum.TEXT)
-    @JSONField(name="item_description")
-    private Object itemDescription;
+    @JSONField(name="order_amount")
+    private Object orderAmount;
 
     @EsField(fieldType = EsFieldTypeEnum.NUM)
-    @JSONField(name="original_seller_price")
-    private Object originalSellerPrice;
+    @JSONField(name="pay_amount")
+    private Object payAmount;
 
-    @EsField(fieldType = EsFieldTypeEnum.KEYWORD)
-    @JSONField(name="is_dispatch")
-    private Object isDispatch;
+    @EsField(fieldType = EsFieldTypeEnum.NUM)
+    @JSONField(name="received_amount")
+    private Object receivedAmount;
+
+    @EsField(fieldType = EsFieldTypeEnum.NUM)
+    @JSONField(name="discount")
+    private Object discount;
+
+    @EsField(fieldType = EsFieldTypeEnum.NUM)
+    @JSONField(name="tax_amount")
+    private Object taxAmount;
+
+    @EsField(fieldType = EsFieldTypeEnum.NUM)
+    @JSONField(name="post")
+    private Object post;
+
+    @EsField(fieldType = EsFieldTypeEnum.NUM)
+    @JSONField(name="freight_amount")
+    private Object freightAmount;
 }

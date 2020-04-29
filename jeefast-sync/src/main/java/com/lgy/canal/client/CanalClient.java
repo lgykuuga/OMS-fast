@@ -6,13 +6,13 @@ import com.google.common.collect.Lists;
 import com.lgy.canal.scheduling.CanalScheduling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
 
 
@@ -23,7 +23,7 @@ import java.net.InetSocketAddress;
  */
 @Component
 @ConditionalOnProperty(name = "lgy.canal", havingValue = "0", matchIfMissing = true)
-public class CanalClient implements DisposableBean {
+public class CanalClient {
     private static final Logger logger = LoggerFactory.getLogger(CanalClient.class);
 
     private CanalConnector canalConnector;
@@ -58,13 +58,13 @@ public class CanalClient implements DisposableBean {
         return canalConnector;
     }
 
-    @Override
+    @PreDestroy
     public void destroy() {
         if (canalConnector != null) {
+            logger.info("====关闭Canal会话任务====");
             canalConnector.disconnect();
         }
     }
-
 
     public void boot() {
         try {
