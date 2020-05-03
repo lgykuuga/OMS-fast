@@ -16,7 +16,7 @@ public class EsOrderTableConstant {
      */
     public static final String OMS_ORDER_BUYERINFO = "oms_order_buyerinfo";
     /**
-     * '订单明细信息表
+     * 订单明细信息表
      */
     public static final String OMS_ORDER_DETAIL = "oms_order_detail";
     /**
