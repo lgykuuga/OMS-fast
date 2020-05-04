@@ -46,8 +46,6 @@ public class EsSearchEngine {
 
     private static final String PUT = "PUT";
 
-    private static final String DELETE = "DELETE";
-
     private static final String DEFAULT_ROUTER = "/order/order_header";
 
     private static final String TYPE = "order_main";
@@ -104,7 +102,7 @@ public class EsSearchEngine {
             }
 
             //请求
-            respJson = requestSearch(searchSourceBuilder.toString());
+//            respJson = requestSearch(searchSourceBuilder.toString());
 
             if (respJson != null) {
                 return JSONObject.parseObject(respJson);
@@ -120,17 +118,17 @@ public class EsSearchEngine {
     private String request(String operate, String esStr) throws IOException {
         log.info("es请求订单操作{}参数:{}", operate, esStr);
         long currentTime = System.currentTimeMillis();
-        String respJson;
+        String respJson = "";
 
         // 发起请求得到响应
         GetResponse response = transportClient.prepareGet(index, TYPE,"10").get();
         System.out.println(response.getSource());
 
-        Response resp = restClient
-                .performRequest(POST, router, Collections.<String, String>emptyMap(),
-                        new StringEntity(esStr, ContentType.APPLICATION_JSON));
-        respJson = EntityUtils.toString(resp.getEntity(), "UTF-8");
-        log.info("ES查询用时,{},查询结果,{}", System.currentTimeMillis() - currentTime, respJson);
+//        Response resp = restClient
+//                .performRequest(POST, router, Collections.<String, String>emptyMap(),
+//                        new StringEntity(esStr, ContentType.APPLICATION_JSON));
+//        respJson = EntityUtils.toString(resp.getEntity(), "UTF-8");
+//        log.info("ES查询用时,{},查询结果,{}", System.currentTimeMillis() - currentTime, respJson);
         return respJson;
     }
 
