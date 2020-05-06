@@ -1,5 +1,6 @@
 package com.lgy.web.controller.oms.test;
 
+import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.es.EsSearchEngine;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,6 +58,16 @@ public class ElasticSearchController {
         return sb.toString();
     }
 
+    @PostMapping("/createIndex")
+    @ApiOperation(value = "创建索引", httpMethod = "POST")
+    public CommonResponse<String> createIndex(String index) {
+        return esSearchEngine.createIndex(index);
+    }
 
+    @PostMapping("/deleteIndex")
+    @ApiOperation(value = "删除索引", httpMethod = "POST")
+    public CommonResponse<String> deleteIndex(String index) {
+        return esSearchEngine.deleteIndex(index);
+    }
 
 }
