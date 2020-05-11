@@ -1,19 +1,18 @@
 package com.lgy.es;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
-import com.lgy.es.exception.EsException;
-import com.lgy.es.param.EsSort;
+import com.lgy.constant.EsOrderFieldConstant;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.model.EsPage;
 import lombok.extern.log4j.Log4j2;
-import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
@@ -23,22 +22,16 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,15 +47,8 @@ import java.util.Objects;
 @Log4j2
 public class EsSearchEngine {
 
-    private static final String TYPE = "order_main";
-
-    private static final String RETRY_TIME = "?retry_on_conflict=10";
-
     @Autowired
     TransportClient transportClient;
-
-    @Value("${elasticsearch.index}")
-    protected String index;
 
     /**
      * 创建索引
@@ -109,7 +95,7 @@ public class EsSearchEngine {
      * @param id         数据ID
      * @return 执行结果
      */
-    public CommonResponse<String> addData(JSONObject jsonObject, String index, String type, String id) {
+    protected CommonResponse<String> addData(JSONObject jsonObject, String index, String type, String id) {
 
         IndexResponse response = transportClient.prepareIndex(index, type, id).setSource(jsonObject).get();
 
@@ -130,7 +116,7 @@ public class EsSearchEngine {
      * @param id    数据ID
      * @return 执行结果
      */
-    public CommonResponse<String> deleteDataById(String index, String type, String id) {
+    protected CommonResponse<String> deleteDataById(String index, String type, String id) {
 
         DeleteResponse response = transportClient.prepareDelete(index, type, id).execute().actionGet();
 
@@ -151,7 +137,7 @@ public class EsSearchEngine {
      * @param type       类型，类似表
      * @param id         数据ID
      */
-    public  void updateDataById(JSONObject jsonObject, String index, String type, String id) {
+    protected void updateDataById(JSONObject jsonObject, String index, String type, String id) {
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.index(index).type(type).id(id).doc(jsonObject);
         transportClient.update(updateRequest);
@@ -166,7 +152,7 @@ public class EsSearchEngine {
      * @param fields 需要显示的字段，逗号分隔（缺省为全部字段）
      * @return 执行结果
      */
-    public Map<String,Object> searchDataById(String index, String type, String id, String fields) {
+    protected Map<String, Object> searchDataById(String index, String type, String id, String fields) {
         GetRequestBuilder getRequestBuilder = transportClient.prepareGet(index, type, id);
         if (StringUtils.isNotEmpty(fields)) {
             getRequestBuilder.setFetchSource(fields.split(","), null);
@@ -175,6 +161,18 @@ public class EsSearchEngine {
         return getResponse.getSource();
     }
 
+    /**
+     * 批量插入
+     */
+    protected void bulkInsert(List<Map> orders, String index, String type) {
+        BulkRequestBuilder bulk = transportClient.prepareBulk();
+        orders.forEach(order -> {
+            String orderId = (String) order.get(EsOrderFieldConstant.ORDER_ID);
+            bulk.add(transportClient.prepareIndex(index, type, orderId).setSource(order));
+        });
+        BulkResponse responses = bulk.get();
+        log.info("bulk response {}", responses.status().name());
+    }
 
     /**
      * 使用分词查询,并分页
@@ -189,17 +187,18 @@ public class EsSearchEngine {
      * @param highlightField 高亮字段
      * @return 执行结果
      */
-    public EsPage searchDataPage(String index, String type, int startPage, int pageSize, QueryBuilder query, String fields, String sortField, String highlightField) {
+    protected EsPage searchDataPage(String index, String type, int startPage, int pageSize, QueryBuilder query,
+                                    String fields, String sortField, String highlightField) {
         SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch(index);
 
         if (StringUtils.isNotEmpty(type)) {
-            searchRequestBuilder.setTypes(type.split(","));
+            searchRequestBuilder.setTypes(type.split(Constants.COMMA));
         }
 
         searchRequestBuilder.setSearchType(SearchType.QUERY_THEN_FETCH);
         // 需要显示的字段，逗号分隔（缺省为全部字段）
         if (StringUtils.isNotEmpty(fields)) {
-            searchRequestBuilder.setFetchSource(fields.split(","), null);
+            searchRequestBuilder.setFetchSource(fields.split(Constants.COMMA), null);
         }
 
         //排序字段
@@ -238,7 +237,7 @@ public class EsSearchEngine {
 
         log.debug("共查询到[{}]条数据,处理数据条数[{}]", totalHits, length);
 
-        if (Objects.equals( RestStatus.OK.getStatus(), searchResponse.status().getStatus())) {
+        if (Objects.equals(RestStatus.OK.getStatus(), searchResponse.status().getStatus())) {
             // 解析对象
             List<Map<String, Object>> sourceList = setSearchResponse(searchResponse, highlightField);
 
@@ -251,8 +250,8 @@ public class EsSearchEngine {
     /**
      * 高亮结果集 特殊处理
      *
-     * @param searchResponse
-     * @param highlightField
+     * @param searchResponse 查询返回结果集
+     * @param highlightField 高亮字段
      */
     private List<Map<String, Object>> setSearchResponse(SearchResponse searchResponse, String highlightField) {
         List<Map<String, Object>> sourceList = new ArrayList<>();
@@ -282,86 +281,11 @@ public class EsSearchEngine {
      * 判断索引是否存在
      *
      * @param index 索引名称
-     * @return
+     * @return 是否存在索引
      */
     private boolean isIndexExist(String index) {
         IndicesExistsResponse inExistsResponse = transportClient.admin().indices().exists(new IndicesExistsRequest(index)).actionGet();
         return inExistsResponse.isExists();
-    }
-
-
-    public JSONObject query(QueryBuilder queryBuilder, int page, int size, EsSort esSort, String... filedNames)
-            throws EsException {
-        log.info("es order 查询开始 入参：{}", JSON.toJSONString(queryBuilder));
-        String respJson;
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        try {
-
-            //构建查询
-            searchSourceBuilder.query(queryBuilder).from((page - 1) * size).size(size);
-            if (filedNames.length != 0) {
-                searchSourceBuilder.fetchSource(filedNames, null);
-            }
-            if (esSort != null) {
-                searchSourceBuilder.sort(esSort.getName(), esSort.getOrder());
-            }
-
-            //请求操作
-            respJson = request("", searchSourceBuilder.toString());
-        } catch (Exception e) {
-            log.error("查询ES 服务异常,{}", searchSourceBuilder, e);
-            throw new EsException(e);
-        }
-
-        if (StringUtils.isNotBlank(respJson)) {
-            return JSONObject.parseObject(respJson).getJSONObject("hits");
-        }
-        return new JSONObject();
-    }
-
-    public JSONObject aggregation(QueryBuilder queryBuilder, List<AbstractAggregationBuilder> aggregationBuilders)
-            throws EsException {
-
-        String respJson = null;
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        try {
-
-            //构建查询
-            searchSourceBuilder.query(queryBuilder).fetchSource(false);
-
-            for (AbstractAggregationBuilder aggregationBuilder : aggregationBuilders) {
-                searchSourceBuilder.aggregation(aggregationBuilder);
-            }
-
-            //请求
-//            respJson = requestSearch(searchSourceBuilder.toString());
-
-            if (respJson != null) {
-                return JSONObject.parseObject(respJson);
-            }
-        } catch (Exception e) {
-            log.error("查询ES 服务异常,{}", searchSourceBuilder, e);
-            throw new EsException(e);
-        }
-        return null;
-    }
-
-
-    private String request(String operate, String esStr) throws IOException {
-        log.info("es请求订单操作{}参数:{}", operate, esStr);
-        long currentTime = System.currentTimeMillis();
-        String respJson = "";
-
-        // 发起请求得到响应
-        GetResponse response = transportClient.prepareGet(index, TYPE, "10").get();
-        System.out.println(response.getSource());
-
-//        Response resp = restClient
-//                .performRequest(POST, router, Collections.<String, String>emptyMap(),
-//                        new StringEntity(esStr, ContentType.APPLICATION_JSON));
-//        respJson = EntityUtils.toString(resp.getEntity(), "UTF-8");
-//        log.info("ES查询用时,{},查询结果,{}", System.currentTimeMillis() - currentTime, respJson);
-        return respJson;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.lgy.canal.constant;
+package com.lgy.constant;
 
 /**
  * @Description 常量订单字段

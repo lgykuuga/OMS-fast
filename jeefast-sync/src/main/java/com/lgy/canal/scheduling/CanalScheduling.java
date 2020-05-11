@@ -12,10 +12,11 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.lgy.canal.biz.EsSearchEngineBiz;
 import com.lgy.canal.common.RecordBuffer;
 import com.lgy.canal.config.EsThreadPoolConfig;
-import com.lgy.canal.constant.EsOrderFieldConstant;
 import com.lgy.canal.constant.EsOrderTableConstant;
 import com.lgy.canal.handler.OrderRecordHandler;
 import com.lgy.canal.model.OrderMainMessage;
+import com.lgy.canal.util.OrderConstruct;
+import com.lgy.constant.EsOrderFieldConstant;
 import com.lgy.model.order.EsOrderMain;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -52,7 +52,8 @@ public class CanalScheduling {
     /**
      * 过滤订单条件
      */
-    private final Predicate<CanalEntry.Column> predicate = column -> (column.getValue() != null && EsOrderFieldConstant.ORDER_ID.equalsIgnoreCase(column.getName()));
+    private final Predicate<CanalEntry.Column> predicate = column ->
+            (column.getValue() != null && EsOrderFieldConstant.ORDER_ID.equalsIgnoreCase(column.getName()));
 
     @Autowired
     EsSearchEngineBiz esSearchEngineBiz;
@@ -64,22 +65,18 @@ public class CanalScheduling {
      * 订单
      */
     private RecordBuffer orderRecordBuffer;
-    /**
-     * 配货单
-     */
-    private RecordBuffer distributionRecordBuffer;
 
     /**
      * 需要同步的表
      */
-    private static final Set<String> IGNORE_INSERT_TABLES;
+    private static final Set<String> SYNC_INSERT_TABLES;
 
     private static final Pattern PATTERN = Pattern.compile("[0-9]*");
     private static final int CANAL_TYPE_DATETIME = 93;
     private static final int CANAL_TYPE_DECIMAL = 3;
 
     /**
-     * 需要同步的操作
+     * 需要canal同步的操作
      */
     private static final Set<CanalEntry.EventType> ACCEPT_OPERATE = Sets.newHashSet(
             CanalEntry.EventType.INSERT, CanalEntry.EventType.UPDATE, CanalEntry.EventType.DELETE);
@@ -89,12 +86,12 @@ public class CanalScheduling {
         /**
          * 把需要同步的表写入
          * */
-        IGNORE_INSERT_TABLES = Sets.newHashSet();
+        SYNC_INSERT_TABLES = Sets.newHashSet();
 
         Field[] fields = EsOrderTableConstant.class.getDeclaredFields();
         try {
             for (Field field : fields) {
-                IGNORE_INSERT_TABLES.add(field.get(field.getName()).toString());
+                SYNC_INSERT_TABLES.add(field.get(field.getName()).toString());
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -168,7 +165,7 @@ public class CanalScheduling {
      * 非 特定表操作
      */
     private boolean isHandle(CanalEntry.EventType eventType, String tableName) {
-        return ACCEPT_OPERATE.contains(eventType) && IGNORE_INSERT_TABLES.contains(tableName);
+        return ACCEPT_OPERATE.contains(eventType) && SYNC_INSERT_TABLES.contains(tableName);
     }
 
 
@@ -203,7 +200,8 @@ public class CanalScheduling {
 
         Map<String, Object> modifyData = extractModifyData(columns, tableName);
 
-        EsOrderMain order = esSearchEngineBiz.getOrderFromMap(tableName, modifyData);
+        //构建出订单对象
+        EsOrderMain order = OrderConstruct.getOrderFromMap(tableName, modifyData);
 
         if (EsOrderFieldConstant.EMPTY_JSON.equals(JSONObject.toJSONString(order))) {
             return null;
@@ -239,7 +237,7 @@ public class CanalScheduling {
 
         Map<String, Object> modifyDatas = Maps.newHashMap();
 
-        List esFieldNames = esSearchEngineBiz.getEsFields(tableName);
+        List esFieldNames = OrderConstruct.getEsFields(tableName);
 
         extractModifyData(columns, modifyDatas, esFieldNames);
 

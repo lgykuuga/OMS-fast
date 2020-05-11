@@ -71,18 +71,18 @@ public class OrderRecordHandler implements RecordHandler {
 
             for (OrderMainMessage record : records) {
 
-                if (null == record.getOrderMain() || null == record.getOrderMain().getOrderId()) {
+                if (record.getOrderMain() == null || record.getOrderMain().getOrderId() == null) {
                     continue;
                 }
 
                 //新增订单时需要特殊处理（获取对应的货主档案、平台、店铺信息）
                 if (insertOrderMainPredicate.test(record)) {
-                    record.getOrderMain().setOwner(Optional.ofNullable(ownerMap.get(record.getOrderMain().getOwner())));
-                    record.getOrderMain().setPlatform(platformMap.get(record.getOrderMain().getPlatform()));
-                    record.getOrderMain().setShop(shopMap.get(record.getOrderMain().getShop()));
+                    record.getOrderMain().setOwner(Optional.ofNullable(ownerMap.get(record.getOrderMain().getOwner())).orElse(null));
+                    record.getOrderMain().setPlatform(Optional.ofNullable(platformMap.get(record.getOrderMain().getPlatform())).orElse(null));
+                    record.getOrderMain().setShop(Optional.ofNullable(shopMap.get(record.getOrderMain().getShop())).orElse(null));
                 }
 
-                String docKey = record.getOrderMain().getOrderId() + "_" + new Object().toString();
+                String docKey = record.getOrderMain().getOrderId() + "";
 
                 orderHeaderEsDocs.put(docKey, esSearchEngineBiz.getOrderMainDoc(record));
             }
