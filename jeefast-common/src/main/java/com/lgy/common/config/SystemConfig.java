@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @Description TODO
+ * @Description 组件配置
  * @Author LGy
  * @Date 2020/4/20 18:06
  **/

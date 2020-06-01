@@ -34,6 +34,7 @@ public class ShiroUtils {
     }
 
     public static Subject getSubject() {
+
         return SecurityUtils.getSubject();
     }
 

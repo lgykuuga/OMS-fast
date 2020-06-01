@@ -1,6 +1,5 @@
-package com.lgy.oms.mq.audit;
+package com.lgy.oms.mq;
 
-import com.lgy.common.conditional.MqExistsCondition;
 import com.lgy.common.config.RabbitMqConfig;
 import com.lgy.common.constant.Method;
 import com.lgy.common.constant.ResponseCode;
@@ -9,6 +8,7 @@ import com.lgy.framework.util.MessageHelper;
 import com.lgy.framework.util.ShiroUtils;
 import com.lgy.oms.biz.IAuditOrderService;
 import com.lgy.oms.domain.MqErrorMessage;
+import com.lgy.oms.mq.audit.AuditOrderMessage;
 import com.lgy.oms.service.IMqErrorMessageService;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
@@ -26,16 +26,15 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * @Description 审单 RabbitMQ消费者
+ * @Description 基础Consumer
  * @Author LGy
  * @Date 2020/1/14 17:51
  **/
 @Component
-//@ConditionalOnProperty(name = "lgy.rabbitMQ", havingValue = "0", matchIfMissing = true)
-@Conditional(MqExistsCondition.class)
-public class AuditMqConsumer {
+@ConditionalOnProperty(name = "lgy.rabbitMQ", havingValue = "0", matchIfMissing = true)
+public class CommonConsumer {
 
-    private static Logger logger = LoggerFactory.getLogger(AuditMqConsumer.class);
+    private static Logger logger = LoggerFactory.getLogger(CommonConsumer.class);
 
     @Autowired
     IAuditOrderService auditOrderService;

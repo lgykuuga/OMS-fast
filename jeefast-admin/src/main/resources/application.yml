@@ -21,7 +21,7 @@ lgy:
   #任务调度xxl_job是否开启(待开发)
   xxl: 1
     # 项目是否启用 canal (可以不安装)
-  canal: 0
+  canal: 1
   # 项目是否启用 redis(可以不安装) mysql
   redis: 1
   # 项目是否启用 mongoDB(可以不安装) mysql
@@ -29,7 +29,7 @@ lgy:
   # 项目是否启用 rabbitMQ(可以不安装) disruptor
   rabbitMQ: 1
   # 项目是否启用 elasticSearch(待开发) mysql
-  elasticSearch: 0
+  elasticSearch: 1
 
 # 开发环境配置
 server:
