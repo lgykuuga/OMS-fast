@@ -3,14 +3,14 @@ package com.lgy.oms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.utils.StringUtils;
+import com.lgy.oms.domain.StrategyConvert;
 import com.lgy.oms.domain.StrategyConvertShop;
 import com.lgy.oms.domain.vo.StrategyConvertVO;
+import com.lgy.oms.mapper.StrategyConvertMapper;
 import com.lgy.oms.mapper.StrategyConvertShopMapper;
+import com.lgy.oms.service.IStrategyConvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.lgy.oms.mapper.StrategyConvertMapper;
-import com.lgy.oms.domain.StrategyConvert;
-import com.lgy.oms.service.IStrategyConvertService;
 
 import java.util.List;
 
@@ -42,7 +42,8 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
     public Integer deleteConvertShopByGco(String gco) {
         if (StringUtils.isNotEmpty(gco)) {
             QueryWrapper<StrategyConvertShop> wrapper = new QueryWrapper<>();
-            wrapper.eq("gco", gco);
+            wrapper.lambda()
+                    .eq(StrategyConvertShop::getGco, gco);
             return shopMapper.delete(wrapper);
         }
         return 0;
@@ -75,7 +76,8 @@ public class StrategyConvertServiceImpl extends ServiceImpl<StrategyConvertMappe
             for (StrategyConvertShop strategyConvertShop : strategyConvertShopList) {
                 //删除选中店铺在其它策略的关系
                 QueryWrapper<StrategyConvertShop> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("shop", strategyConvertShop.getShop());
+                queryWrapper.lambda()
+                        .eq(StrategyConvertShop::getShop, strategyConvertShop.getShop());
                 shopMapper.delete(queryWrapper);
 
                 //保存

@@ -75,13 +75,13 @@ public class ShopInterfacesController extends BaseController {
         QueryWrapper<ShopInterfaces> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(shopInterfaces.getPlatform())) {
-            queryWrapper.like("platform", shopInterfaces.getPlatform());
+            queryWrapper.lambda().like(ShopInterfaces::getPlatform, shopInterfaces.getPlatform());
         }
         if (StringUtils.isNotEmpty(shopInterfaces.getAppk())) {
-            queryWrapper.like("appk", shopInterfaces.getAppk());
+            queryWrapper.lambda().like(ShopInterfaces::getAppk, shopInterfaces.getAppk());
         }
         if (StringUtils.isNotEmpty(shopInterfaces.getStatus())) {
-            queryWrapper.like("status", shopInterfaces.getStatus());
+            queryWrapper.lambda().eq(ShopInterfaces::getStatus, shopInterfaces.getStatus());
         }
         return queryWrapper;
     }
@@ -126,17 +126,18 @@ public class ShopInterfacesController extends BaseController {
             return error("店铺不能为空");
         }
 
-        QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("shop", shopInterfaces.getShop());
+        QueryWrapper<ShopInterfaces> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(ShopInterfaces::getShop, shopInterfaces.getShop());
         ShopInterfaces one = shopInterfacesService.getOne(queryWrapper);
         if (one != null) {
             return error("店铺已存在店铺接口,请选择编辑设置");
         }
 
-        //设置店铺平台、货主
-        QueryWrapper shopWrapper = new QueryWrapper<>();
-        shopWrapper.eq("gco", shopInterfaces.getShop());
+        //获取店铺
+        QueryWrapper<Shop> shopWrapper = new QueryWrapper<>();
+        shopWrapper.lambda().eq(Shop::getGco, shopInterfaces.getShop());
         Shop shop = shopService.getOne(shopWrapper);
+        //设置店铺平台、货主
         shopInterfaces.setPlatform(shop.getPlatform());
         shopInterfaces.setOwner(shop.getOwner());
         return toAjax(shopInterfacesService.save(shopInterfaces));

@@ -156,7 +156,7 @@ public class CommodityController extends BaseController {
     @ResponseBody
     public String checkCodeUnique(Commodity commodity) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("gco", commodity.getGco());
+        queryWrapper.lambda().eq(Commodity::getGco, commodity.getGco());
         Commodity one = commodityService.getOne(queryWrapper);
         if (one != null) {
             return BaseConstants.NOT_UNIQUE;
@@ -191,22 +191,23 @@ public class CommodityController extends BaseController {
      * @return
      */
     private QueryWrapper<Commodity> getCommodityQueryWrapper(Commodity commodity) {
+
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(commodity.getGco())) {
-            queryWrapper.eq("gco", commodity.getGco());
+            queryWrapper.lambda().eq(Commodity::getGco, commodity.getGco());
         }
         if (StringUtils.isNotEmpty(commodity.getGna())) {
-            queryWrapper.like("gna", commodity.getGna());
+            queryWrapper.lambda().like(Commodity::getGna, commodity.getGna());
         }
         if (StringUtils.isNotEmpty(commodity.getOwner())) {
-            queryWrapper.eq("owner", commodity.getOwner());
+            queryWrapper.lambda().eq(Commodity::getOwner, commodity.getOwner());
         }
         if (StringUtils.isNotEmpty(commodity.getCombo())) {
-            queryWrapper.eq("combo", commodity.getCombo());
+            queryWrapper.lambda().eq(Commodity::getCombo, commodity.getCombo());
         }
         if (StringUtils.isNotEmpty(commodity.getStatus())) {
-            queryWrapper.eq("status", commodity.getStatus());
+            queryWrapper.lambda().eq(Commodity::getStatus, commodity.getStatus());
         }
         return queryWrapper;
     }
@@ -219,7 +220,7 @@ public class CommodityController extends BaseController {
     public AjaxResult selectCommodityParent() {
         AjaxResult ajax = new AjaxResult();
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "gco", "gna");
+        queryWrapper.lambda().select(Commodity::getId, Commodity::getGco, Commodity::getGna);
         List<Commodity> commodityList = commodityService.list(queryWrapper);
         ajax.put("code", 200);
         ajax.put("value", commodityList);

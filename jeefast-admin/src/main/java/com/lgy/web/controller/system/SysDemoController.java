@@ -1,32 +1,28 @@
 package com.lgy.web.controller.system;
 
-import java.util.Arrays;
-import java.util.List;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lgy.common.annotation.Log;
+import com.lgy.common.core.controller.BaseController;
+import com.lgy.common.core.domain.AjaxResult;
+import com.lgy.common.core.page.TableDataInfo;
+import com.lgy.common.core.text.Convert;
+import com.lgy.common.enums.BusinessType;
+import com.lgy.common.utils.StringUtils;
+import com.lgy.common.utils.poi.ExcelUtil;
+import com.lgy.system.domain.SysDemo;
+import com.lgy.system.service.ISysDemoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.web.bind.annotation.*;
 
-import com.lgy.common.annotation.Log;
-import com.lgy.common.enums.BusinessType;
-import com.lgy.system.domain.SysDemo;
-import com.lgy.system.service.ISysDemoService;
-import com.lgy.common.core.controller.BaseController;
-import com.lgy.common.core.domain.AjaxResult;
-import com.lgy.common.utils.StringUtils;
-import com.lgy.common.utils.poi.ExcelUtil;
-import com.lgy.common.core.text.Convert;
-import com.lgy.common.core.page.TableDataInfo;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 用户演示Controller
- * 
+ *
  * @author lgy
  * @date 2019-09-24
  */
@@ -51,20 +47,14 @@ public class SysDemoController extends BaseController {
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(SysDemo sysDemo) {
-    	QueryWrapper<SysDemo> queryWrapper = new QueryWrapper<>();
-    	// 需要根据页面查询条件进行组装
-    	if(StringUtils.isNotEmpty(sysDemo.getLoginName())) {
-    		queryWrapper.like("login_name", sysDemo.getLoginName());
-    	} 
-    	if(StringUtils.isNotEmpty(sysDemo.getUserName())) {
-    		queryWrapper.like("user_name", sysDemo.getUserName());
-    	}
-		// 特殊查询时条件需要进行单独组装
-		/*Map<String, Object> params = sysDemo.getParams();
-		if (StringUtils.isNotEmpty(params)) {
-			queryWrapper.ge(StringUtils.isNotEmpty((String)params.get("beginTime")), "create_time", params.get("beginTime"));
-			queryWrapper.le(StringUtils.isNotEmpty((String)params.get("endTime")), "create_time", params.get("endTime"));
-		}*/
+        QueryWrapper<SysDemo> queryWrapper = new QueryWrapper<>();
+        // 需要根据页面查询条件进行组装
+        if (StringUtils.isNotEmpty(sysDemo.getLoginName())) {
+            queryWrapper.lambda().like(SysDemo::getLoginName, sysDemo.getLoginName());
+        }
+        if (StringUtils.isNotEmpty(sysDemo.getUserName())) {
+            queryWrapper.lambda().like(SysDemo::getUserName, sysDemo.getUserName());
+        }
         startPage();
         return getDataTable(sysDemoService.list(queryWrapper));
     }
@@ -126,7 +116,7 @@ public class SysDemoController extends BaseController {
      */
     @RequiresPermissions("system:demo:remove")
     @Log(title = "用户演示", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
     public AjaxResult remove(String ids) {
         return toAjax(sysDemoService.removeByIds(Arrays.asList(Convert.toStrArray(ids))));

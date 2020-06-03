@@ -19,9 +19,10 @@ public class TradeStandardServiceImpl extends ServiceImpl<TradeStandardMapper, S
     @Override
     public StandardOrderData getLatestStandardOrderData(String tid) {
         QueryWrapper<StandardOrderData> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("tid", tid);
-        queryWrapper.orderByDesc("modified");
-        queryWrapper.last("limit 1");
+        queryWrapper.lambda()
+                .eq(StandardOrderData::getTid, tid)
+                .orderByDesc(StandardOrderData::getModified)
+                .last("limit 1");
         return this.getOne(queryWrapper);
     }
 }
