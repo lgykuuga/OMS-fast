@@ -1,6 +1,9 @@
 package com.lgy.web.controller.oms.interfaces;
 
+import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.lgy.common.utils.xml.XMLUtils;
+import com.lgy.oms.interfaces.qimen.bean.QimenParam;
 import com.lgy.oms.interfaces.qimen.bean.QimenResponse;
 import com.lgy.oms.interfaces.qimen.contant.QimenConstants;
 import com.lgy.oms.interfaces.qimen.service.QimenService;
@@ -20,9 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 
 /**
@@ -37,11 +38,9 @@ public class QimenInterfaceController {
 
     public Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final String ENCODE = "UTF-8";
 
-    private static final String JSON = "JSON";
-
-    private static final String XML = "XML";
+    private static final Long TIME_DIFFERENT = 300000L;
 
     @Resource
     private ApplicationContext applicationContext;
@@ -59,25 +58,25 @@ public class QimenInterfaceController {
         String data = getData(request);
         logger.info("&data=" + data);
 
-        HashMap<String, String> paramMap = new HashMap<>(9);
-        paramMap.put("data", data);
-        paramMap.put("appkey", app_key);
-        paramMap.put("method", method);
-        paramMap.put("timestamp", timestamp);
-        paramMap.put("format", format);
-        paramMap.put("sign", sign);
-        paramMap.put("sign_method", sign_method);
-        paramMap.put("customerId", customerId);
-        paramMap.put("v", v);
+        QimenParam qimenParam = new QimenParam();
+        qimenParam.setData(data);
+        qimenParam.setAppkey(app_key);
+        qimenParam.setMethod(method);
+        qimenParam.setTimestamp(timestamp);
+        qimenParam.setFormat(format);
+        qimenParam.setSign(sign);
+        qimenParam.setSign_method(sign_method);
+        qimenParam.setCustomerId(customerId);
+        qimenParam.setV(v);
 
         //返回消息
         QimenResponse qimenResponse = new QimenResponse();
 
         //参数验证
-        qimenResponse = checkParam(paramMap, qimenResponse);
+        checkParam(qimenParam, qimenResponse);
 
         //返回内容
-        String rtnMessage = "";
+        String rtnMessage = StringUtils.EMPTY;
 
         if (QimenConstants.SUCCESS.equals(qimenResponse.getFlag())) {
             try {
@@ -88,14 +87,14 @@ public class QimenInterfaceController {
                 QimenService qimenService = (QimenService) applicationContext.getBean(method);
                 if (qimenService == null) {
                     qimenResponse.setFlag(QimenConstants.SUCCESS);
-                    qimenResponse.setMessage("不支持的Method：" + method);
+                    qimenResponse.setMessage("不支持的Method:" + method);
                 } else {
 
                     //请求执行对应的方法
-                    qimenResponse = qimenService.requestExec(paramMap);
+                    qimenResponse = qimenService.requestExec(qimenParam);
                     //奇门response响应实体转换
                     rtnMessage = responseConvert(qimenResponse, format);
-                    logger.info("奇门接口服务返回：" + rtnMessage);
+                    logger.info("奇门接口服务返回:" + rtnMessage);
                     return rtnMessage;
                 }
             } catch (Exception e) {
@@ -114,50 +113,48 @@ public class QimenInterfaceController {
     /**
      * 参数验证
      *
-     * @param paramMap
-     * @return
+     * @param qimenParam    奇门接口请求参数
+     * @param qimenResponse 返回值
      */
-    private QimenResponse checkParam(HashMap<String, String> paramMap, QimenResponse qimenResponse) {
+    private void checkParam(QimenParam qimenParam, QimenResponse qimenResponse) {
 
-        StringBuffer msg = new StringBuffer();
+        StringBuilder msg = new StringBuilder();
 
-        String format = paramMap.get("format");
-
-        if (!XML.equalsIgnoreCase(format) && !JSON.equalsIgnoreCase(format)) {
+        if (!StringUtils.equalsAnyIgnoreCase(qimenParam.getFormat(), QimenConstants.XML, QimenConstants.JSON)) {
             msg.append("format格式为空或者不支持！");
         }
 
-        if (StringUtils.isBlank(paramMap.get("appkey"))) {
+        if (StringUtils.isBlank(qimenParam.getAppkey())) {
             msg.append("appkey参数不能为空！");
         }
 
-        if (StringUtils.isBlank(paramMap.get("method"))) {
+        if (StringUtils.isBlank(qimenParam.getMethod())) {
             msg.append("method参数不能为空！");
         }
 
-        if (StringUtils.isBlank(paramMap.get("sign"))) {
+        if (StringUtils.isBlank(qimenParam.getSign())) {
             msg.append("sign参数不能为空或者错误！");
         }
 
-        if (StringUtils.isBlank(paramMap.get("customerId"))) {
+        if (StringUtils.isBlank(qimenParam.getCustomerId())) {
             msg.append("customerId参数不能为空！");
         }
 
-        String timestamp = paramMap.get("timestamp");
+        String timestamp = qimenParam.getTimestamp();
 
         if (StringUtils.isBlank(timestamp)) {
             msg.append("timestamp参数不能为空！");
         } else {
             try {
-                timestamp = URLDecoder.decode(timestamp, "UTF-8");
+                timestamp = URLDecoder.decode(timestamp, ENCODE);
             } catch (UnsupportedEncodingException e1) {
                 logger.error("URLDecoder处理失败，直接按照yyyy-MM-dd HH:mm:ss格式处理");
             }
             try {
-                Date date = sf.parse(timestamp);
+                Date date = DateUtil.parseDateTime(timestamp);
                 Long now = System.currentTimeMillis();
                 //验证请求时间不能与服务器时间,相差5分钟
-                if ((now + 300000L) < date.getTime() || (now - 300000L) > date.getTime()) {
+                if ((now + TIME_DIFFERENT) < date.getTime() || (now - TIME_DIFFERENT) > date.getTime()) {
                     msg.append("签名超时！");
                 }
             } catch (Exception e) {
@@ -171,16 +168,14 @@ public class QimenInterfaceController {
             qimenResponse.setFlag(QimenConstants.FAILURE);
             qimenResponse.setMessage(msg.toString());
         }
-        return qimenResponse;
     }
 
 
     /**
      * 读取data 数据
      *
-     * @param request
-     * @return
-     * @throws UnsupportedEncodingException
+     * @param request HttpServletRequest
+     * @return data
      */
     private String getData(HttpServletRequest request) {
 
@@ -193,8 +188,8 @@ public class QimenInterfaceController {
         StringBuilder buffer = new StringBuilder();
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
-            String line = null;
+            reader = new BufferedReader(new InputStreamReader(request.getInputStream(), ENCODE));
+            String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line);
             }
@@ -218,13 +213,13 @@ public class QimenInterfaceController {
      *
      * @param qimenResponse 返回消息
      * @param format        格式
-     * @return
+     * @return 格式体
      */
     private String responseConvert(QimenResponse qimenResponse, String format) {
-        if (XML.equalsIgnoreCase(format)) {
+        if (QimenConstants.XML.equalsIgnoreCase(format)) {
             return XMLUtils.parseObj2XML(qimenResponse);
         } else {
-            return com.alibaba.fastjson.JSON.toJSONString(qimenResponse);
+            return JSON.toJSONString(qimenResponse);
         }
 
     }

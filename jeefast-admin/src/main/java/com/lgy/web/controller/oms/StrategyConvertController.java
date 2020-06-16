@@ -1,7 +1,6 @@
 package com.lgy.web.controller.oms;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.lgy.common.annotation.Log;
 import com.lgy.common.core.controller.BaseController;
@@ -24,7 +23,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 转单策略Controller
@@ -186,8 +187,8 @@ public class StrategyConvertController extends BaseController {
      * 新增策略店铺弹窗
      * gco:      策略编码
      * enforce: 是否强制新增店铺;
-     *          true:取不在该策略的店铺
-     *          false:获取未加入策略的店铺
+     * true:取不在该策略的店铺
+     * false:获取未加入策略的店铺
      */
     @RequiresPermissions("oms:convert:add")
     @GetMapping("/selectShop")
@@ -201,8 +202,8 @@ public class StrategyConvertController extends BaseController {
      * 新增读取店铺
      * gco:      策略编码
      * enforce: 是否强制新增店铺
-     *          true:获取不在该策略的店铺
-     *          false:获取未加入策略的店铺
+     * true:获取不在该策略的店铺
+     * false:获取未加入策略的店铺
      */
     @PostMapping("/addLoadShop")
     @ResponseBody
@@ -220,7 +221,7 @@ public class StrategyConvertController extends BaseController {
     public AjaxResult addNotInShop(String data) {
         List<StrategyConvertShop> strategyConvertShops = JSON.parseArray(data, StrategyConvertShop.class);
         Integer count = strategyConvertService.saveStrategyConvertShop(strategyConvertShops, true);
-       return toAjax(SqlHelper.retBool(count));
+        return toAjax(SqlHelper.retBool(count));
     }
 
     /**

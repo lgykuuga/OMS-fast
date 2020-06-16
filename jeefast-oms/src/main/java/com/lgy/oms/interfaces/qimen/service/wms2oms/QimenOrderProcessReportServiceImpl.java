@@ -1,6 +1,7 @@
 package com.lgy.oms.interfaces.qimen.service.wms2oms;
 
 
+import com.lgy.oms.interfaces.qimen.bean.QimenParam;
 import com.lgy.oms.interfaces.qimen.bean.QimenResponse;
 import com.lgy.oms.interfaces.qimen.contant.QimenConstants;
 import com.lgy.oms.interfaces.qimen.service.QimenService;
@@ -27,7 +28,7 @@ public class QimenOrderProcessReportServiceImpl implements QimenService {
     public Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public QimenResponse requestExec(HashMap<String, String> paramMap) {
+    public QimenResponse requestExec(QimenParam qimenParam) {
 
         QimenResponse response = new QimenResponse();
 

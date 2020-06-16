@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class TraceLogApi {
 
-    @Value("${lgy.traceLog.level}")
-    private int level;
 
     @Autowired
     TraceLogDisruptorUtil traceLogDisruptorUtil;
@@ -25,10 +23,8 @@ public class TraceLogApi {
         event.setTraceLog(traceLog);
 
         //轨迹记录级别
-        if (level <= traceLog.getLevel()) {
-            traceLogDisruptorUtil
-                    .getProducer()
-                    .onData(event);
-        }
+        traceLogDisruptorUtil
+                .getProducer()
+                .onData(event);
     }
 }

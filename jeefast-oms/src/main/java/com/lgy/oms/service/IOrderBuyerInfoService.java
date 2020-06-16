@@ -11,4 +11,10 @@ import com.lgy.oms.domain.order.OrderBuyerInfo;
  */
 public interface IOrderBuyerInfoService extends IService<OrderBuyerInfo> {
 
+    /**
+     * getByOrderId
+     * @param orderId
+     * @return
+     */
+    OrderBuyerInfo getByOrderId(String orderId);
 }

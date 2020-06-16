@@ -9,6 +9,7 @@ import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
+import com.lgy.oms.domain.StrategyAudit;
 import com.lgy.oms.domain.StrategyAuditSpecial;
 import com.lgy.oms.enums.strategy.AuditSpecialEnum;
 import com.lgy.oms.service.IStrategyAuditSpecialService;
@@ -78,16 +79,16 @@ public class StrategyAuditSpecialController extends BaseController {
         QueryWrapper<StrategyAuditSpecial> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(strategyAuditSpecial.getGco())) {
-            queryWrapper.eq("gco", strategyAuditSpecial.getGco());
+            queryWrapper.lambda().eq(StrategyAuditSpecial::getGco, strategyAuditSpecial.getGco());
         }
         if (strategyAuditSpecial.getType() != null) {
-            queryWrapper.eq("type", strategyAuditSpecial.getType());
+            queryWrapper.lambda().eq(StrategyAuditSpecial::getType, strategyAuditSpecial.getType());
         }
         if (StringUtils.isNotEmpty(strategyAuditSpecial.getValue())) {
-            queryWrapper.like("value", strategyAuditSpecial.getValue());
+            queryWrapper.lambda().like(StrategyAuditSpecial::getValue, strategyAuditSpecial.getValue());
         }
         if (StringUtils.isNotEmpty(strategyAuditSpecial.getStatus())) {
-            queryWrapper.eq("status", strategyAuditSpecial.getStatus());
+            queryWrapper.lambda().eq(StrategyAuditSpecial::getStatus, strategyAuditSpecial.getStatus());
         }
         return queryWrapper;
     }

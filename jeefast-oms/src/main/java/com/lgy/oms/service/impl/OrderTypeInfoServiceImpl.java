@@ -1,5 +1,6 @@
 package com.lgy.oms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.oms.domain.order.OrderTypeInfo;
 import com.lgy.oms.mapper.OrderTypeInfoMapper;
@@ -15,4 +16,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderTypeInfoServiceImpl extends ServiceImpl<OrderTypeInfoMapper, OrderTypeInfo> implements IOrderTypeInfoService {
 
+    @Override
+    public OrderTypeInfo getByOrderId(String orderId) {
+        QueryWrapper<OrderTypeInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OrderTypeInfo::getOrderId, orderId);
+        return this.getOne(queryWrapper);
+    }
 }

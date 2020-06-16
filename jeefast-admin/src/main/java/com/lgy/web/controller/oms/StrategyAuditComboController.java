@@ -75,10 +75,10 @@ public class StrategyAuditComboController extends BaseController {
         QueryWrapper<StrategyAuditCombo> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(strategyAuditCombo.getGco())) {
-            queryWrapper.eq("gco", strategyAuditCombo.getGco());
+            queryWrapper.lambda().eq(StrategyAuditCombo::getGco, strategyAuditCombo.getGco());
         }
         if (StringUtils.isNotEmpty(strategyAuditCombo.getGna())) {
-            queryWrapper.like("gna", strategyAuditCombo.getGna());
+            queryWrapper.lambda().like(StrategyAuditCombo::getGna, strategyAuditCombo.getGna());
         }
         return queryWrapper;
     }

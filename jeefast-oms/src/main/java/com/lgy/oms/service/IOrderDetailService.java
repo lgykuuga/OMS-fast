@@ -3,6 +3,8 @@ package com.lgy.oms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lgy.oms.domain.order.OrderDetail;
 
+import java.util.List;
+
 /**
  * 订单明细信息 服务层
  *
@@ -19,4 +21,11 @@ public interface IOrderDetailService extends IService<OrderDetail> {
      */
     boolean checkOrderCombDetailExist(OrderDetail orderDetail);
 
+    /**
+     * getByOrderId
+     *
+     * @param orderId 订单号
+     * @return
+     */
+    List<OrderDetail> getByOrderId(String orderId);
 }

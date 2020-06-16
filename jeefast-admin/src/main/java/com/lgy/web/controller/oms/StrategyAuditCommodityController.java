@@ -77,16 +77,16 @@ public class StrategyAuditCommodityController extends BaseController {
         QueryWrapper<StrategyAuditCommodity> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(strategyAuditCommodity.getGco())) {
-            queryWrapper.eq("gco", strategyAuditCommodity.getGco());
+            queryWrapper.lambda().eq(StrategyAuditCommodity::getGco, strategyAuditCommodity.getGco());
         }
         if (strategyAuditCommodity.getType() != null) {
-            queryWrapper.eq("type", strategyAuditCommodity.getType());
+            queryWrapper.lambda().eq(StrategyAuditCommodity::getType, strategyAuditCommodity.getType());
         }
         if (StringUtils.isNotEmpty(strategyAuditCommodity.getValue())) {
-            queryWrapper.like("value", strategyAuditCommodity.getValue());
+            queryWrapper.lambda().like(StrategyAuditCommodity::getType, strategyAuditCommodity.getValue());
         }
         if (StringUtils.isNotEmpty(strategyAuditCommodity.getStatus())) {
-            queryWrapper.eq("status", strategyAuditCommodity.getStatus());
+            queryWrapper.lambda().eq(StrategyAuditCommodity::getStatus, strategyAuditCommodity.getStatus());
         }
         return queryWrapper;
     }

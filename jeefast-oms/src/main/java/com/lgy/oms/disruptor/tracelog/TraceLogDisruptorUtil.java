@@ -2,12 +2,12 @@ package com.lgy.oms.disruptor.tracelog;
 
 import com.alibaba.fastjson.JSON;
 import com.lgy.framework.util.ShiroUtils;
-import com.lgy.oms.config.CustomThreadFactoryBuilder;
 import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
+import com.lmax.disruptor.util.DaemonThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,8 +15,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.ThreadFactory;
 
 /**
  * @Author LGy
@@ -36,7 +34,6 @@ public class TraceLogDisruptorUtil implements DisposableBean, InitializingBean {
 
     private Producer producer;
 
-
     @Override
     public void destroy() {
         disruptor.shutdown();
@@ -45,16 +42,11 @@ public class TraceLogDisruptorUtil implements DisposableBean, InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        ThreadFactory threadFactory = new CustomThreadFactoryBuilder()
-                .setNamePrefix("traceLogEvent")
-                .setDaemon(false)
-                .build();
 
         disruptor = new Disruptor<>(
                 TraceLogEvent::new,
                 RING_BUFFER_SIZE,
-//                DaemonThreadFactory.INSTANCE,
-                threadFactory,
+                DaemonThreadFactory.INSTANCE,
                 ProducerType.SINGLE,
                 new SleepingWaitStrategy()
         );

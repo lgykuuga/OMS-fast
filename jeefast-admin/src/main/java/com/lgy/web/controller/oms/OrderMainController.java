@@ -73,7 +73,7 @@ public class OrderMainController extends BaseController {
         //全部成功标识
         boolean flag = true;
         //失败原因
-        StringBuffer failureMessage = new StringBuffer();
+        StringBuilder failureMessage = new StringBuilder();
 
         AuditParamDTO param = new AuditParamDTO();
         //非自动触发
@@ -112,10 +112,10 @@ public class OrderMainController extends BaseController {
         QueryWrapper<OrderMain> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(orderVO.getOrderId())) {
-            queryWrapper.like("orderId", orderVO.getOrderId());
+            queryWrapper.lambda().eq(OrderMain::getOrderId, orderVO.getOrderId());
         }
         if (StringUtils.isNotEmpty(orderVO.getSourceId())) {
-            queryWrapper.like("sourceId", orderVO.getSourceId());
+            queryWrapper.lambda().eq(OrderMain::getSourceId, orderVO.getSourceId());
         }
         return queryWrapper;
     }

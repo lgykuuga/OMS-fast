@@ -1,8 +1,7 @@
 package com.lgy.oms.interfaces.qimen.service;
 
+import com.lgy.oms.interfaces.qimen.bean.QimenParam;
 import com.lgy.oms.interfaces.qimen.bean.QimenResponse;
-
-import java.util.HashMap;
 
 
 /**
@@ -12,13 +11,12 @@ import java.util.HashMap;
  */
 public interface QimenService {
 
-
     /**
      * 请求执行方法
      *
-     * @param paramMap 参数
+     * @param qimenParam 参数
      * @return
      */
-    QimenResponse requestExec(HashMap<String, String> paramMap);
+    QimenResponse requestExec(QimenParam qimenParam);
 
 }

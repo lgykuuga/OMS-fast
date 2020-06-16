@@ -8,6 +8,7 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
+import com.lmax.disruptor.util.DaemonThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -50,16 +51,11 @@ public class AuditDisruptorUtil {
      */
     @PostConstruct
     public void afterPropertiesSet() {
-        ThreadFactory threadFactory = new CustomThreadFactoryBuilder()
-                .setNamePrefix("auditEvent")
-                .setDaemon(false)
-                .build();
 
         disruptor = new Disruptor<>(
                 AuditOrderEvent::new,
                 RING_BUFFER_SIZE,
-//                DaemonThreadFactory.INSTANCE,
-                threadFactory,
+                DaemonThreadFactory.INSTANCE,
                 ProducerType.SINGLE,
                 new SleepingWaitStrategy()
         );

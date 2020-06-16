@@ -46,4 +46,11 @@ public interface IOrderInterceptService extends IService<OrderInterceptInfo> {
      */
     void deleteAndUpdateStatByOrderIds(List<String> orderIds);
 
+    /**
+     * getByOrderId
+     *
+     * @param orderId 订单号
+     * @return
+     */
+    OrderInterceptInfo getByOrderId(String orderId);
 }

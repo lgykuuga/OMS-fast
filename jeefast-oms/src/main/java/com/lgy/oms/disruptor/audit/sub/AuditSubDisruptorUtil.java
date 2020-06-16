@@ -9,6 +9,7 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
+import com.lmax.disruptor.util.DaemonThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -77,28 +78,32 @@ public class AuditSubDisruptorUtil {
      */
     @PostConstruct
     public void afterPropertiesSet() {
-        ThreadFactory threadFactory = new CustomThreadFactoryBuilder()
-                .setNamePrefix("auditSubEvent")
-                .setDaemon(false)
-                .build();
 
         disruptor = new Disruptor<>(
                 AuditOrderEvent::new,
                 RING_BUFFER_SIZE,
-//                DaemonThreadFactory.INSTANCE,
-                threadFactory,
+                DaemonThreadFactory.INSTANCE,
                 ProducerType.SINGLE,
                 new SleepingWaitStrategy()
         );
 
-        //异常处理
-        disruptor.setDefaultExceptionHandler(new AuditSubExceptionHandler());
         /**
          * 并行校验地址、校验拦截订单主信息、校验拦截订单明细信息
          * 后串行执行更新订单状态
          */
-        disruptor.handleEventsWith(addressHandler, orderSpecialHandler, orderCommodityHandler)
+
+        CheckOrderCommodityHandler[] checkOrderCommodityHandlers = new CheckOrderCommodityHandler[10];
+        for (int i = 0; i < 10; i++) {
+            checkOrderCommodityHandlers[i] = orderCommodityHandler;
+        }
+
+        disruptor.handleEventsWithWorkerPool(checkOrderCommodityHandlers);
+        disruptor.handleEventsWith(orderSpecialHandler);
+        disruptor.handleEventsWith(addressHandler)
                 .then(updateOrderInfoHandler);
+
+        //异常处理
+        disruptor.setDefaultExceptionHandler(new AuditSubExceptionHandler());
         //启动disruptor
         disruptor.start();
         this.producer = new Producer(disruptor.getRingBuffer());

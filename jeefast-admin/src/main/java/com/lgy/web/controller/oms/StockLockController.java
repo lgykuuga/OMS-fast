@@ -77,16 +77,16 @@ public class StockLockController extends BaseController {
         QueryWrapper<StockLock> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(stockLock.getOrderId())) {
-            queryWrapper.eq("order_id", stockLock.getOrderId());
+            queryWrapper.lambda().eq(StockLock::getOrderId, stockLock.getOrderId());
         }
         if (StringUtils.isNotEmpty(stockLock.getWarehouse())) {
-            queryWrapper.eq("warehouse", stockLock.getWarehouse());
+            queryWrapper.lambda().eq(StockLock::getWarehouse, stockLock.getWarehouse());
         }
         if (StringUtils.isNotEmpty(stockLock.getCommodity())) {
-            queryWrapper.eq("commodity", stockLock.getCommodity());
+            queryWrapper.lambda().eq(StockLock::getCommodity, stockLock.getCommodity());
         }
         if (StringUtils.isNotEmpty(stockLock.getOwner())) {
-            queryWrapper.eq("owner", stockLock.getOwner());
+            queryWrapper.lambda().eq(StockLock::getOwner, stockLock.getOwner());
         }
         return queryWrapper;
     }

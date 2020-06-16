@@ -1,5 +1,7 @@
 package com.lgy.web.controller.oms;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lgy.common.annotation.Log;
 import com.lgy.common.constant.Constants;
@@ -35,7 +37,11 @@ import java.util.Map;
 @Controller
 @RequestMapping("/oms/downloadorder")
 public class DownloadOrderController extends BaseController {
+
     private String prefix = "oms/downloadorder";
+
+    private static int ONE = 1;
+
 
     @Autowired
     private IDownloadOrderService downloadOrderService;
@@ -148,7 +154,7 @@ public class DownloadOrderController extends BaseController {
             return AjaxResult.error("查单时间不能为空");
         }
         //比较前后时间，跨度大于一天即不能下单
-        if ((downloadorder.getEndt().getTime() - downloadorder.getBedt().getTime()) >= DateUtils.ONE_DAY) {
+        if (DateUtil.between(downloadorder.getEndt(),downloadorder.getBedt(), DateUnit.DAY) >= ONE) {
             return AjaxResult.error("下单时间跨度大于一天不能下单");
         }
         CommonResponse<String> response = downloadOrderService.downloadByTime(downloadorder);

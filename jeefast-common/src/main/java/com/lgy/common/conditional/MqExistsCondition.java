@@ -23,6 +23,7 @@ public class MqExistsCondition implements Condition {
         Environment environment = context.getEnvironment();
         //从这里获取配置文件中 active 的值，根据当前的active值决定是否加载类
         String[] activeProfiles = environment.getActiveProfiles();
+        environment.getDefaultProfiles();
         for (String active : activeProfiles) {
             if (Constants.ON.equals(active)) {
                 log.info("启动rabbitMQ配置");

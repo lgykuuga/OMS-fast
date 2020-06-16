@@ -77,13 +77,13 @@ public class StockController extends BaseController {
         QueryWrapper<Stock> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(stock.getWarehouse())) {
-            queryWrapper.eq("warehouse", stock.getWarehouse());
+            queryWrapper.lambda().eq(Stock::getWarehouse, stock.getWarehouse());
         }
         if (StringUtils.isNotEmpty(stock.getCommodity())) {
-            queryWrapper.eq("commodity", stock.getCommodity());
+            queryWrapper.lambda().eq(Stock::getCommodity, stock.getCommodity());
         }
         if (StringUtils.isNotEmpty(stock.getOwner())) {
-            queryWrapper.eq("owner", stock.getOwner());
+            queryWrapper.lambda().eq(Stock::getOwner, stock.getOwner());
         }
         return queryWrapper;
     }

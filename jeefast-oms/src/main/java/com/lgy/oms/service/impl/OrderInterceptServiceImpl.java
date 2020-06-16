@@ -21,8 +21,7 @@ import java.util.List;
  * @date 2019-12-13
  */
 @Service
-public class OrderInterceptServiceImpl extends ServiceImpl<OrderInterceptMapper, OrderInterceptInfo>
-        implements IOrderInterceptService {
+public class OrderInterceptServiceImpl extends ServiceImpl<OrderInterceptMapper, OrderInterceptInfo> implements IOrderInterceptService {
 
     @Autowired
     IOrderMainService orderMainService;
@@ -36,7 +35,7 @@ public class OrderInterceptServiceImpl extends ServiceImpl<OrderInterceptMapper,
         OrderMain orderMain = new OrderMain();
         orderMain.setIntercept(Constants.YES);
         UpdateWrapper<OrderMain> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("order_id", orderId);
+        updateWrapper.lambda().eq(OrderMain::getOrderId, orderId);
         boolean b = orderMainService.update(orderMain, updateWrapper);
         if (b) {
             //新增或更新拦截订单信息
@@ -48,7 +47,7 @@ public class OrderInterceptServiceImpl extends ServiceImpl<OrderInterceptMapper,
     @Override
     public void deleteByOrderId(String orderId) {
         QueryWrapper<OrderInterceptInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("order_id", orderId);
+        queryWrapper.lambda().eq(OrderInterceptInfo::getOrderId, orderId);
         this.remove(queryWrapper);
     }
 
@@ -60,7 +59,7 @@ public class OrderInterceptServiceImpl extends ServiceImpl<OrderInterceptMapper,
         OrderMain orderMain = new OrderMain();
         orderMain.setIntercept(Constants.NO);
         UpdateWrapper<OrderMain> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("order_id", orderId);
+        updateWrapper.lambda().eq(OrderMain::getOrderId, orderId);
         orderMainService.update(orderMain, updateWrapper);
     }
 
@@ -74,9 +73,16 @@ public class OrderInterceptServiceImpl extends ServiceImpl<OrderInterceptMapper,
             OrderMain orderMain = new OrderMain();
             orderMain.setIntercept(Constants.NO);
             UpdateWrapper<OrderMain> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("order_id", orderId);
+            updateWrapper.lambda().eq(OrderMain::getOrderId, orderId);
             orderMainService.update(orderMain, updateWrapper);
         }
 
+    }
+
+    @Override
+    public OrderInterceptInfo getByOrderId(String orderId) {
+        QueryWrapper<OrderInterceptInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OrderInterceptInfo::getOrderId, orderId);
+        return this.getOne(queryWrapper);
     }
 }

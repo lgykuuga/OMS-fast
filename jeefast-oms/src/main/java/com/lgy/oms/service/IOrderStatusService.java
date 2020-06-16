@@ -11,4 +11,6 @@ import com.lgy.oms.domain.order.OrderStatusInfo;
  */
 public interface IOrderStatusService extends IService<OrderStatusInfo> {
 
+    OrderStatusInfo getByOrderId(String orderId);
+
 }

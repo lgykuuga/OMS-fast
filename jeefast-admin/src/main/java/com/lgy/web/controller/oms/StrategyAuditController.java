@@ -73,10 +73,10 @@ public class StrategyAuditController extends BaseController {
         QueryWrapper<StrategyAudit> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(strategyAudit.getGco())) {
-            queryWrapper.eq("gco", strategyAudit.getGco());
+            queryWrapper.lambda().eq(StrategyAudit::getGco, strategyAudit.getGco());
         }
         if (StringUtils.isNotEmpty(strategyAudit.getGna())) {
-            queryWrapper.like("gna", strategyAudit.getGna());
+            queryWrapper.lambda().like(StrategyAudit::getGna, strategyAudit.getGna());
         }
         return queryWrapper;
     }

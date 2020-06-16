@@ -69,10 +69,10 @@ public class StrategyDistributionController extends BaseController {
         QueryWrapper<StrategyDistribution> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(strategyDistribution.getGco())) {
-            queryWrapper.eq("gco", strategyDistribution.getGco());
+            queryWrapper.lambda().eq(StrategyDistribution::getGco, strategyDistribution.getGco());
         }
         if (StringUtils.isNotEmpty(strategyDistribution.getGna())) {
-            queryWrapper.like("gna", strategyDistribution.getGna());
+            queryWrapper.lambda().like(StrategyDistribution::getGna, strategyDistribution.getGna());
         }
         return queryWrapper;
     }

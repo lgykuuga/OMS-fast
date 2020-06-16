@@ -9,13 +9,9 @@ lgy:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/temp/lgy/uploadPath，Linux配置 /usr/local/oms/uploadPath）
-  profile: /usr/local/oms/uploadPath
+  profile: D:/temp/lgy/uploadPath
   # 获取ip地址开关
   addressEnabled: true
-  # 轨迹日志
-  traceLog:
-    # 保存日志等级(0:trace/1:STATUS/2:ABNORMAL)
-    level: 0
 
   #中间件使用开启关闭【on:0 / off:1】
   #任务调度xxl_job是否开启(待开发)

@@ -4,19 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.base.domain.Shop;
 import com.lgy.base.service.IShopService;
-import com.lgy.common.annotation.Excel;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
+import com.lgy.oms.domain.ShopCommodity;
+import com.lgy.oms.mapper.ShopCommodityMapper;
+import com.lgy.oms.service.IShopCommodityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.lgy.oms.mapper.ShopCommodityMapper;
-import com.lgy.oms.domain.ShopCommodity;
-import com.lgy.oms.service.IShopCommodityService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +43,7 @@ public class ShopCommodityServiceImpl extends ServiceImpl<ShopCommodityMapper, S
         }
 
         //错误信息
-        StringBuffer failureMsg = new StringBuffer();
+        StringBuilder failureMsg = new StringBuilder();
 
         //excel行,用于提示错误信息
         int i = 1;
@@ -67,7 +66,7 @@ public class ShopCommodityServiceImpl extends ServiceImpl<ShopCommodityMapper, S
             String key = shopCommodity.getShop() + shopCommodity.getNumIid() + shopCommodity.getSkuId();
 
             QueryWrapper<Shop> queryShopWrapper = new QueryWrapper<>();
-            queryShopWrapper.eq("gco", shopCommodity.getShop());
+            queryShopWrapper.lambda().eq(Shop::getGco, shopCommodity.getShop());
             Shop shop = shopService.getOne(queryShopWrapper);
             if (StringUtils.isNull(shop)) {
                 failureMsg.append("第").append(i).append("行店铺编码无效");
@@ -78,14 +77,14 @@ public class ShopCommodityServiceImpl extends ServiceImpl<ShopCommodityMapper, S
             if (!updateSupport) {
                 QueryWrapper<ShopCommodity> queryWrapper = new QueryWrapper<>();
                 //店铺编码
-                queryWrapper.eq("shop", shopCommodity.getShop());
+                queryWrapper.lambda().eq(ShopCommodity::getShop, shopCommodity.getShop());
                 //商品数字ID
                 if (StringUtils.isEmpty(shopCommodity.getNumIid())) {
-                    queryWrapper.eq("num_iid", shopCommodity.getNumIid());
+                    queryWrapper.lambda().eq(ShopCommodity::getNumIid, shopCommodity.getNumIid());
                 }
                 //平台skuID
                 if (StringUtils.isEmpty(shopCommodity.getSkuId())) {
-                    queryWrapper.eq("sku_id", shopCommodity.getSkuId());
+                    queryWrapper.lambda().eq(ShopCommodity::getSkuId, shopCommodity.getSkuId());
                 }
                 List<ShopCommodity> list = this.list(queryWrapper);
                 if (list != null && list.size() > 0) {
@@ -125,14 +124,14 @@ public class ShopCommodityServiceImpl extends ServiceImpl<ShopCommodityMapper, S
             for (ShopCommodity shopCommodity : shopCommodities) {
                 QueryWrapper<ShopCommodity> queryWrapper = new QueryWrapper<>();
                 //店铺编码
-                queryWrapper.eq("shop", shopCommodity.getShop());
+                queryWrapper.lambda().eq(ShopCommodity::getShop, shopCommodity.getShop());
                 //商品数字ID
                 if (StringUtils.isEmpty(shopCommodity.getNumIid())) {
-                    queryWrapper.eq("num_iid", shopCommodity.getNumIid());
+                    queryWrapper.lambda().eq(ShopCommodity::getNumIid, shopCommodity.getNumIid());
                 }
                 //平台skuID
                 if (StringUtils.isEmpty(shopCommodity.getSkuId())) {
-                    queryWrapper.eq("sku_id", shopCommodity.getSkuId());
+                    queryWrapper.lambda().eq(ShopCommodity::getSkuId, shopCommodity.getSkuId());
                 }
                 saveBatch = this.saveOrUpdate(shopCommodity, queryWrapper);
             }
@@ -154,16 +153,18 @@ public class ShopCommodityServiceImpl extends ServiceImpl<ShopCommodityMapper, S
 
         ShopCommodity shopCommodity;
 
-        QueryWrapper<ShopCommodity> queryWrapper  = new QueryWrapper();
-        queryWrapper.eq("shop", shop);
-        queryWrapper.eq("status", Constants.VALID);
+        QueryWrapper<ShopCommodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .lambda()
+                .eq(ShopCommodity::getShop, shop)
+                .eq(ShopCommodity::getStatus, Constants.VALID);
 
         //用商家编码和商家sku匹配商品
         if (StringUtils.isNotEmpty(numIid)) {
-            queryWrapper.eq("numIid", numIid);
+            queryWrapper.lambda().eq(ShopCommodity::getNumIid, numIid);
         }
         if (StringUtils.isNotEmpty(skuId)) {
-            queryWrapper.eq("skuId", skuId);
+            queryWrapper.lambda().eq(ShopCommodity::getSkuId, skuId);
         }
         try {
             shopCommodity = this.getOne(queryWrapper);

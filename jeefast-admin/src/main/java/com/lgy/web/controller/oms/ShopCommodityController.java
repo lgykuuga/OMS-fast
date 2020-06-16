@@ -1,7 +1,6 @@
 package com.lgy.web.controller.oms;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lgy.base.domain.Commodity;
 import com.lgy.base.domain.Shop;
 import com.lgy.base.service.IShopService;
 import com.lgy.common.annotation.Log;
@@ -80,19 +79,19 @@ public class ShopCommodityController extends BaseController {
     private QueryWrapper<ShopCommodity> getShopCommodityQueryWrapper(ShopCommodity shopCommodity) {
         QueryWrapper<ShopCommodity> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(shopCommodity.getShop())) {
-            queryWrapper.eq("shop", shopCommodity.getShop());
+            queryWrapper.lambda().eq(ShopCommodity::getShop, shopCommodity.getShop());
         }
         if (StringUtils.isNotEmpty(shopCommodity.getCommodity())) {
-            queryWrapper.eq("commodity", shopCommodity.getCommodity());
+            queryWrapper.lambda().eq(ShopCommodity::getCommodity, shopCommodity.getCommodity());
         }
         if (StringUtils.isNotEmpty(shopCommodity.getNumIid())) {
-            queryWrapper.eq("num_iid", shopCommodity.getNumIid());
+            queryWrapper.lambda().eq(ShopCommodity::getNumIid, shopCommodity.getNumIid());
         }
         if (StringUtils.isNotEmpty(shopCommodity.getSkuId())) {
-            queryWrapper.eq("sku_id", shopCommodity.getSkuId());
+            queryWrapper.lambda().eq(ShopCommodity::getSkuId, shopCommodity.getSkuId());
         }
         if (StringUtils.isNotEmpty(shopCommodity.getStatus())) {
-            queryWrapper.eq("status", shopCommodity.getStatus());
+            queryWrapper.lambda().eq(ShopCommodity::getStatus, shopCommodity.getStatus());
         }
         return queryWrapper;
     }
@@ -145,7 +144,7 @@ public class ShopCommodityController extends BaseController {
     public AjaxResult editSave(ShopCommodity shopCommodity) {
         if (StringUtils.isNotEmpty(shopCommodity.getShop())) {
             QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("gco", shopCommodity.getShop());
+            queryWrapper.lambda().eq(Shop::getGco, shopCommodity.getShop());
             Shop shop = shopService.getOne(queryWrapper);
             if (shop != null) {
                 //设置货主

@@ -17,7 +17,7 @@ public class AuditSubExceptionHandler implements ExceptionHandler {
     public void handleEventException(Throwable ex, long sequence, Object event) {
         ex.printStackTrace();
         logger.error("审核订单 disruptor error:sequence[{}],event[{}],ex[{}]",
-                sequence, event.toString(), ex.getMessage());
+        sequence, event.toString(), ex.getMessage());
     }
 
     @Override

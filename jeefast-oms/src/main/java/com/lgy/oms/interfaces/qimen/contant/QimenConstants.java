@@ -11,6 +11,11 @@ public class QimenConstants {
      */
     public static final String SUCCESS = "success";
 
+
+    public static final String XML = "XML";
+
+    public static final String JSON = "JSON";
+
     /**
      * 返回失败标识
      */

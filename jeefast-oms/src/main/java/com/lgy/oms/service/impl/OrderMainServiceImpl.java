@@ -3,7 +3,6 @@ package com.lgy.oms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
-import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.order.*;
 import com.lgy.oms.domain.vo.OrderVO;
 import com.lgy.oms.mapper.OrderMainMapper;
@@ -11,8 +10,10 @@ import com.lgy.oms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 订单审核信息 服务层实现
@@ -62,86 +63,70 @@ public class OrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain
     public List<String> getOrderIdBySourceId(String sourceId, Boolean status) {
 
         QueryWrapper<OrderStatusInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("source_id", sourceId);
+        queryWrapper.lambda().eq(OrderStatusInfo::getSourceId, sourceId);
         if (status) {
-            queryWrapper.eq("status", Constants.VALID);
+            queryWrapper.lambda().eq(OrderStatusInfo::getStatus, Constants.VALID);
         }
-        queryWrapper.select("order_id");
+        queryWrapper.lambda().select(OrderStatusInfo::getOrderId);
         List<OrderStatusInfo> list = orderStatusService.list(queryWrapper);
-        if (list == null) {
-            return null;
+        if (list.isEmpty()) {
+            return Collections.emptyList();
         }
 
-        List<String> orderIdList = new ArrayList<>(list.size());
-        list.forEach(orderStatus -> {
-            orderIdList.add(orderStatus.getOrderId());
-        });
-
-        return orderIdList;
+        return list.stream().map(OrderStatusInfo::getOrderId).collect(Collectors.toList());
     }
 
     @Override
     public OrderMain getOrderById(String orderId) {
         QueryWrapper<OrderMain> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("order_id", orderId);
+        queryWrapper.lambda().eq(OrderMain::getOrderId, orderId);
         return this.getOne(queryWrapper);
     }
 
     @Override
     public OrderMain getOrderFullInfoById(String orderId) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("order_id", orderId);
+        QueryWrapper<OrderMain> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OrderMain::getOrderId, orderId);
         //订单主信息
         OrderMain orderMain = this.getOne(queryWrapper);
 
-        if (orderMain == null) {
+        if (Objects.isNull(orderMain)) {
             return null;
         }
         //订单状态信息
-        OrderStatusInfo orderStatusInfo = orderStatusService.getOne(queryWrapper);
-        if (orderStatusInfo != null) {
-            orderMain.setOrderStatusinfo(orderStatusInfo);
-        }
+        OrderStatusInfo orderStatusInfo = orderStatusService.getByOrderId(orderMain.getOrderId());
+        orderMain.setOrderStatusinfo(orderStatusInfo);
         //订单支付信息
-        OrderPayInfo orderPayInfo = orderPayInfoService.getOne(queryWrapper);
-        if (orderPayInfo != null) {
-            orderMain.setOrderPayinfo(orderPayInfo);
-        }
+        OrderPayInfo orderPayInfo = orderPayInfoService.getByOrderId(orderMain.getOrderId());
+        orderMain.setOrderPayinfo(orderPayInfo);
         //订单买家信息
-        OrderBuyerInfo orderBuyerInfo = orderBuyerInfoService.getOne(queryWrapper);
-        if (orderBuyerInfo != null) {
-            orderMain.setOrderBuyerinfo(orderBuyerInfo);
-        }
+        OrderBuyerInfo orderBuyerInfo = orderBuyerInfoService.getByOrderId(orderMain.getOrderId());
+        orderMain.setOrderBuyerinfo(orderBuyerInfo);
         //订单类型信息
-        OrderTypeInfo orderTypeInfo = orderTypeInfoService.getOne(queryWrapper);
-        if (orderTypeInfo != null) {
-            orderMain.setOrderTypeinfo(orderTypeInfo);
-        }
+        OrderTypeInfo orderTypeInfo = orderTypeInfoService.getByOrderId(orderMain.getOrderId());
+        orderMain.setOrderTypeinfo(orderTypeInfo);
         //订单拦截信息
-        OrderInterceptInfo orderInterceptInfo = orderInterceptService.getOne(queryWrapper);
-        if (orderInterceptInfo != null) {
-            orderMain.setOrderInterceptInfo(orderInterceptInfo);
-        }
+        OrderInterceptInfo orderInterceptInfo = orderInterceptService.getByOrderId(orderMain.getOrderId());
+        orderMain.setOrderInterceptInfo(orderInterceptInfo);
         //订单明细信息
-        List<OrderDetail> orderDetailList = orderDetailService.list(queryWrapper);
-        if (StringUtils.isNotEmpty(orderDetailList)) {
-            orderMain.setOrderDetails(orderDetailList);
-        }
-
+        List<OrderDetail> orderDetailList = orderDetailService.getByOrderId(orderMain.getOrderId());
+        orderMain.setOrderDetails(orderDetailList);
         return orderMain;
 
     }
 
     @Override
     public List<String> checkSameOrderExist(String orderId, String sourceId, String owner, Integer status) {
-        QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("source_id", sourceId);
-        queryWrapper.eq("status", Constants.VALID);
-        queryWrapper.ne("order_id", orderId);
-        queryWrapper.select("order_id");
-        return orderStatusService.list(queryWrapper);
+        QueryWrapper<OrderStatusInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .lambda()
+                .eq(OrderStatusInfo::getSourceId, sourceId)
+                .eq(OrderStatusInfo::getStatus, Constants.VALID)
+                .ne(OrderStatusInfo::getOrderId, orderId)
+                .select(OrderStatusInfo::getOrderId);
+        List<OrderStatusInfo> list = orderStatusService.list(queryWrapper);
+        return list.stream().map(OrderStatusInfo::getOrderId).collect(Collectors.toList());
     }
-
 
     @Override
     public List<OrderVO> queryOrderList(OrderVO orderVO) {
