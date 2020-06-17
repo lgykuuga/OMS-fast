@@ -1,7 +1,6 @@
 package com.lgy.web.controller.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lgy.base.domain.Commodity;
 import com.lgy.base.domain.Logistics;
 import com.lgy.base.service.ILogisticsService;
 import com.lgy.common.annotation.Log;
@@ -62,7 +61,7 @@ public class LogisticsController extends BaseController {
     public AjaxResult export(Logistics logistics) {
         QueryWrapper<Logistics> queryWrapper = getLogisticsQueryWrapper(logistics);
         List<Logistics> list = logisticsService.list(queryWrapper);
-        ExcelUtil<Logistics> util = new ExcelUtil<Logistics>(Logistics.class);
+        ExcelUtil<Logistics> util = new ExcelUtil<>(Logistics.class);
         return util.exportExcel(list, "logistics");
     }
 
@@ -70,13 +69,13 @@ public class LogisticsController extends BaseController {
         QueryWrapper<Logistics> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(logistics.getGco())) {
-            queryWrapper.eq("gco", logistics.getGco());
+            queryWrapper.lambda().eq(Logistics::getGco, logistics.getGco());
         }
         if (StringUtils.isNotEmpty(logistics.getGna())) {
-            queryWrapper.eq("gna", logistics.getGna());
+            queryWrapper.lambda().eq(Logistics::getGna, logistics.getGna());
         }
         if (StringUtils.isNotEmpty(logistics.getStatus())) {
-            queryWrapper.eq("status", logistics.getStatus());
+            queryWrapper.lambda().eq(Logistics::getStatus, logistics.getStatus());
         }
         return queryWrapper;
     }
@@ -149,7 +148,7 @@ public class LogisticsController extends BaseController {
     @ResponseBody
     public AjaxResult delete(String gcos) {
 
-        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+        String[] gcoList = Convert.toStrArray(gcos);
 
         boolean flag = true;
 

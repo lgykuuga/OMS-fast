@@ -1,7 +1,6 @@
 package com.lgy.web.controller.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lgy.base.domain.Logistics;
 import com.lgy.base.domain.Owner;
 import com.lgy.base.service.IOwnerService;
 import com.lgy.common.annotation.Log;
@@ -68,6 +67,7 @@ public class OwnerController extends BaseController {
 
     /**
      * 需要根据页面查询条件进行组装
+     *
      * @param owner 货主查询条件
      * @return
      */
@@ -75,13 +75,13 @@ public class OwnerController extends BaseController {
         QueryWrapper<Owner> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(owner.getGco())) {
-            queryWrapper.eq("gco", owner.getGco());
+            queryWrapper.lambda().eq(Owner::getGco, owner.getGco());
         }
         if (StringUtils.isNotEmpty(owner.getGna())) {
-            queryWrapper.eq("gna", owner.getGna());
+            queryWrapper.lambda().eq(Owner::getGna, owner.getGna());
         }
         if (StringUtils.isNotEmpty(owner.getStatus())) {
-            queryWrapper.eq("status", owner.getStatus());
+            queryWrapper.lambda().eq(Owner::getStatus, owner.getStatus());
         }
         return queryWrapper;
     }
@@ -154,7 +154,7 @@ public class OwnerController extends BaseController {
     @ResponseBody
     public AjaxResult delete(String gcos) {
 
-        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+        String[] gcoList = Convert.toStrArray(gcos);
 
         boolean flag = true;
 

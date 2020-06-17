@@ -1,7 +1,6 @@
 package com.lgy.web.controller.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lgy.base.domain.Owner;
 import com.lgy.base.domain.Platform;
 import com.lgy.base.service.IPlatformService;
 import com.lgy.common.annotation.Log;
@@ -62,7 +61,7 @@ public class PlatformController extends BaseController {
     public AjaxResult export(Platform platform) {
         QueryWrapper<Platform> queryWrapper = getPlatformQueryWrapper(platform);
         List<Platform> list = platformService.list(queryWrapper);
-        ExcelUtil<Platform> util = new ExcelUtil<Platform>(Platform.class);
+        ExcelUtil<Platform> util = new ExcelUtil<>(Platform.class);
         return util.exportExcel(list, "platform");
     }
 
@@ -76,13 +75,13 @@ public class PlatformController extends BaseController {
         QueryWrapper<Platform> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(platform.getGco())) {
-            queryWrapper.eq("gco", platform.getGco());
+            queryWrapper.lambda().eq(Platform::getGco, platform.getGco());
         }
         if (StringUtils.isNotEmpty(platform.getGna())) {
-            queryWrapper.eq("gna", platform.getGna());
+            queryWrapper.lambda().eq(Platform::getGna, platform.getGna());
         }
         if (StringUtils.isNotEmpty(platform.getStatus())) {
-            queryWrapper.eq("status", platform.getStatus());
+            queryWrapper.lambda().eq(Platform::getStatus, platform.getStatus());
         }
         return queryWrapper;
     }
@@ -155,7 +154,7 @@ public class PlatformController extends BaseController {
     @ResponseBody
     public AjaxResult delete(String gcos) {
 
-        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+        String[] gcoList = Convert.toStrArray(gcos);
 
         boolean flag = true;
 

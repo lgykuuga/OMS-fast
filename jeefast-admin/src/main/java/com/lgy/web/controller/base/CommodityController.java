@@ -138,7 +138,7 @@ public class CommodityController extends BaseController {
     @ResponseBody
     public AjaxResult delete(String gcos) {
 
-        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+        String[] gcoList = Convert.toStrArray(gcos);
 
         boolean flag = true;
 
@@ -187,8 +187,8 @@ public class CommodityController extends BaseController {
     /**
      * 查询条件
      *
-     * @param commodity
-     * @return
+     * @param commodity 商品查询条件
+     * @return QueryWrapper
      */
     private QueryWrapper<Commodity> getCommodityQueryWrapper(Commodity commodity) {
 

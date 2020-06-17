@@ -29,7 +29,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/base/warehouse")
 public class WarehouseController extends BaseController {
+
     private String prefix = "base/warehouse";
+
+    private String module = "warehouse";
 
     @Autowired
     private IWarehouseService warehouseService;
@@ -37,7 +40,7 @@ public class WarehouseController extends BaseController {
     @RequiresPermissions("base:warehouse:view")
     @GetMapping()
     public String warehouse() {
-        return prefix + "/warehouse";
+        return prefix + "/" + module;
     }
 
     /**
@@ -62,20 +65,20 @@ public class WarehouseController extends BaseController {
         QueryWrapper<Warehouse> queryWrapper = getWarehouseQueryWrapper(warehouse);
         List<Warehouse> list = warehouseService.list(queryWrapper);
         ExcelUtil<Warehouse> util = new ExcelUtil<>(Warehouse.class);
-        return util.exportExcel(list, "warehouse");
+        return util.exportExcel(list, module);
     }
 
     private QueryWrapper<Warehouse> getWarehouseQueryWrapper(Warehouse warehouse) {
         QueryWrapper<Warehouse> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(warehouse.getGco())) {
-            queryWrapper.eq("gco", warehouse.getGco());
+            queryWrapper.lambda().eq(Warehouse::getGco, warehouse.getGco());
         }
         if (StringUtils.isNotEmpty(warehouse.getGna())) {
-            queryWrapper.eq("gna", warehouse.getGna());
+            queryWrapper.lambda().eq(Warehouse::getGna, warehouse.getGna());
         }
         if (StringUtils.isNotEmpty(warehouse.getStatus())) {
-            queryWrapper.eq("status", warehouse.getStatus());
+            queryWrapper.lambda().eq(Warehouse::getStatus, warehouse.getStatus());
         }
         return queryWrapper;
     }
@@ -109,7 +112,7 @@ public class WarehouseController extends BaseController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         Warehouse warehouse = warehouseService.getById(id);
-        mmap.put("warehouse", warehouse);
+        mmap.put(module, warehouse);
         return prefix + "/edit";
     }
 
@@ -148,7 +151,7 @@ public class WarehouseController extends BaseController {
     @ResponseBody
     public AjaxResult delete(String gcos) {
 
-        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+        String[] gcoList = Convert.toStrArray(gcos);
 
         boolean flag = true;
 

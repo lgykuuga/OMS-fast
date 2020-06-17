@@ -21,7 +21,7 @@ public enum DownloadOrderInterfaceEnum {
      */
     KJY("跨境翼"),
     /**
-     * gwall: ODS
+     *
      */
     GODS("GODS"),
 

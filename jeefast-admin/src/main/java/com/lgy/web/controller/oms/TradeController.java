@@ -7,14 +7,15 @@ import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.core.page.TableDataInfo;
+import com.lgy.common.core.text.Convert;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
+import com.lgy.oms.biz.ITradeConvertService;
 import com.lgy.oms.domain.Trade;
 import com.lgy.oms.domain.dto.TradeParamDTO;
 import com.lgy.oms.enums.order.PlatformOrderStatusEnum;
 import com.lgy.oms.enums.order.TradeTranformStatusEnum;
 import com.lgy.oms.service.ITradeService;
-import com.lgy.oms.biz.ITradeConvertService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 交易订单Controller
@@ -90,18 +89,18 @@ public class TradeController extends BaseController {
         QueryWrapper<Trade> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(trade.getTid())) {
-            queryWrapper.eq("tid", trade.getTid());
+            queryWrapper.lambda().eq(Trade::getTid, trade.getTid());
         }
         if (StringUtils.isNotEmpty(trade.getShop())) {
-            queryWrapper.eq("shop", trade.getShop());
+            queryWrapper.lambda().eq(Trade::getShop, trade.getShop());
         }
         if (trade.getStatus() != null) {
-            queryWrapper.eq("status", trade.getStatus());
+            queryWrapper.lambda().eq(Trade::getStatus, trade.getStatus());
         }
         if (trade.getFlag() != null) {
-            queryWrapper.eq("flag", trade.getFlag());
+            queryWrapper.lambda().eq(Trade::getFlag, trade.getFlag());
         }
-        queryWrapper.orderByDesc("create_time");
+        queryWrapper.lambda().orderByDesc(Trade::getCreateTime);
         return queryWrapper;
     }
 
@@ -119,7 +118,7 @@ public class TradeController extends BaseController {
      * 生成订单
      *
      * @param tids 平台单号
-     * @return
+     * @return 生成订单结果
      */
     @RequiresPermissions("tool:trade:add")
     @PostMapping("/convert")
@@ -129,7 +128,7 @@ public class TradeController extends BaseController {
         //全部成功标识
         boolean flag = true;
         //失败原因
-        StringBuffer failureMessage = new StringBuffer();
+        StringBuilder failureMessage = new StringBuilder();
 
         String[] tidz = tids.split(Constants.COMMA);
         for (String tid : tidz) {
@@ -150,17 +149,17 @@ public class TradeController extends BaseController {
      * 生成订单快照
      *
      * @param tids 平台单号
-     * @return
+     * @return 生成快照结果
      */
     @RequiresPermissions("tool:trade:add")
     @PostMapping("/createSnapshot")
     @ResponseBody
     public AjaxResult createSnapshot(String tids) {
-        String[] tidCollection = tids.split(",");
+        String[] tidCollection = Convert.toStrArray(tids);
         //全部成功标识
         boolean flag = true;
         //失败原因
-        StringBuffer failureMessage = new StringBuffer();
+        StringBuilder failureMessage = new StringBuilder();
 
         for (String tid : tidCollection) {
             CommonResponse<String> createSnapshot = tradeService.createSnapshot(tid);

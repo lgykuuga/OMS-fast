@@ -59,7 +59,7 @@ public class WarehouseInterfacesController extends BaseController {
         QueryWrapper<WarehouseInterfaces> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(warehouseInterfaces.getWarehouse())) {
-            queryWrapper.like("warehouse", warehouseInterfaces.getWarehouse());
+            queryWrapper.lambda().eq(WarehouseInterfaces::getWarehouse, warehouseInterfaces.getWarehouse());
         }
         return queryWrapper;
     }
@@ -73,7 +73,7 @@ public class WarehouseInterfacesController extends BaseController {
     public AjaxResult export(WarehouseInterfaces warehouseInterfaces) {
         QueryWrapper<WarehouseInterfaces> queryWrapper = getWarehouseInterfacesQueryWrapper(warehouseInterfaces);
         List<WarehouseInterfaces> list = warehouseInterfacesService.list(queryWrapper);
-        ExcelUtil<WarehouseInterfaces> util = new ExcelUtil<WarehouseInterfaces>(WarehouseInterfaces.class);
+        ExcelUtil<WarehouseInterfaces> util = new ExcelUtil<>(WarehouseInterfaces.class);
         return util.exportExcel(list, "interfaces");
     }
 
@@ -98,7 +98,7 @@ public class WarehouseInterfacesController extends BaseController {
     @ResponseBody
     public AjaxResult addSave(WarehouseInterfaces warehouseInterfaces) {
         QueryWrapper<WarehouseInterfaces> wrapper = new QueryWrapper<>();
-        wrapper.eq("warehouse", warehouseInterfaces.getWarehouse());
+        wrapper.lambda().eq(WarehouseInterfaces::getWarehouse, warehouseInterfaces.getWarehouse());
         WarehouseInterfaces one = warehouseInterfacesService.getOne(wrapper);
         if (one != null) {
             return AjaxResult.error("该仓库已存在配置接口");

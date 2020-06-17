@@ -3,7 +3,6 @@ package com.lgy.web.controller.base;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lgy.base.domain.Combo;
 import com.lgy.base.domain.Commodity;
-import com.lgy.base.domain.vo.CommodityVO;
 import com.lgy.base.service.IComboService;
 import com.lgy.base.service.ICommodityService;
 import com.lgy.common.annotation.Log;
@@ -15,13 +14,11 @@ import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +31,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/base/combo")
 public class ComboController extends BaseController {
-    private String prefix = "base/combo" ;
+    private String prefix = "base/combo";
 
     @Autowired
     private IComboService comboService;
@@ -45,7 +42,7 @@ public class ComboController extends BaseController {
     @RequiresPermissions("base:combo:view")
     @GetMapping()
     public String combo() {
-        return prefix + "/combo" ;
+        return prefix + "/combo";
     }
 
     /**
@@ -69,7 +66,7 @@ public class ComboController extends BaseController {
     public AjaxResult export(Combo combo) {
         QueryWrapper<Combo> queryWrapper = getComboQueryWrapper(combo);
         List<Combo> list = comboService.list(queryWrapper);
-        ExcelUtil<Combo> util = new ExcelUtil<Combo>(Combo.class);
+        ExcelUtil<Combo> util = new ExcelUtil<>(Combo.class);
         return util.exportExcel(list, "combo");
     }
 
@@ -77,13 +74,13 @@ public class ComboController extends BaseController {
         QueryWrapper<Combo> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(combo.getParent())) {
-            queryWrapper.eq("parent", combo.getParent());
+            queryWrapper.lambda().eq(Combo::getParent, combo.getParent());
         }
         if (StringUtils.isNotEmpty(combo.getChildren())) {
-            queryWrapper.eq("children", combo.getChildren());
+            queryWrapper.lambda().eq(Combo::getChildren, combo.getChildren());
         }
         if (StringUtils.isNotEmpty(combo.getStatus())) {
-            queryWrapper.eq("status", combo.getStatus());
+            queryWrapper.lambda().eq(Combo::getStatus, combo.getStatus());
         }
         return queryWrapper;
     }
@@ -93,7 +90,7 @@ public class ComboController extends BaseController {
      */
     @GetMapping("/add")
     public String add() {
-        return prefix + "/add" ;
+        return prefix + "/add";
     }
 
     /**
@@ -114,7 +111,7 @@ public class ComboController extends BaseController {
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         Combo combo = comboService.getById(id);
         mmap.put("combo", combo);
-        return prefix + "/edit" ;
+        return prefix + "/edit";
     }
 
     /**
@@ -149,9 +146,9 @@ public class ComboController extends BaseController {
         AjaxResult ajax = new AjaxResult();
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(combo)) {
-            queryWrapper.eq("combo", combo);
+            queryWrapper.lambda().eq(Commodity::getCombo, combo);
         }
-        queryWrapper.select("id", "gco", "gna");
+        queryWrapper.lambda().select(Commodity::getId, Commodity::getGco, Commodity::getGna);
         List<Commodity> commodityList = commodityService.list(queryWrapper);
         ajax.put("code", 200);
         ajax.put("value", commodityList);

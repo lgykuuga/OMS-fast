@@ -40,10 +40,14 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
 
     @Resource
     TradeMapper tradeMapper;
-    /** 标准订单报文快照 */
+    /**
+     * 标准订单报文快照
+     */
     @Autowired
     ITradeStandardService tradeStandardService;
-    /** 店铺接口信息 */
+    /**
+     * 店铺接口信息
+     */
     @Autowired
     IShopInterfacesService shopInterfacesService;
 
@@ -64,7 +68,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
     public String previewOrder(String tid, String type) {
         // 查询表信息
         QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("tid", tid);
+        queryWrapper.lambda().eq("tid", tid);
         Trade trade = tradeMapper.selectOne(queryWrapper);
         if (trade != null) {
             if (OrderType.ORIGIN.name().equalsIgnoreCase(type)) {
@@ -88,7 +92,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
     public CommonResponse<String> createSnapshot(String tid) {
         // 查询表信息
         QueryWrapper<Trade> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("tid", tid);
+        queryWrapper.lambda().eq(Trade::getTid, tid);
         Trade trade = this.getOne(queryWrapper);
 
         if (trade == null) {
@@ -97,7 +101,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
 
         //根据店铺获取店铺接口类型
         QueryWrapper<ShopInterfaces> shopInterfacesQueryWrapper = new QueryWrapper<>();
-        shopInterfacesQueryWrapper.eq("shop", trade.getShop());
+        shopInterfacesQueryWrapper.lambda().eq(ShopInterfaces::getShop, trade.getShop());
         ShopInterfaces shopInterface = shopInterfacesService.getOne(shopInterfacesQueryWrapper);
         if (shopInterface == null) {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "店铺接口信息不完整;");
@@ -148,9 +152,9 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
         //更新状态为已转单
         updateTrade.setFlag(TradeTranformStatusEnum.TRANFORM.getValue());
 
-        UpdateWrapper updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("tid", trade.getTid());
-        updateWrapper.eq("flag", TradeTranformStatusEnum.WAIT_TRANFORM.getValue());
+        UpdateWrapper<Trade> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.lambda().eq(Trade::getTid, trade.getTid());
+        updateWrapper.lambda().eq(Trade::getFlag, TradeTranformStatusEnum.WAIT_TRANFORM.getValue());
         boolean b = this.update(updateTrade, updateWrapper);
         if (b) {
             return new CommonResponse<String>().ok("更新成功");
@@ -160,6 +164,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
 
     /**
      * 保存快照
+     *
      * @param standardOrder 保存订单快照信息
      */
     public void saveStandardOrderData(StandardOrder standardOrder) {

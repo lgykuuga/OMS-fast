@@ -1,10 +1,10 @@
 package com.lgy.web.controller.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lgy.base.domain.Logistics;
 import com.lgy.base.domain.Shop;
 import com.lgy.base.service.IShopService;
 import com.lgy.common.annotation.Log;
+import com.lgy.common.constant.Constants;
 import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
 import com.lgy.common.core.page.TableDataInfo;
@@ -61,7 +61,9 @@ public class ShopController extends BaseController {
     public AjaxResult selectShop() {
         AjaxResult ajax = new AjaxResult();
         QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("gco", "gna");
+        queryWrapper.lambda()
+                .eq(Shop::getStatus, Constants.VALID)
+                .select(Shop::getGco, Shop::getGna);
         List<Shop> shopList = shopService.list(queryWrapper);
         ajax.put("code", 200);
         ajax.put("value", shopList);
@@ -91,19 +93,19 @@ public class ShopController extends BaseController {
         QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(shop.getGco())) {
-            queryWrapper.eq("gco", shop.getGco());
+            queryWrapper.lambda().eq(Shop::getGco, shop.getGco());
         }
         if (StringUtils.isNotEmpty(shop.getGna())) {
-            queryWrapper.eq("gna", shop.getGna());
+            queryWrapper.lambda().eq(Shop::getGna, shop.getGna());
         }
         if (StringUtils.isNotEmpty(shop.getPlatform())) {
-            queryWrapper.eq("platform", shop.getPlatform());
+            queryWrapper.lambda().eq(Shop::getPlatform, shop.getPlatform());
         }
         if (StringUtils.isNotEmpty(shop.getOwner())) {
-            queryWrapper.eq("owner", shop.getOwner());
+            queryWrapper.lambda().eq(Shop::getOwner, shop.getOwner());
         }
         if (StringUtils.isNotEmpty(shop.getStatus())) {
-            queryWrapper.eq("status", shop.getStatus());
+            queryWrapper.lambda().eq(Shop::getStatus, shop.getStatus());
         }
         return queryWrapper;
     }
@@ -176,7 +178,7 @@ public class ShopController extends BaseController {
     @ResponseBody
     public AjaxResult delete(String gcos) {
 
-        List<String> gcoList = Arrays.asList(Convert.toStrArray(gcos));
+        String[] gcoList = Convert.toStrArray(gcos);
 
         boolean flag = true;
 
