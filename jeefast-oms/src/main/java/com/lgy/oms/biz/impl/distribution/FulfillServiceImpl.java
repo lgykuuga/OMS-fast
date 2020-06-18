@@ -12,6 +12,7 @@ import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.oms.factory.TraceLogFactory;
 import com.lgy.oms.service.IOrderDetailService;
 import com.lgy.oms.service.IOrderInterceptService;
 import com.lgy.oms.service.IOrderMainService;
@@ -124,7 +125,7 @@ public class FulfillServiceImpl implements IFulfillService {
         logger.debug("开始订单配货[{}]", orderMain.getOrderId());
 
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+        traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.DISTRIBUTION.getValue(), TraceLevelType.TRACE.getKey(), "开始订单配货:" + param.toString()));
 
         //店铺策略

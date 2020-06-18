@@ -9,7 +9,6 @@ import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.disruptor.audit.AuditOrderEvent;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.StrategyAudit;
-import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderInterceptInfo;
 import com.lgy.oms.enums.order.OrderDetailRefundStatusEnum;
@@ -17,6 +16,7 @@ import com.lgy.oms.enums.order.OrderInterceptTypeEnum;
 import com.lgy.oms.enums.strategy.AuditAmountEnum;
 import com.lgy.oms.enums.strategy.AuditNumberEnum;
 import com.lgy.oms.enums.strategy.AuditTimeEnum;
+import com.lgy.oms.factory.TraceLogFactory;
 import com.lgy.oms.service.IOrderMainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +131,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.AMOUNT.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -202,12 +202,11 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.NUMBER.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
         }
-
 
 
     }
@@ -275,7 +274,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.DATE.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -341,7 +340,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.DATE.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -396,7 +395,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.AMOUNT.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -431,7 +430,7 @@ public class CheckOrderSpecial {
                     stringBuffer.toString()));
         }
         //保存轨迹服务
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+        traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                 OrderOperateType.SELLER_FLAG.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
         stringBuffer.delete(0, stringBuffer.length());
@@ -454,7 +453,7 @@ public class CheckOrderSpecial {
                         .equals(orderDetail.getRefundStatus())) {
                     flag = true;
                     stringBuffer.append("明细商品").append(orderDetail.getCommodity())
-                    .append("存在退款");
+                            .append("存在退款");
                 }
             }
         }
@@ -469,7 +468,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.REFUND.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -494,7 +493,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.SELLER_FLAG.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -520,7 +519,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.COD.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -536,7 +535,7 @@ public class CheckOrderSpecial {
 
             stringBuffer.append("卖家留言拦截:").append(event.getOrderMain().getOrderBuyerinfo().getBuyerMessage());
 
-            logger.debug("单据[{}][{}]", event.getOrderMain().getOrderId(),stringBuffer.toString());
+            logger.debug("单据[{}][{}]", event.getOrderMain().getOrderId(), stringBuffer.toString());
 
             //非强制审核,则拦截
             if (!event.getParam().getEnforce()) {
@@ -546,7 +545,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.SELLER_MESSAGE.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -562,7 +561,7 @@ public class CheckOrderSpecial {
 
             stringBuffer.append("买家留言拦截:").append(event.getOrderMain().getOrderBuyerinfo().getBuyerMessage());
 
-            logger.debug("单据[{}][{}]", event.getOrderMain().getOrderId(),stringBuffer.toString());
+            logger.debug("单据[{}][{}]", event.getOrderMain().getOrderId(), stringBuffer.toString());
 
             //非强制审核,则拦截
             if (!event.getParam().getEnforce()) {
@@ -572,7 +571,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.BUYER_MESSAGE.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());
@@ -592,7 +591,7 @@ public class CheckOrderSpecial {
             stringBuffer.append("来源单号").append(event.getOrderMain().getSourceId())
                     .append("存在有效的相同订单:").append(orderIds.toString());
 
-            logger.warn("单据[{}][{}]", event.getOrderMain().getOrderId(),stringBuffer.toString());
+            logger.warn("单据[{}][{}]", event.getOrderMain().getOrderId(), stringBuffer.toString());
 
             //非强制审核,则拦截
             if (!event.getParam().getEnforce()) {
@@ -602,7 +601,7 @@ public class CheckOrderSpecial {
                         stringBuffer.toString()));
             }
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.AUDIT_CHECK_SAME_ORDER.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
 
             stringBuffer.delete(0, stringBuffer.length());

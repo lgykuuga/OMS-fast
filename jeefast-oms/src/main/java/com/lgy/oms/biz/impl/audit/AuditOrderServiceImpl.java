@@ -24,6 +24,7 @@ import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.enums.order.OrderDetailTypeEnum;
 import com.lgy.oms.enums.order.OrderFlagEnum;
 import com.lgy.oms.enums.order.OrderInterceptTypeEnum;
+import com.lgy.oms.factory.TraceLogFactory;
 import com.lgy.oms.service.IOrderDetailService;
 import com.lgy.oms.service.IOrderInterceptService;
 import com.lgy.oms.service.IOrderMainService;
@@ -35,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Description 审核订单服务实现
@@ -120,7 +122,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         logger.debug("开始审核订单[{}]", orderMain.getOrderId());
 
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+        traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.AUDIT.getValue(), TraceLevelType.TRACE.getKey(), "开始审核订单:" + param.toString()));
 
         //店铺策略
@@ -156,7 +158,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
             orderInterceptService.addOrUpdateOrderIntercept(orderMain.getOrderId(),
                     OrderInterceptTypeEnum.VALIDITY_CHECK.getCode(), failReason.toString());
             //保存轨迹
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                     OrderOperateType.AUDIT.getValue(), TraceLevelType.ABNORMAL.getKey(), failReason.toString()));
 
             return new CommonResponse<String>().error(Constants.FAIL, failReason.toString());
@@ -227,7 +229,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         }
 
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+        traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.AUDIT_CHECK.getValue(), TraceLevelType.TRACE.getKey(), "通过有效性校验"));
         return new CommonResponse<String>().ok("通过有效性校验");
     }
@@ -245,16 +247,16 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         //组装订单信息
         if (param.getInstall()) {
             OrderMain orderFullInfo = orderMainService.getOrderFullInfoById(orderMain.getOrderId());
-            if (orderFullInfo == null) {
+
+            if (Objects.isNull(orderFullInfo)) {
                 logger.error("订单[{}]信息主体不完整;", orderMain.getOrderId());
                 return new CommonResponse<OrderMain>().error(Constants.FAIL, "订单信息主体不完整;");
-            } else {
-                BeanUtils.copyProperties(orderFullInfo, orderMain);
             }
+
+            BeanUtils.copyProperties(orderFullInfo, orderMain);
         }
 
-        if (orderMain.getOrderStatusinfo() == null ||
-                Constants.INVALID.equals(orderMain.getOrderStatusinfo().getStatus())) {
+        if (Objects.isNull(orderMain.getOrderStatusinfo()) || Constants.INVALID.equals(orderMain.getOrderStatusinfo().getStatus())) {
             logger.error("订单[{}]状态无效,不能审核订单;", orderMain.getOrderId());
             return new CommonResponse<OrderMain>().error(Constants.FAIL, "订单状态无效,不能审核订单;");
         }
@@ -280,15 +282,16 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         //审单策略
         StrategyAudit strategyByShop = strategyAuditService.getFullInfoStrategyByShop(orderMain.getShop());
 
-        if (strategyByShop == null) {
+        if (Objects.isNull(strategyByShop)) {
             logger.error("订单[{}]店铺[{}]未设置审单策略,不能审核订单;", orderMain.getOrderId(), orderMain.getShop());
             return new CommonResponse<OrderMain>().error(Constants.FAIL,
                     "店铺" + orderMain.getShop() + "未设置审单策略,不能审核订单;");
-        } else {
-            BeanUtils.copyProperties(strategyByShop, auditStrategy);
         }
 
+        BeanUtils.copyProperties(strategyByShop, auditStrategy);
+
         logger.debug("审核订单:满足审单条件,完成装载订单[{}]对象;", orderMain.getOrderId());
+
         return new CommonResponse<OrderMain>().ok(orderMain);
     }
 
@@ -347,7 +350,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("完成审核订单,耗时:").append(spendTime).append("ms");
                 //保存轨迹
-                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+                traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                         OrderOperateType.AUDIT.getValue(), TraceLevelType.STATUS.getKey(), stringBuilder.toString()));
 
                 logger.info("订单[{}][{}]", event.getOrderMain().getOrderId(), stringBuilder.toString());
@@ -356,7 +359,7 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
                 eventDrivenService.finishAudit(event.getOrderMain(), event.getParam());
             } else {
                 //保存轨迹
-                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+                traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                         OrderOperateType.AUDIT.getValue(), TraceLevelType.ABNORMAL.getKey(), "更新订单状态失败,请检查日志"));
 
                 logger.error("订单[{}]审核更新订单状态失败,method:orderMainService.auditUpdateOrder(orderMain)", event.getOrderMain().getOrderId());

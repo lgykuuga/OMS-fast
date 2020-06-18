@@ -68,14 +68,6 @@ public class TraceLog implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    public TraceLog(String module, String orderId, String type, Integer level, String content) {
-        this.module = module;
-        this.orderId = orderId;
-        this.type = type;
-        this.level = level;
-        this.content = content;
-    }
-
     @Override
     public String toString() {
 

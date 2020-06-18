@@ -1,5 +1,6 @@
 package com.lgy.oms.biz;
 
+import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.oms.domain.order.OrderMain;
 
 /**
@@ -15,6 +16,6 @@ public interface ICreateOrderMainService {
      * @param orderMain 订单主体
      * @return
      */
-    OrderMain saveOrder(OrderMain orderMain);
+    CommonResponse<OrderMain> saveOrder(OrderMain orderMain);
 
 }

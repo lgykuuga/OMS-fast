@@ -8,6 +8,7 @@ import com.lgy.common.constant.Constants;
 import com.lgy.common.constant.ResponseCode;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.DateUtils;
+import com.lgy.common.utils.StringUtils;
 import com.lgy.oms.domain.ShopInterfaces;
 import com.lgy.oms.domain.StandardOrderData;
 import com.lgy.oms.domain.Trade;
@@ -23,11 +24,13 @@ import com.lgy.oms.mapper.TradeMapper;
 import com.lgy.oms.service.IShopInterfacesService;
 import com.lgy.oms.service.ITradeService;
 import com.lgy.oms.service.ITradeStandardService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 交易订单 服务层实现
@@ -40,11 +43,13 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
 
     @Resource
     TradeMapper tradeMapper;
+
     /**
      * 标准订单报文快照
      */
     @Autowired
     ITradeStandardService tradeStandardService;
+
     /**
      * 店铺接口信息
      */
@@ -58,7 +63,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
     public Trade checkOrderExist(String tid, String shop, boolean valid) {
 
         List<Trade> trades = tradeMapper.checkOrderExist(tid, shop, valid);
-        if (trades != null && !trades.isEmpty()) {
+        if (CollectionUtils.isEmpty(trades)) {
             return trades.get(0);
         }
         return null;
@@ -67,25 +72,22 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
     @Override
     public String previewOrder(String tid, String type) {
         // 查询表信息
-        QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq("tid", tid);
-        Trade trade = tradeMapper.selectOne(queryWrapper);
-        if (trade != null) {
+        QueryWrapper<Trade> tradeQueryWrapper = new QueryWrapper<>();
+        tradeQueryWrapper.lambda().eq(Trade::getTid, tid);
+        Trade trade = tradeMapper.selectOne(tradeQueryWrapper);
+        if (Objects.nonNull(trade)) {
             if (OrderType.ORIGIN.name().equalsIgnoreCase(type)) {
                 //原始订单报文
                 return trade.getResponse();
             } else if (OrderType.STANDARD.name().equalsIgnoreCase(type)) {
                 //最新标准订单报文
-                queryWrapper.orderByDesc("modified");
-                queryWrapper.last("limit 1");
-                StandardOrderData standardOrderData = tradeStandardService.getOne(queryWrapper);
-                if (standardOrderData == null) {
-                    return null;
+                StandardOrderData latestStandardOrderData = tradeStandardService.getLatestStandardOrderData(tid);
+                if (Objects.nonNull(latestStandardOrderData)) {
+                    return latestStandardOrderData.getStandard();
                 }
-                return standardOrderData.getStandard();
             }
         }
-        return null;
+        return StringUtils.EMPTY;
     }
 
     @Override
@@ -95,7 +97,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
         queryWrapper.lambda().eq(Trade::getTid, tid);
         Trade trade = this.getOne(queryWrapper);
 
-        if (trade == null) {
+        if (Objects.isNull(trade)) {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "信息不完整;");
         }
 
@@ -103,7 +105,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
         QueryWrapper<ShopInterfaces> shopInterfacesQueryWrapper = new QueryWrapper<>();
         shopInterfacesQueryWrapper.lambda().eq(ShopInterfaces::getShop, trade.getShop());
         ShopInterfaces shopInterface = shopInterfacesService.getOne(shopInterfacesQueryWrapper);
-        if (shopInterface == null) {
+        if (Objects.isNull(shopInterface)) {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "店铺接口信息不完整;");
         }
 
@@ -121,13 +123,13 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
             standardOrder = RdsConvert.changeStandard(rdsTrade, shopInterface);
         }
 
-        if (standardOrder == null) {
+        if (Objects.isNull(standardOrder)) {
             return new CommonResponse<String>().error(Constants.FAIL, tid + "店铺接口类型暂不支持,生成快照失败;");
         } else {
             //获取最新的订单快照信息
             StandardOrderData latest = tradeStandardService.getLatestStandardOrderData(tid);
 
-            if (latest == null) {
+            if (Objects.isNull(latest)) {
                 /** 没有快照信息,则直接保存快照 */
                 saveStandardOrderData(standardOrder);
             } else {
@@ -153,8 +155,9 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
         updateTrade.setFlag(TradeTranformStatusEnum.TRANFORM.getValue());
 
         UpdateWrapper<Trade> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().eq(Trade::getTid, trade.getTid());
-        updateWrapper.lambda().eq(Trade::getFlag, TradeTranformStatusEnum.WAIT_TRANFORM.getValue());
+        updateWrapper.lambda()
+                .eq(Trade::getTid, trade.getTid())
+                .eq(Trade::getFlag, TradeTranformStatusEnum.WAIT_TRANFORM.getValue());
         boolean b = this.update(updateTrade, updateWrapper);
         if (b) {
             return new CommonResponse<String>().ok("更新成功");
@@ -167,7 +170,7 @@ public class TradeServiceImpl extends ServiceImpl<TradeMapper, Trade> implements
      *
      * @param standardOrder 保存订单快照信息
      */
-    public void saveStandardOrderData(StandardOrder standardOrder) {
+    private void saveStandardOrderData(StandardOrder standardOrder) {
 
         StandardOrderData standardOrderData = new StandardOrderData();
         //平台单号

@@ -1,7 +1,6 @@
 package com.lgy.oms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
@@ -11,8 +10,8 @@ import com.lgy.oms.constants.OrderOperateType;
 import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
-import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.enums.strategy.DistributionWarehouseRuleEnum;
+import com.lgy.oms.factory.TraceLogFactory;
 import com.lgy.oms.mapper.StrategyDistributionWarehouseRuleMapper;
 import com.lgy.oms.service.IStrategyDistributionWarehouseRuleService;
 import org.slf4j.Logger;
@@ -82,14 +81,14 @@ public class StrategyDistributionWarehouseRuleServiceImpl extends ServiceImpl<St
         if (b) {
             logger.info("[{}]初始化分仓规则成功", ShiroUtils.getUserId());
             //保存轨迹
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.STRATEGY_DISTRIBUTION, gco,
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.STRATEGY_DISTRIBUTION, gco,
                     OrderOperateType.RULE_INIT.getValue(), TraceLevelType.TRACE.getKey(), "初始化分仓策略成功"));
             return new CommonResponse<String>().ok("初始化分仓策略成功");
         }
 
         logger.error("[{}]初始化分仓规则失败", ShiroUtils.getUserId());
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.STRATEGY_DISTRIBUTION, gco,
+        traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.STRATEGY_DISTRIBUTION, gco,
                 OrderOperateType.RULE_INIT.getValue(), TraceLevelType.ABNORMAL.getKey(), "初始化分仓策略失败"));
         return new CommonResponse<String>().error(Constants.FAIL, "初始化分仓策略失败");
     }
@@ -121,12 +120,13 @@ public class StrategyDistributionWarehouseRuleServiceImpl extends ServiceImpl<St
 
     /**
      * 修改字段值
+     *
      * @param obj
      * @param propertyName
      * @param value
      * @throws Exception
      */
-    public  static void setProperty(Object obj, String propertyName, Object value) throws Exception{
+    public static void setProperty(Object obj, String propertyName, Object value) throws Exception {
         Class<? extends Object> clazz = obj.getClass();
 
         //防止字段为private时，无法修改字段值的情况

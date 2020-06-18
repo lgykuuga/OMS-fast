@@ -7,10 +7,13 @@ import com.lgy.common.utils.reflect.ReflectUtils;
 import com.lgy.oms.domain.StrategyDistributionWarehouseAvailable;
 import com.lgy.oms.mapper.StrategyDistributionWarehouseAvailableMapper;
 import com.lgy.oms.service.IStrategyDistributionWarehouseAvailableService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 配货策略分仓可用仓库 服务层实现
@@ -19,12 +22,13 @@ import java.util.List;
  * @date 2020-02-01
  */
 @Service
-public class StrategyDistributionWarehouseAvailableServiceImpl extends ServiceImpl<StrategyDistributionWarehouseAvailableMapper, StrategyDistributionWarehouseAvailable> implements IStrategyDistributionWarehouseAvailableService {
+public class StrategyDistributionWarehouseAvailableServiceImpl extends ServiceImpl<StrategyDistributionWarehouseAvailableMapper,
+        StrategyDistributionWarehouseAvailable> implements IStrategyDistributionWarehouseAvailableService {
 
     @Override
     public List<StrategyDistributionWarehouseAvailable> getStrategyByGco(String gco) {
         QueryWrapper<StrategyDistributionWarehouseAvailable> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("gco", gco);
+        queryWrapper.lambda().eq(StrategyDistributionWarehouseAvailable::getGco, gco);
         return this.list(queryWrapper);
     }
 
@@ -46,26 +50,23 @@ public class StrategyDistributionWarehouseAvailableServiceImpl extends ServiceIm
 
     @Override
     public List<String> getAvailableWarehouse(String gco) {
+
         QueryWrapper<StrategyDistributionWarehouseAvailable> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("gco", gco);
-        //开启的仓库
-        queryWrapper.eq("status", Constants.ON);
-        //优先级排序
-        queryWrapper.orderByAsc("priority");
-        queryWrapper.select("warehouse");
+        queryWrapper.lambda()
+                .eq(StrategyDistributionWarehouseAvailable::getGco, gco)
+                //开启的仓库
+                .eq(StrategyDistributionWarehouseAvailable::getStatus, Constants.ON)
+                //优先级排序
+                .orderByAsc(StrategyDistributionWarehouseAvailable::getPriority)
+                .select(StrategyDistributionWarehouseAvailable::getWarehouse);
+
         List<StrategyDistributionWarehouseAvailable> list = this.list(queryWrapper);
 
-        if (list == null || list.isEmpty()) {
-            return null;
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
         }
 
-        List<String> warehouseList = new ArrayList<>(list.size());
-
-        for (StrategyDistributionWarehouseAvailable strategyDistributionWarehouseAvailable : list) {
-            warehouseList.add(strategyDistributionWarehouseAvailable.getWarehouse());
-        }
-
-        return warehouseList;
+        return list.stream().map(StrategyDistributionWarehouseAvailable::getWarehouse).collect(Collectors.toList());
     }
 
 }

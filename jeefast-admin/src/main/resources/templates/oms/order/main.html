@@ -52,14 +52,52 @@
                    shiro:hasPermission="oms:main:edit">
                     <i class="fa fa-edit"></i> 编辑
                 </a>
-                <a class="btn btn-primary multiple disabled" onclick="audit()"
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle multiple disabled">审核 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="fa fa-hand-pointer-o" href="buttons.html#">人工审核</a>
+                        </li>
+                        <li><a class="fa fa-space-shuttle" onclick="audit()">自动审核</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle multiple disabled">配货 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="fa fa-hand-pointer-o" href="buttons.html#">人工配货</a>
+                        </li>
+                        <li><a class="fa fa-space-shuttle" href="buttons.html#">自动配货</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <a class="btn btn-primary multiple disabled multiple disabled" onclick="distribution()"
                    shiro:hasPermission="oms:main:add">
-                    <i class="fa fa-edit"></i> 审核
+                    <i class="glyphicon glyphicon-circle-arrow-right"></i> 推送
                 </a>
+
                 <a class="btn btn-primary multiple disabled" onclick="distribution()"
                    shiro:hasPermission="oms:main:add">
-                    <i class="fa fa-edit"></i> 配货
+                    <i class="fa fa-truck"></i> 发货
                 </a>
+                <a class="btn btn-warning multiple disabled" onclick="distribution()"
+                   shiro:hasPermission="oms:main:add">
+                    <i class="fa fa-wrench"></i> 清除异常
+                </a>
+
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle multiple disabled">打印 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="glyphicon glyphicon-cloud-download" href="buttons.html#">下载PDF</a>
+                        </li>
+                        <li><a class="fa fa-file" href="buttons.html#">打印发货单</a>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -185,6 +223,47 @@
                     field : 'mark',
                     title : '订单标记'
                 },
+
+                {
+                    field:'mark',
+                    title:'标识',
+                    align:'left',
+                    width:'12%',
+                    formatter: function(value,row,index){
+                        var mark = "";
+                        if (0 != row.sellerFlag) {
+                            mark += '<span class="hand-rock-o' + row.flid + '" title="平台卖家旗帜" style="display:inline-block;height:20px;">1</span>';
+                        }
+                        if(0 == row.intercept){//是否拦截
+                            mark += '<span class="hand-rock-o" title="订单拦截" style="height:20px;">2</span>';
+                        }
+                        if(0 == row.frozen){//是否冻结
+                            mark += '<span class="hand-rock-o" title="订单冻结" style="height:20px;">3</span>';
+                        }
+                        if(0 == row.orderLock){//是否锁定
+                            mark += '<span class="hand-rock-o" title="订单锁定" style="height:20px;">4</span>';
+                        }
+                        if(0 == row.handEdit){//是否人工编辑
+                            mark += '<span class="hand-rock-o" title="人工编辑" style="height:20px;">5</span>';
+                        }
+                        if(0 == row.active){//是否参与活动
+                            mark += '<span class="hand-rock-o" title="订单参与活动" style="height:20px;">6</span>';
+                        }
+                        if(0 == row.refund){//是否退款
+                            mark += '<span class="hand-rock-o" title="订单存在退款">7</span>';
+                        }
+                        if(0 == row.afterSales){//是否售后
+                            mark += '<span class="hand-rock-o" title="订单生成售后单" style="height:20px;">8</span>';
+                        }
+                        if(0 == row.invoice){//订单是否已生成发票
+                            mark += '<span class="hand-rock-o" title="订单已生成发票" style="height:20px;">9</span>';
+                        }
+                        return mark;
+                    }
+                },
+
+
+
                 {
                     field : 'markContent',
                     title : '标记内容'
@@ -192,30 +271,6 @@
                 {
                     field : 'sellerFlag',
                     title : '卖家备注旗帜'
-                },
-                {
-                    field : 'sizeType',
-                    title : '尺码类型'
-                },
-                {
-                    field : 'skuNum',
-                    title : 'sku种类数量'
-                },
-                {
-                    field : 'qty',
-                    title : '总件数'
-                },
-                {
-                    field : 'commodity',
-                    title : '商品编码集合'
-                },
-                {
-                    field : 'volume',
-                    title : '总体积'
-                },
-                {
-                    field : 'weight',
-                    title : '总重量'
                 },
                 {
                     field : 'warehouse',

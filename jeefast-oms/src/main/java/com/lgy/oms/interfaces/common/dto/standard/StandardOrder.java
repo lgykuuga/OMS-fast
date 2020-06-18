@@ -200,8 +200,6 @@ public class StandardOrder {
      */
     private String est_con_time;
 
-
-
     /**
      * 是否平台发货
      */
@@ -256,6 +254,11 @@ public class StandardOrder {
      * 快递单号
      */
     private String express_number;
+
+    /**
+     * 是否存在退款
+     */
+    private Boolean exist_refund;
 
 
 }

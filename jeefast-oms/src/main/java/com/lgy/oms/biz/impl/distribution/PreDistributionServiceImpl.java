@@ -10,6 +10,7 @@ import com.lgy.oms.domain.StrategyDistribution;
 import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.oms.factory.TraceLogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class PreDistributionServiceImpl implements IPreDistributionService {
 
 
         //保存轨迹
-        traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+        traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                 OrderOperateType.SPLIT.getValue(), TraceLevelType.TRACE.getKey(), msg.toString()));
         logger.debug(msg.toString());
 

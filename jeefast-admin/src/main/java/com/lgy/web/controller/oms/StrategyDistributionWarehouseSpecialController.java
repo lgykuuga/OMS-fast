@@ -74,10 +74,10 @@ public class StrategyDistributionWarehouseSpecialController extends BaseControll
         QueryWrapper<StrategyDistributionWarehouseSpecial> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(entity.getGco())) {
-            queryWrapper.eq("gco", entity.getGco());
+            queryWrapper.lambda().eq(StrategyDistributionWarehouseSpecial::getGco, entity.getGco());
         }
         if (StringUtils.isNotEmpty(entity.getWarehouse())) {
-            queryWrapper.eq("warehouse", entity.getWarehouse());
+            queryWrapper.lambda().eq(StrategyDistributionWarehouseSpecial::getWarehouse, entity.getWarehouse());
         }
 
         startPage();

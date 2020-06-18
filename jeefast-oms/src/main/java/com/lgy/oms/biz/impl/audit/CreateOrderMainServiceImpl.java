@@ -2,18 +2,21 @@ package com.lgy.oms.biz.impl.audit;
 
 
 import com.lgy.base.service.ICommodityService;
+import com.lgy.common.constant.Constants;
+import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
+import com.lgy.oms.biz.ICreateOrderMainService;
+import com.lgy.oms.biz.IOrderDetailProcessingService;
 import com.lgy.oms.constants.OrderModuleConstants;
 import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.service.*;
-import com.lgy.oms.biz.ICreateOrderMainService;
-import com.lgy.oms.biz.IOrderDetailProcessingService;
 import com.lgy.system.incrementer.IDIncrementer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 /**
@@ -80,7 +83,10 @@ public class CreateOrderMainServiceImpl implements ICreateOrderMainService {
 
 
     @Override
-    public OrderMain saveOrder(OrderMain orderMain) {
+    @Transactional(rollbackFor = Exception.class)
+    public CommonResponse<OrderMain> saveOrder(OrderMain orderMain) {
+
+        boolean flag = true;
 
         if (StringUtils.isEmpty(orderMain.getOrderId())) {
             //若不存在单号,则生成单据流水号
@@ -124,13 +130,17 @@ public class CreateOrderMainServiceImpl implements ICreateOrderMainService {
 
             orderMainService.save(orderMain);
         } catch (Exception e) {
+            flag = false;
             logger.error("保存单据" + orderMain.getSourceId() + "失败。", e);
             //手动回滚事务
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
 
+        if (flag) {
+            return new CommonResponse<OrderMain>().ok(orderMain);
+        }
 
-        return orderMain;
+        return new CommonResponse<OrderMain>().error(Constants.FAIL, "保存订单失败,请检查日志");
     }
 
 }

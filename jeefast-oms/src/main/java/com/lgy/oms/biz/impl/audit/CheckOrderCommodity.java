@@ -16,6 +16,7 @@ import com.lgy.oms.domain.order.OrderInterceptInfo;
 import com.lgy.oms.enums.order.OrderInterceptTypeEnum;
 import com.lgy.oms.enums.strategy.AuditCommodityEnum;
 import com.lgy.oms.enums.strategy.AuditSpecialEnum;
+import com.lgy.oms.factory.TraceLogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +132,7 @@ public class CheckOrderCommodity {
             }
 
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                     OrderOperateType.AUDIT_SPECIAL_INTERCEPT.getValue(), TraceLevelType.TRACE.getKey(), stringBuffer.toString()));
         }
 
@@ -211,7 +212,7 @@ public class CheckOrderCommodity {
                 }
 
                 //保存轨迹服务
-                traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
+                traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, event.getOrderMain().getOrderId(),
                         OrderOperateType.AUDIT_DETAIL_INTERCEPT.getValue(), TraceLevelType.TRACE.getKey(), intercept.toString()));
             }
         }

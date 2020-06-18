@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -64,13 +65,13 @@ public class StrategyDistributionWarehouseWeightController extends BaseControlle
         QueryWrapper<StrategyDistributionWarehouseWeight> queryWrapper = new QueryWrapper<>();
         // 需要根据页面查询条件进行组装
         if (StringUtils.isNotEmpty(entity.getGco())) {
-            queryWrapper.eq("gco", entity.getGco());
+            queryWrapper.lambda().eq(StrategyDistributionWarehouseWeight::getGco, entity.getGco());
         }
         if (StringUtils.isNotEmpty(entity.getWarehouse())) {
-            queryWrapper.eq("warehouse", entity.getWarehouse());
+            queryWrapper.lambda().eq(StrategyDistributionWarehouseWeight::getWarehouse, entity.getWarehouse());
         }
-        if (entity.getStatus() != null) {
-            queryWrapper.eq("status", entity.getStatus());
+        if (Objects.nonNull(entity.getStatus())) {
+            queryWrapper.lambda().eq(StrategyDistributionWarehouseWeight::getStatus, entity.getStatus());
         }
         startPage();
         return getDataTable(distributionWarehouseWeightService.list(queryWrapper));
@@ -115,7 +116,9 @@ public class StrategyDistributionWarehouseWeightController extends BaseControlle
         List<StrategyDistributionWarehouseAvailable> availableList = availableService.getStrategyByGco(gco);
 
         if (StringUtils.isNotEmpty(availableList)) {
-            List<String> warehouseList = availableList.stream().map(StrategyDistributionWarehouseAvailable::getWarehouse).collect(Collectors.toList());
+            List<String> warehouseList = availableList.stream()
+                    .map(StrategyDistributionWarehouseAvailable::getWarehouse)
+                    .collect(Collectors.toList());
             List<Warehouse> warehouses = warehouseService.selectWarehouse(warehouseList);
             mmap.put("warehouses", warehouses);
         }

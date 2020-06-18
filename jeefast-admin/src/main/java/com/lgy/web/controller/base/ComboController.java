@@ -31,6 +31,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/base/combo")
 public class ComboController extends BaseController {
+
     private String prefix = "base/combo";
 
     @Autowired

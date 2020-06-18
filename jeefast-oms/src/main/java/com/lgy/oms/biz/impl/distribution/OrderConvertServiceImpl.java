@@ -14,6 +14,7 @@ import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderDetail;
 import com.lgy.oms.domain.order.OrderMain;
+import com.lgy.oms.factory.TraceLogFactory;
 import com.lgy.oms.service.IDistributionOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,12 @@ public class OrderConvertServiceImpl implements IOrderConvertService {
         boolean b = distributionOrderService.saveOrder(distributionOrder);
         if (b) {
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                     OrderOperateType.CREATE_DISTRIBUTION.getValue(), TraceLevelType.STATUS.getKey(),
                     "生成配货单成功,配货单号:" + distributionOrder.getDistributionId()));
         } else {
             //保存轨迹服务
-            traceLogApi.addTraceLogAction(new TraceLog(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
+            traceLogApi.addTraceLogAction(TraceLogFactory.create(OrderModuleConstants.ORDER_MAIN, orderMain.getOrderId(),
                     OrderOperateType.CREATE_DISTRIBUTION.getValue(), TraceLevelType.ABNORMAL.getKey(),
                     "生成配货单失败,请开发人员检查代码"));
             logger.error("单据[{}]生成配货单失败,请开发人员检查代码", orderMain.getOrderId());

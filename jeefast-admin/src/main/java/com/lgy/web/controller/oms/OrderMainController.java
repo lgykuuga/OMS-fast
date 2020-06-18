@@ -7,6 +7,7 @@ import com.lgy.common.core.controller.BaseController;
 import com.lgy.common.core.domain.AjaxResult;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.core.page.TableDataInfo;
+import com.lgy.common.core.text.Convert;
 import com.lgy.common.enums.BusinessType;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.poi.ExcelUtil;
@@ -79,7 +80,7 @@ public class OrderMainController extends BaseController {
         //非自动触发
         param.setAuto(false);
 
-        String[] orderIdz = orderIds.split(Constants.COMMA);
+        String[] orderIdz = Convert.toStrArray(orderIds);
         for (String orderId : orderIdz) {
             CommonResponse<String> response = auditOrderService.auditOrder(orderId, param);
             if (!Constants.SUCCESS.equals(response.getCode())) {

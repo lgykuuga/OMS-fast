@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lgy.oms.mapper.TradeMapper">
 
-    <resultMap type="Trade" id="TradeResult">
+    <resultMap type="com.lgy.oms.domain.Trade" id="TradeResult">
         <result property="id"    column="id"    />
         <result property="tid"    column="tid"    />
         <result property="status"    column="status"    />
@@ -19,7 +19,6 @@
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
     </resultMap>
 
     <select id="checkOrderExist" parameterType="String" resultMap="TradeResult">
