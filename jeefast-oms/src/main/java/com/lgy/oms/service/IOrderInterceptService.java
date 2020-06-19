@@ -20,9 +20,9 @@ public interface IOrderInterceptService extends IService<OrderInterceptInfo> {
      * @param orderId 订单号
      * @param type    拦截类型
      * @param content 拦截内容
-     * @return
+     * @return 成功/失败
      */
-    Integer addOrUpdateOrderIntercept(String orderId, Integer type, String content);
+    Boolean addOrUpdateOrderIntercept(String orderId, Integer type, String content);
 
 
     /**
@@ -31,6 +31,13 @@ public interface IOrderInterceptService extends IService<OrderInterceptInfo> {
      * @param orderId 订单号
      */
     void deleteByOrderId(String orderId);
+
+    /**
+     * 清除订单拦截信息
+     *
+     * @param orderIds 批量订单号
+     */
+    void deleteByOrderIds(List<String> orderIds);
 
     /**
      * 清除订单拦截信息并更新订单状态

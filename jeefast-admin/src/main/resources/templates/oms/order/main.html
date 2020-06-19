@@ -176,6 +176,8 @@
                 createUrl: prefix + "/add",
                 exportUrl: prefix + "/export",
                 modalName: "订单审核信息",
+                fixedColumns: true,
+                fixedNumber: 3,
                 columns: [{
                     checkbox: true
                 },
@@ -202,7 +204,7 @@
                 {
                     field : 'shopName',
                     title : '店铺',
-                    width : 120,
+                    width : 150,
                     formatter: function(value, row, index) {
                         return $.table.tooltip(value);
                     }
@@ -217,80 +219,81 @@
                 },
                 {
                     field : 'flag',
-                    title : '订单状态'
+                    title : '订单状态',
+                    width : 120,
                 },
-                {
-                    field : 'mark',
-                    title : '订单标记'
-                },
+
 
                 {
                     field:'mark',
                     title:'标识',
                     align:'left',
-                    width:'12%',
+                    width:200,
                     formatter: function(value,row,index){
                         var mark = "";
-                        if (0 != row.sellerFlag) {
-                            mark += '<span class="hand-rock-o' + row.flid + '" title="平台卖家旗帜" style="display:inline-block;height:20px;">1</span>';
+                        if(0 == row.intercept){
+                            mark += '<span class="fa fa-ban" title="订单拦截">&nbsp;&nbsp;</span>';
                         }
-                        if(0 == row.intercept){//是否拦截
-                            mark += '<span class="hand-rock-o" title="订单拦截" style="height:20px;">2</span>';
+                        if(0 == row.frozen){
+                            mark += '<span class="fa fa-eye" title="订单冻结">&nbsp;&nbsp;</span>';
                         }
-                        if(0 == row.frozen){//是否冻结
-                            mark += '<span class="hand-rock-o" title="订单冻结" style="height:20px;">3</span>';
+                        if(0 == row.orderLock){
+                            mark += '<span class="fa fa-lock" title="订单锁定">&nbsp;&nbsp;</span>';
                         }
-                        if(0 == row.orderLock){//是否锁定
-                            mark += '<span class="hand-rock-o" title="订单锁定" style="height:20px;">4</span>';
+                        if(0 == row.handEdit){
+                            mark += '<span class="fa fa-edit" title="人工编辑">&nbsp;&nbsp;</span>';
                         }
-                        if(0 == row.handEdit){//是否人工编辑
-                            mark += '<span class="hand-rock-o" title="人工编辑" style="height:20px;">5</span>';
+                        if(0 == row.active){
+                            mark += '<span class="fa fa-gift" title="订单参与活动">&nbsp;&nbsp;</span>';
                         }
-                        if(0 == row.active){//是否参与活动
-                            mark += '<span class="hand-rock-o" title="订单参与活动" style="height:20px;">6</span>';
+                        if(0 == row.refund){
+                            mark += '<span class="fa fa-rmb" title="订单存在退款">&nbsp;&nbsp;</span>';
                         }
-                        if(0 == row.refund){//是否退款
-                            mark += '<span class="hand-rock-o" title="订单存在退款">7</span>';
+                        if(0 == row.afterSales){
+                            mark += '<span class="fa fa-shopping-cart" title="订单生成售后单">&nbsp;&nbsp;</span>';
                         }
-                        if(0 == row.afterSales){//是否售后
-                            mark += '<span class="hand-rock-o" title="订单生成售后单" style="height:20px;">8</span>';
-                        }
-                        if(0 == row.invoice){//订单是否已生成发票
-                            mark += '<span class="hand-rock-o" title="订单已生成发票" style="height:20px;">9</span>';
+                        if(0 == row.invoice){
+                            mark += '<span class="fa fa-money" title="订单已生成发票">&nbsp;&nbsp;</span>';
                         }
                         return mark;
                     }
                 },
-
-
-
-                {
-                    field : 'markContent',
-                    title : '标记内容'
-                },
-                {
-                    field : 'sellerFlag',
-                    title : '卖家备注旗帜'
-                },
                 {
                     field : 'warehouse',
-                    title : '发货仓库编码(支持多条)'
+                    title : '发货仓库',
+                    width:150,
                 },
                 {
                     field : 'logistics',
-                    title : '物流商编码(支持多条)'
+                    title : '物流商',
+                    width:150,
                 },
                 {
                     field : 'expressNumber',
-                    title : '快递单号(支持多条)'
+                    title : '快递单号',
+                    width:200,
                 },
                 {
+                    field : 'mark',
+                    title : '订单标记',
+                    width:50
+                },
+
+                {
+                    field : 'markContent',
+                    title : '标记内容',
+                    width:200,
+                },
+
+                {
                     field : 'sendoutTime',
-                    title : '发货时间'
+                    title : '发货时间',
+                    width:200,
                 },
                 {
                     field : 'remark',
-                    title : '备注'
+                    title : '备注',
+                    width:500
                 }
 
                 ]

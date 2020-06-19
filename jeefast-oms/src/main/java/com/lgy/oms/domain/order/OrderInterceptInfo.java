@@ -1,5 +1,6 @@
 package com.lgy.oms.domain.order;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lgy.common.core.domain.BaseEntity;
@@ -28,6 +29,7 @@ public class OrderInterceptInfo extends BaseEntity implements Serializable {
     /**
      * 订单流水编号
      */
+    @TableId
     @JsonProperty("订单编号")
     private String orderId;
 

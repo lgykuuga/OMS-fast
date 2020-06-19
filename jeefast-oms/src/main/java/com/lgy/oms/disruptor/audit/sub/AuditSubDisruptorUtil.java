@@ -2,7 +2,6 @@ package com.lgy.oms.disruptor.audit.sub;
 
 import com.alibaba.fastjson.JSON;
 import com.lgy.framework.util.ShiroUtils;
-import com.lgy.oms.config.CustomThreadFactoryBuilder;
 import com.lgy.oms.disruptor.audit.AuditOrderEvent;
 import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.RingBuffer;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * @Author LGy
@@ -87,23 +85,17 @@ public class AuditSubDisruptorUtil {
                 new SleepingWaitStrategy()
         );
 
+
         /**
          * 并行校验地址、校验拦截订单主信息、校验拦截订单明细信息
          * 后串行执行更新订单状态
          */
-
-        CheckOrderCommodityHandler[] checkOrderCommodityHandlers = new CheckOrderCommodityHandler[10];
-        for (int i = 0; i < 10; i++) {
-            checkOrderCommodityHandlers[i] = orderCommodityHandler;
-        }
-
-        disruptor.handleEventsWithWorkerPool(checkOrderCommodityHandlers);
-        disruptor.handleEventsWith(orderSpecialHandler);
-        disruptor.handleEventsWith(addressHandler)
+        disruptor.handleEventsWith(addressHandler, orderSpecialHandler, orderCommodityHandler)
                 .then(updateOrderInfoHandler);
 
         //异常处理
         disruptor.setDefaultExceptionHandler(new AuditSubExceptionHandler());
+
         //启动disruptor
         disruptor.start();
         this.producer = new Producer(disruptor.getRingBuffer());

@@ -271,7 +271,8 @@ public class AuditOrderServiceImpl implements IAuditOrderService {
         if (Constants.YES.equals(orderMain.getOrderLock())) {
             //获取当前登陆人编码
             Long userId = ShiroUtils.getSysUser().getUserId();
-            if (!userId.toString().equals(orderMain.getLockUser())) {
+            if (StringUtils.isNotBlank(orderMain.getLockUser()) &&
+                    !userId.toString().equals(orderMain.getLockUser())) {
                 logger.error("当前登录人[{}]不是订单锁定人[{}],不能审核该订单[{}];", userId,
                         orderMain.getLockUser(), orderMain.getOrderId());
                 return new CommonResponse<OrderMain>().error(Constants.FAIL,
