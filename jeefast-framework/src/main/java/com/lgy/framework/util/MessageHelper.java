@@ -7,7 +7,7 @@ import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.core.MessageProperties;
 
 /**
- * @Description rabbitMQ MessageHelper
+ * @Description rabbitmq MessageHelper
  * @Author LGy
  * @Date 2020/1/15
  */

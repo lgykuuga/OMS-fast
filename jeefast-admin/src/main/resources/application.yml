@@ -22,7 +22,7 @@ lgy:
   redis: 1
   # 项目是否启用 mongoDB(可以不安装) mysql
   mongoDB: 1
-  # 项目是否启用 rabbitMQ(可以不安装) disruptor
+  # 项目是否启用 rabbitmq(可以不安装) disruptor
   rabbitMQ: 1
   # 项目是否启用 elasticSearch(待开发) mysql
   elasticSearch: 1

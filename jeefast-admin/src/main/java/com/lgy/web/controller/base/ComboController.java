@@ -49,6 +49,12 @@ public class ComboController extends BaseController {
     /**
      * 查询组合商品列表
      */
+    /**
+     * 查询组合商品列表
+     *
+     * @param combo 组合商品入参
+     * @return TableDataInfo
+     */
     @RequiresPermissions("base:combo:list")
     @PostMapping("/list")
     @ResponseBody
@@ -58,8 +64,12 @@ public class ComboController extends BaseController {
         return getDataTable(comboService.list(queryWrapper));
     }
 
+
     /**
      * 导出组合商品列表
+     *
+     * @param combo 组合商品查询条件入参
+     * @return AjaxResult
      */
     @RequiresPermissions("base:combo:export")
     @PostMapping("/export")
@@ -86,16 +96,23 @@ public class ComboController extends BaseController {
         return queryWrapper;
     }
 
+
     /**
-     * 新增组合商品
+     * 新增组合商品页面跳转
+     *
+     * @return url
      */
     @GetMapping("/add")
     public String add() {
         return prefix + "/add";
     }
 
+
     /**
      * 新增保存组合商品
+     *
+     * @param combo 组合商品
+     * @return AjaxResult
      */
     @RequiresPermissions("base:combo:add")
     @Log(title = "组合商品", businessType = BusinessType.INSERT)
@@ -108,6 +125,13 @@ public class ComboController extends BaseController {
     /**
      * 修改组合商品
      */
+    /**
+     * 修改组合商品
+     *
+     * @param id   组合商品id
+     * @param mmap ModelMap
+     * @return url
+     */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         Combo combo = comboService.getById(id);
@@ -117,6 +141,9 @@ public class ComboController extends BaseController {
 
     /**
      * 修改保存组合商品
+     *
+     * @param combo 组合商品id
+     * @return AjaxResult
      */
     @RequiresPermissions("base:combo:edit")
     @Log(title = "组合商品", businessType = BusinessType.UPDATE)
@@ -128,6 +155,9 @@ public class ComboController extends BaseController {
 
     /**
      * 删除组合商品
+     *
+     * @param ids 组合商品ids
+     * @return AjaxResult
      */
     @RequiresPermissions("base:combo:remove")
     @Log(title = "组合商品", businessType = BusinessType.DELETE)
@@ -140,6 +170,9 @@ public class ComboController extends BaseController {
 
     /**
      * 获取商品档案信息
+     *
+     * @param combo 组合商品id
+     * @return AjaxResult
      */
     @GetMapping("/selectCommodityParent/{combo}")
     @ResponseBody

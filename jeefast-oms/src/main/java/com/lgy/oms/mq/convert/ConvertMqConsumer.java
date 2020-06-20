@@ -31,7 +31,7 @@ import java.util.Date;
  * @Date 2020/1/14 17:51
  **/
 @Component
-@ConditionalOnProperty(name = "lgy.rabbitMQ", havingValue = "0", matchIfMissing = true)
+@ConditionalOnProperty(name = "lgy.rabbitmq", havingValue = "0", matchIfMissing = true)
 public class ConvertMqConsumer {
 
     private static Logger logger = LoggerFactory.getLogger(ConvertMqConsumer.class);

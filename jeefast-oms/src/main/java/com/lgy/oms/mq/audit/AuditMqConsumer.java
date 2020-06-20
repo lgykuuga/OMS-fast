@@ -31,7 +31,7 @@ import java.util.Date;
  * @Date 2020/1/14 17:51
  **/
 @Component
-//@ConditionalOnProperty(name = "lgy.rabbitMQ", havingValue = "0", matchIfMissing = true)
+//@ConditionalOnProperty(name = "lgy.rabbitmq", havingValue = "0", matchIfMissing = true)
 @Conditional(MqExistsCondition.class)
 public class AuditMqConsumer {
 

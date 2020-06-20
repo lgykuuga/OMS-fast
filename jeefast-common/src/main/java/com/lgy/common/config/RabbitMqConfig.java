@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date 2020/1/14 15:35
  **/
 @Configuration
-@ConditionalOnProperty(name = "lgy.rabbitMQ", havingValue = "0", matchIfMissing = true)
+@ConditionalOnProperty(name = "lgy.rabbitmq", havingValue = "0", matchIfMissing = true)
 public class RabbitMqConfig {
 
     public Logger logger = LoggerFactory.getLogger(getClass());

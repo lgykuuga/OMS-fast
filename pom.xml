@@ -23,6 +23,7 @@
 		<module>jeefast-base</module>
 		<module>jeefast-es</module>
         <module>jeefast-sync</module>
+        <module>jeefast-jms</module>
     </modules>
 	<packaging>pom</packaging>
 
@@ -51,6 +52,7 @@
 		<org.elasticsearch.version>6.2.4</org.elasticsearch.version>
 		<canal.version>1.1.4</canal.version>
 		<hutool.version>5.3.6</hutool.version>
+		<japidocs.version>1.3</japidocs.version>
 	</properties>
 
 	<!-- 依赖声明 -->
@@ -237,12 +239,8 @@
 				<version>${jeefast.version}</version>
 			</dependency>
 
-			<!-- disruptor并发框架 -->
-			<dependency>
-				<groupId>com.lmax</groupId>
-				<artifactId>disruptor</artifactId>
-				<version>${disruptor.version}</version>
-			</dependency>
+
+
 
 		</dependencies>
 	</dependencyManagement>
@@ -299,6 +297,13 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
 			<version>${hutool.version}</version>
+		</dependency>
+
+		<!-- japidocs 根据注释文档生成-->
+		<dependency>
+			<groupId>io.github.yedaxia</groupId>
+			<artifactId>japidocs</artifactId>
+			<version>${japidocs.version}</version>
 		</dependency>
 
 	</dependencies>

@@ -37,7 +37,7 @@ public class EventDrivenServiceImpl implements IEventDrivenService {
     @Autowired
     AuditThreadProducer auditThreadProducer;
 
-    @Value("${lgy.rabbitMQ}")
+    @Value("${lgy.rabbitmq}")
     private String rabbitMQ;
 
     @Override

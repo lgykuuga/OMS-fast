@@ -31,9 +31,9 @@ public class SystemConfig {
     private String mongoDB;
 
     /**
-     * rabbitMQ
+     * rabbitmq
      */
-    @Value("${lgy.rabbitMQ}")
+    @Value("${lgy.rabbitmq}")
     private String rabbitMQ;
 
     /**
