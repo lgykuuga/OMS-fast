@@ -2,16 +2,12 @@ package com.lgy.oms.biz.impl.common;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lgy.common.constant.Constants;
-import com.lgy.common.core.domain.CommonResponse;
-import com.lgy.oms.biz.ICancelOrderService;
 import com.lgy.oms.biz.IUpdateOrderFlagService;
 import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.domain.order.OrderStatusInfo;
 import com.lgy.oms.enums.distribution.DistributionSourceTypeEnum;
 import com.lgy.oms.enums.order.OrderFlagEnum;
-import com.lgy.oms.interfaces.common.dto.OrderDTO;
-import com.lgy.oms.mapper.OrderMainMapper;
 import com.lgy.oms.service.IOrderMainService;
 import com.lgy.oms.service.IOrderStatusService;
 import org.slf4j.Logger;
@@ -50,10 +46,10 @@ public class UpdateOrderFlagServiceImpl implements IUpdateOrderFlagService {
         orderStatusinfo.setFlag(OrderFlagEnum.AUDIT.getCode());
         //更新条件
         UpdateWrapper<OrderStatusInfo> orderStatusWrapper = new UpdateWrapper<>();
-        orderStatusWrapper.eq("order_id", orderMain.getOrderId());
-        orderStatusWrapper.eq("status", Constants.VALID);
-        orderStatusWrapper.in("flag", OrderFlagEnum.NEW.getCode(), OrderFlagEnum.EDIT.getCode());
-
+        orderStatusWrapper.lambda()
+                .eq(OrderStatusInfo::getOrderId, orderMain.getOrderId())
+                .eq(OrderStatusInfo::getStatus, Constants.VALID)
+                .in(OrderStatusInfo::getFlag, OrderFlagEnum.NEW.getCode(), OrderFlagEnum.EDIT.getCode());
         flag = orderStatusService.update(orderMain.getOrderStatusinfo(), orderStatusWrapper);
 
         if (flag) {
@@ -63,7 +59,7 @@ public class UpdateOrderFlagServiceImpl implements IUpdateOrderFlagService {
             orderMain.setFrozen(Constants.NO);
 
             UpdateWrapper<OrderMain> mainUpdateWrapper = new UpdateWrapper<>();
-            mainUpdateWrapper.eq("order_id", orderMain.getOrderId());
+            mainUpdateWrapper.lambda().eq(OrderMain::getOrderId, orderMain.getOrderId());
             flag = orderMainService.update(orderMain, mainUpdateWrapper);
         }
 
@@ -119,7 +115,7 @@ public class UpdateOrderFlagServiceImpl implements IUpdateOrderFlagService {
 
         if (flag) {
             UpdateWrapper<OrderStatusInfo> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("order_id", orderId);
+            updateWrapper.lambda().eq(OrderStatusInfo::getOrderId, orderId);
             flag = orderStatusService.update(orderStatusInfo, updateWrapper);
         }
 

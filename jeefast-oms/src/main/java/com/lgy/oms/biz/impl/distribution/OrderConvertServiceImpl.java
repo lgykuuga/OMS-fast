@@ -8,7 +8,6 @@ import com.lgy.oms.constants.OrderModuleConstants;
 import com.lgy.oms.constants.OrderOperateType;
 import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
-import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.distribution.DistributionDetail;
 import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;

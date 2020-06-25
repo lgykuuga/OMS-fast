@@ -56,7 +56,7 @@ public class OrderFieldUtils {
     private static List<Config> orderFullFieldConfigs;
 
 
-    public final static List<Config> getOrderMainList() {
+    public static List<Config> getOrderMainList() {
         if (orderMainConfigs == null) {
             orderMainConfigs = new ArrayList<>(OrderMain.class.getDeclaredFields().length);
             for (Field field : OrderMain.class.getDeclaredFields()) {
@@ -69,7 +69,7 @@ public class OrderFieldUtils {
         return orderMainConfigs;
     }
 
-    public final static List<Config> getBuyerInfoList() {
+    public static List<Config> getBuyerInfoList() {
         if (orderBuyerConfigs == null) {
             orderBuyerConfigs = new ArrayList<>(OrderBuyerInfo.class.getDeclaredFields().length);
             for (Field field : OrderBuyerInfo.class.getDeclaredFields()) {
@@ -82,7 +82,7 @@ public class OrderFieldUtils {
         return orderBuyerConfigs;
     }
 
-    public final static List<Config> getPayInfoList() {
+    public static List<Config> getPayInfoList() {
         if (orderPayConfigs == null) {
             orderPayConfigs = new ArrayList<>(OrderPayInfo.class.getDeclaredFields().length);
             for (Field field : OrderPayInfo.class.getDeclaredFields()) {
@@ -95,7 +95,7 @@ public class OrderFieldUtils {
         return orderPayConfigs;
     }
 
-    public final static List<Config> getStatusInfoList() {
+    public static List<Config> getStatusInfoList() {
         if (orderStatusConfigs == null) {
             orderStatusConfigs = new ArrayList<>(OrderStatusInfo.class.getDeclaredFields().length);
             for (Field field : OrderStatusInfo.class.getDeclaredFields()) {
@@ -108,7 +108,7 @@ public class OrderFieldUtils {
         return orderStatusConfigs;
     }
 
-    public final static List<Config> getTypeInfoList() {
+    public static List<Config> getTypeInfoList() {
         if (orderTypeConfigs == null) {
             orderTypeConfigs = new ArrayList<>(OrderTypeInfo.class.getDeclaredFields().length);
             for (Field field : OrderTypeInfo.class.getDeclaredFields()) {
@@ -121,7 +121,7 @@ public class OrderFieldUtils {
         return orderTypeConfigs;
     }
 
-    public final static List<Config> getInterceptList() {
+    public static List<Config> getInterceptList() {
         if (orderInterceptConfigs == null) {
             orderInterceptConfigs = new ArrayList<>(OrderInterceptInfo.class.getDeclaredFields().length);
             for (Field field : OrderInterceptInfo.class.getDeclaredFields()) {
@@ -134,7 +134,7 @@ public class OrderFieldUtils {
         return orderInterceptConfigs;
     }
 
-    public final static List<Config> getDetailList() {
+    public static List<Config> getDetailList() {
         if (orderDetailConfigs == null) {
             orderDetailConfigs = new ArrayList<>(OrderDetail.class.getDeclaredFields().length);
             for (Field field : OrderDetail.class.getDeclaredFields()) {
@@ -148,7 +148,7 @@ public class OrderFieldUtils {
     }
 
 
-    public final static List<Config> getFullFieldList() {
+    public static List<Config> getFullFieldList() {
         if (orderFullFieldConfigs == null) {
             orderFullFieldConfigs = new ArrayList<>();
             orderFullFieldConfigs.addAll(getOrderMainList());

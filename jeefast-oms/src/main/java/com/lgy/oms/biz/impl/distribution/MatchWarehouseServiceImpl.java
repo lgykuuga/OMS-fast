@@ -15,6 +15,7 @@ import com.lgy.oms.domain.order.OrderMain;
 import com.lgy.oms.enums.strategy.DistributionWarehouseRuleEnum;
 import com.lgy.oms.factory.TraceLogFactory;
 import com.lgy.oms.service.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,7 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
 
         List<StrategyDistributionWarehouseRule> warehouseRules = ruleService.matchWarehouseGyRules(strategyDistribution.getGco());
 
-        if (warehouseRules == null || warehouseRules.isEmpty()) {
+        if (CollectionUtils.isEmpty(warehouseRules)) {
             if (StringUtils.isNotEmpty(strategyDistribution.getWarehouse())) {
                 logger.debug("订单[{}]匹配策略[{}]没有初始化分仓规则,分配店铺策略默认仓库。", orderMain.getOrderId(), strategyDistribution.getGco());
                 warehouseList.add(strategyDistribution.getWarehouse());
@@ -182,8 +183,6 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
 
 
                 }
-            } else if (DistributionWarehouseRuleEnum.RULE_LOCK_STOCK.getCode().equals(warehouseRule.getRuleId())) {
-                //可用库存分配仓库在选仓后执行
             }
         }
 

@@ -124,9 +124,6 @@ public class ComboController extends BaseController {
 
     /**
      * 修改组合商品
-     */
-    /**
-     * 修改组合商品
      *
      * @param id   组合商品id
      * @param mmap ModelMap
