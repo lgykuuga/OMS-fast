@@ -25,7 +25,6 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
                 .eq(OrderDetail::getOrderId, orderDetail.getOrderId())
                 .eq(OrderDetail::getSourceRow, orderDetail.getRowNumber())
                 .select(OrderDetail::getOrderId);
-        queryWrapper.select("order_id");
         List<OrderDetail> list = this.list(queryWrapper);
         if (list.isEmpty()) {
             return false;
