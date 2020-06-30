@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CheckStockServiceImpl implements ICheckStockService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 库存Service

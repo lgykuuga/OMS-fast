@@ -2,7 +2,6 @@ package com.lgy.oms.disruptor.audit;
 
 import com.alibaba.fastjson.JSON;
 import com.lgy.framework.util.ShiroUtils;
-import com.lgy.oms.config.CustomThreadFactoryBuilder;
 import com.lgy.system.domain.SysUser;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.SleepingWaitStrategy;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * @Author LGy
