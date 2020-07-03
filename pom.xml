@@ -298,14 +298,6 @@
 			<artifactId>hutool-all</artifactId>
 			<version>${hutool.version}</version>
 		</dependency>
-
-		<!-- japidocs 根据注释文档生成-->
-		<dependency>
-			<groupId>io.github.yedaxia</groupId>
-			<artifactId>japidocs</artifactId>
-			<version>${japidocs.version}</version>
-		</dependency>
-
 	</dependencies>
 
 
