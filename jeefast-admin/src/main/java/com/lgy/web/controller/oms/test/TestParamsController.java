@@ -1,6 +1,7 @@
 package com.lgy.web.controller.oms.test;
 
 import com.lgy.common.config.SystemConfig;
+import com.lgy.common.core.text.Convert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
- * @Description TestController
- * @Author LGy
- * @Date 2020/1/16 17:56
- **/
+ * TestParamsController
+ *
+ * @author LGy
+ * @date 2020-07-03
+ */
 @RestController
 @RequestMapping("/test/getParams")
 @Api("参数接口")
@@ -70,7 +73,7 @@ public class TestParamsController {
      * @return
      */
     private List<String> parse(String orderIds) {
-        String[] orderIdz = orderIds.split(",");
+        String[] orderIdz = Convert.toStrArray(orderIds);
         return Arrays.asList(orderIdz);
     }
 

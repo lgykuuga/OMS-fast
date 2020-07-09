@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.utils.StringUtils;
 import com.lgy.common.utils.reflect.ReflectUtils;
-import com.lgy.oms.domain.StrategyDistributionWarehouseLogistics;
 import com.lgy.oms.domain.StrategyDistributionWarehouseRule;
 import com.lgy.oms.domain.StrategyDistributionWarehouseWeight;
 import com.lgy.oms.domain.order.OrderMain;
@@ -16,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +35,7 @@ public class StrategyDistributionWarehouseWeightServiceImpl extends ServiceImpl<
     @Override
     public List<StrategyDistributionWarehouseWeight> getStrategyByGco(String gco) {
         QueryWrapper<StrategyDistributionWarehouseWeight> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("gco", gco);
+        queryWrapper.lambda().eq(StrategyDistributionWarehouseWeight::getGco, gco);
         return this.list(queryWrapper);
     }
 
