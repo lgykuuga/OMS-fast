@@ -30,6 +30,8 @@ public class AuditDisruptorUtil {
     private Disruptor<AuditOrderEvent> disruptor;
     private static final int RING_BUFFER_SIZE = 1024 * 1024;
 
+    private static final int THREAD_COUNT = 5;
+
     @Autowired
     private AuditHandler auditHandler;
 
@@ -58,17 +60,25 @@ public class AuditDisruptorUtil {
                 new SleepingWaitStrategy()
         );
 
+        //校验地址创建消费者组
+        AuditHandler[] auditHandlers = new AuditHandler[THREAD_COUNT];
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            auditHandlers[i] = auditHandler;
+        }
+
+        //创建消费者组
+        disruptor.handleEventsWithWorkerPool(auditHandlers);
+
         //异常处理
         disruptor.setDefaultExceptionHandler(new AuditExceptionHandler());
-        //创建消费者组
-        disruptor.handleEventsWith(auditHandler);
+
         //启动disruptor
         disruptor.start();
         this.producer = new Producer(disruptor.getRingBuffer());
         logger.info("disruptor of auditEvent start");
     }
 
-    public Producer getProducer() {
+    Producer getProducer() {
         return producer;
     }
 
@@ -79,7 +89,7 @@ public class AuditDisruptorUtil {
             this.ringBuffer = ringBuffer;
         }
 
-        public void onData(AuditOrderEvent t) {
+        void onData(AuditOrderEvent t) {
             logger.debug("publish auditEvent [{}]", JSON.toJSONString(t.getOrderMain().getOrderId()));
             long sequence = ringBuffer.next();
             try {

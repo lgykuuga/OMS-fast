@@ -39,6 +39,8 @@ public class AuditSubDisruptorUtil {
     private Disruptor<AuditOrderEvent> disruptor;
     private static final int RING_BUFFER_SIZE = 1024 * 1024;
 
+
+
     /**
      * 校验订单地址有效性
      */
@@ -84,7 +86,6 @@ public class AuditSubDisruptorUtil {
                 ProducerType.SINGLE,
                 new SleepingWaitStrategy()
         );
-
 
         /**
          * 并行校验地址、校验拦截订单主信息、校验拦截订单明细信息
