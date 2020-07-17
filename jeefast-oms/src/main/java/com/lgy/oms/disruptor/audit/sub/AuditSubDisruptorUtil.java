@@ -37,7 +37,7 @@ public class AuditSubDisruptorUtil {
     private static Logger logger = LoggerFactory.getLogger(AuditSubDisruptorUtil.class);
 
     private Disruptor<AuditOrderEvent> disruptor;
-    private static final int RING_BUFFER_SIZE = 1024 * 1024;
+    private static final int RING_BUFFER_SIZE = 1024;
 
 
 

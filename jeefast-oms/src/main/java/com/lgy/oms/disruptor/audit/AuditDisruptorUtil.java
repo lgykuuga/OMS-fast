@@ -28,7 +28,7 @@ public class AuditDisruptorUtil {
     private static Logger logger = LoggerFactory.getLogger(AuditDisruptorUtil.class);
 
     private Disruptor<AuditOrderEvent> disruptor;
-    private static final int RING_BUFFER_SIZE = 1024 * 1024;
+    private static final int RING_BUFFER_SIZE = 1024;
 
     private static final int THREAD_COUNT = 5;
 
@@ -89,7 +89,7 @@ public class AuditDisruptorUtil {
             this.ringBuffer = ringBuffer;
         }
 
-        void onData(AuditOrderEvent t) {
+        public void onData(AuditOrderEvent t) {
             logger.debug("publish auditEvent [{}]", JSON.toJSONString(t.getOrderMain().getOrderId()));
             long sequence = ringBuffer.next();
             try {
