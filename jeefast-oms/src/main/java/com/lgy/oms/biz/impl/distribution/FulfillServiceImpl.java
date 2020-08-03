@@ -8,7 +8,6 @@ import com.lgy.oms.constants.OrderOperateType;
 import com.lgy.oms.constants.TraceLevelType;
 import com.lgy.oms.disruptor.tracelog.TraceLogApi;
 import com.lgy.oms.domain.StrategyDistribution;
-import com.lgy.oms.domain.TraceLog;
 import com.lgy.oms.domain.distribution.DistributionOrder;
 import com.lgy.oms.domain.dto.DistributionParamDTO;
 import com.lgy.oms.domain.order.OrderMain;
@@ -182,19 +181,18 @@ public class FulfillServiceImpl implements IFulfillService {
         //更新订单状态
         updateOrderFlagService.distributionUpdateOrder(distributionOrder);
 
-
         return null;
     }
 
     private CommonResponse<OrderMain> conditionDistributionOrder(OrderMain orderMain, StrategyDistribution strategyDistribution) {
 
-        //审单策略
+        //配货策略
         StrategyDistribution strategy = strategyDistributionService.getFullInfoStrategyByShop(orderMain.getShop());
 
         if (strategy == null) {
             logger.error("订单[{}]店铺[{}]未设置配货策略,不能配货;", orderMain.getOrderId(), orderMain.getShop());
             return new CommonResponse<OrderMain>().error(Constants.FAIL,
-                    "店铺" + orderMain.getShop() + "未设置审单策略,不能审核订单;");
+                    "店铺" + orderMain.getShop() + "未设置配货策略,不能配货;");
         } else {
             BeanUtils.copyProperties(strategy, strategyDistribution);
         }
