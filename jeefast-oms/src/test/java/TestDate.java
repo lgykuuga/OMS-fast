@@ -8,5 +8,12 @@ import java.util.Date;
 public class TestDate {
     public static void main(String[] args) {
         System.out.println(new Date());
+
+        String begin = "Mon Jun 01 08:00:00 CST 2020";
+
+        Date date = new Date(begin);
+        System.out.println(date);
+
+
     }
 }

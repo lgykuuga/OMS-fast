@@ -1,8 +1,7 @@
 package com.lgy.oms.interfaces.rds.bean;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lgy.common.annotation.Excel;
-import com.lgy.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -24,6 +23,7 @@ public class JdpTbTrade implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId
     private Long tid;
 
     private String status;

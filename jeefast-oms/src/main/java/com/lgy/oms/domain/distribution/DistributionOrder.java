@@ -2,7 +2,6 @@ package com.lgy.oms.domain.distribution;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lgy.common.annotation.Excel;
 import com.lgy.common.core.domain.BaseEntity;
 import com.lgy.oms.domain.order.*;

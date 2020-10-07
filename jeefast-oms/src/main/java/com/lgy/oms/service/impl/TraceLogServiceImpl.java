@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 订单轨迹服务 服务层实现
@@ -49,6 +50,7 @@ public class TraceLogServiceImpl extends ServiceImpl<TraceLogMapper, TraceLog>
         if (Objects.isNull(entity.getCreateTime())) {
             entity.setCreateTime(DateUtils.getNowDate());
         }
+        entity.setId(UUID.randomUUID().toString());
         traceLogMapper.add(entity);
     }
 

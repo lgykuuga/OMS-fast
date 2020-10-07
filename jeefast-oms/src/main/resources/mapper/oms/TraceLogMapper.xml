@@ -6,10 +6,10 @@
 
     <insert id="add" parameterType="com.lgy.oms.domain.TraceLog">
         insert into oms_trace_log
-            (order_id, module, type,
+            (id, order_id, module, type,
             level, content, create_by, create_time)
         values
-            (#{orderId}, #{module}, #{type},
+            (#{id}, #{orderId}, #{module}, #{type},
               #{level}, #{content}, #{createBy}, #{createTime})
       </insert>
 
@@ -24,6 +24,7 @@
 
 
     <sql id="trace_log">
+        id,
         module,
         order_id,
         type,

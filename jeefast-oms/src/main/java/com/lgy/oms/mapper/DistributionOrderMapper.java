@@ -11,4 +11,5 @@ import com.lgy.oms.domain.distribution.DistributionOrder;
  */
 public interface DistributionOrderMapper extends BaseMapper<DistributionOrder> {
 
+
 }

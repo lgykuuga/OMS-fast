@@ -23,7 +23,6 @@
 		<module>jeefast-base</module>
 		<module>jeefast-es</module>
         <module>jeefast-sync</module>
-        <module>jeefast-jms</module>
     </modules>
 	<packaging>pom</packaging>
 
