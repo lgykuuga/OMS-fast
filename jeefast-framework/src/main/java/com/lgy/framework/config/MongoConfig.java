@@ -2,7 +2,10 @@ package com.lgy.framework.config;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.convert.CustomConversions;
@@ -19,7 +22,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
  * @Date 2020/1/13 18:36
  **/
 @Configuration
-@ConditionalOnProperty(name = "lgy.mongoDB", havingValue = "0", matchIfMissing = true)
+@ConditionalOnBean({MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 public class MongoConfig {
 
     @Bean

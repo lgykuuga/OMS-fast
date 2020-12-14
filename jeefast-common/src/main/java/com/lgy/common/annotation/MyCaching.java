@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.EnableCaching;
  * @Author LGy
  * @Date 2020/1/13
  */
-
 @EnableCaching
 @ConditionalOnProperty(name = "lgy.redis", havingValue = "0", matchIfMissing = true)
 public @interface MyCaching {

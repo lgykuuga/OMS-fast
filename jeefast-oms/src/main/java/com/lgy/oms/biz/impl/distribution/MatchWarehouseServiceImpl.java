@@ -1,5 +1,6 @@
 package com.lgy.oms.biz.impl.distribution;
 
+import com.google.common.collect.Lists;
 import com.lgy.common.constant.Constants;
 import com.lgy.common.core.domain.CommonResponse;
 import com.lgy.common.utils.StringUtils;
@@ -21,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,7 +71,7 @@ public class MatchWarehouseServiceImpl implements IMatchWarehouseService {
         long startTime = System.currentTimeMillis();
 
         //可用仓库有序集合
-        List<String> warehouseList = new ArrayList<>();
+        List<String> warehouseList = Lists.newArrayList();
         //返回消息
         StringBuilder rtnMessage = new StringBuilder();
 

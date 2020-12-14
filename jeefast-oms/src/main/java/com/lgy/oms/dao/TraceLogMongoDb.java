@@ -9,6 +9,9 @@ import com.lgy.oms.constants.OrderModuleConstants;
 import com.lgy.oms.domain.TraceLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
  * @Date 2020/1/13 14:53
  **/
 @Service(OrderModuleConstants.TRACE_LOG_MongoDB)
+@ConditionalOnBean({MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 public class TraceLogMongoDb extends AbstractMongoDbDao<TraceLog> {
 
     private static Logger logger = LoggerFactory.getLogger(TraceLogMongoDb.class);

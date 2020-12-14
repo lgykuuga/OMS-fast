@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,7 +54,7 @@ public class TestParamsController {
 
     @PostMapping("/testList")
     @ApiOperation(value = "对比数据", httpMethod = "POST")
-    public String testList(String list1, String list2) {
+    public String testList(@RequestBody String list1, @RequestBody String list2) {
 
         if (StringUtils.isEmpty(list1)) {
             return "输入单号为空";
