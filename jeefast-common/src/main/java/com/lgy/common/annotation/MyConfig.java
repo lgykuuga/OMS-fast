@@ -6,8 +6,6 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
-import java.lang.reflect.Field;
-
 
 /**
  * @Description 判断设置是否加载缓存
@@ -23,20 +21,13 @@ public class MyConfig implements BeanPostProcessor {
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        System.out.println("BeforeInit加载了bean " + beanName);
+//        System.out.println("BeforeInit加载了bean " + beanName);
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-
-
-        System.out.println("AfterInit加载了bean " + beanName);
-        Class clazz = bean.getClass();
-        Field[] declaredFields = clazz.getDeclaredFields();
-
-
-
+//        System.out.println("AfterInit加载了bean " + beanName);
         return bean;
     }
 
