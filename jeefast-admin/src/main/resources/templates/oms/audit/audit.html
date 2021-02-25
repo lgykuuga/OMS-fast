@@ -472,7 +472,6 @@
                     //填充表单
                     $("#form-audit-edit").setForm(strategyAudit);
 
-
                 }
             };
             $.ajax(config)
@@ -584,75 +583,6 @@
                         $.modal.alertError(result.msg);
                     }
                 }
-            })
-        }
-
-        /**
-         * 将josn对象赋值给form
-         * @param {dom} 指定的选择器
-         * @param {obj} 需要给form赋值的json对象
-         * @method serializeJson
-         * */
-        $.fn.setForm = function (jsonValue) {
-            var $this = this;
-            $.each(jsonValue, function (name, ival) {
-                //优先使用name,因为表单提交使用name
-                var that = $this.find("[name=" + name + "]")[0];
-                if(that == undefined){
-
-                    //初始化switch控件，起别名是因为名称相同，控件值会污染到表单
-                    var switchs = $this.find("[name=switch_" + name + "]")[0];
-                    if(switchs != undefined && $(switchs).parent().hasClass("toggle-switch")){
-                        $(switchs).prop("checked", ival == 0 ? true : false);
-                        return true;
-                    }
-
-                    console.log("init Form data error : " + name + " is undifined!");
-                    return true;
-                }
-
-                var formcontrl = $(that);
-                if(formcontrl.is("select")){
-                    $("[name='" + name +"']").val(ival);
-                }else if(formcontrl.is("input")){
-                    //这里需要判断控件是否是switch
-                    if (formcontrl.attr("type") == "checkbox") {
-                        if (ival !== null) {
-                            var checkboxObj = $("[name=" + name + "]");
-                            ival = ival.toString();
-                            var checkArray = ival.split(";");
-                            for (var i = 0; i < checkboxObj.length; i++) {
-                                for (var j = 0; j < checkArray.length; j++) {
-                                    if (checkboxObj[i].value == checkArray[j]) {
-                                        // checkboxObj[i].click();
-                                        checkboxObj[i].attr("checked", 'checked');
-                                    }
-                                }
-                            }
-
-                        }
-                    } else if (formcontrl.attr("type") == "radio") {
-                        formcontrl.each(function () {
-                            var radioObj = $("[name=" + name + "]");
-                            $("input[name='" + name +"'][checked]").val(ival);
-                        });
-                    } else if (formcontrl.attr("type") == "checkbox") {
-                        formcontrl.each(function () {
-                            var radioObj = $("[name=" + name + "]");
-                            for (var i = 0; i < radioObj.length; i++) {
-                                if (radioObj[i].value == ival) {
-                                    radioObj[i].click();
-                                }
-                            }
-                        });
-                    }else {
-                        $this.find("[name=" + name + "]").val(ival);
-                    }
-                }else if(formcontrl.is("textarea")) {
-                    $this.find("[name=" + name + "]").html(ival);
-                }
-
-
             })
         }
 

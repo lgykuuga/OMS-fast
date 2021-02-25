@@ -459,16 +459,6 @@
 
         function submit2() {
             var data = $("#form-distribution-edit").serializeArray();
-            var source = $("input[id='source']").is(':checked') == true ? 0 : 1;
-            var addressValid = $("input[id='addressValid']").is(':checked') == true ? 0 : 1;
-            var buyMessage = $("input[id='buyMessage']").is(':checked') == true ? 0 : 1;
-            var sellerMessage = $("input[id='sellerMessage']").is(':checked') == true ? 0 : 1;
-            var comboIntercept = $("input[id='comboIntercept']").is(':checked') == true ? 0 : 1;
-            data.push({"name": "source", "value": source});
-            data.push({"name": "addressValid", "value": addressValid});
-            data.push({"name": "buyMessage", "value": buyMessage});
-            data.push({"name": "sellerMessage", "value": sellerMessage});
-            data.push({"name": "comboIntercept", "value": comboIntercept});
 
             $.ajax({
                 url: prefix + "/edit",
